@@ -1,0 +1,586 @@
+# 🎮 MEGA PROMPT — GameReviews Platform (Para Replit)
+
+---
+
+## 🎯 OBJETIVO DEL PROYECTO
+
+Construye una plataforma web completa llamada **GameReviews** — una comunidad donde los usuarios pueden buscar videojuegos, escribir reseñas, votar, construir su lista personal de juegos y ver rankings comunitarios. Todo funciona sin backend real: los datos se guardan en `localStorage` y la IA está integrada mediante la **API de Anthropic** directamente desde el frontend.
+
+---
+
+## 🗂️ ESTRUCTURA DE ARCHIVOS
+
+```
+gamereviews/
+├── index.html           ← Página principal / buscador / catálogo
+├── juego.html           ← Detalle de juego + reseñas + IA
+├── ranking.html         ← Ranking global de juegos
+├── mi-lista.html        ← Tracker personal del usuario
+├── perfil.html          ← Perfil del usuario con sus reseñas
+├── css/
+│   └── style.css        ← Estilos globales
+├── js/
+│   ├── app.js           ← Lógica principal y catálogo
+│   ├── juego.js         ← Detalle + reseñas + llamada a IA
+│   ├── ranking.js       ← Lógica del ranking
+│   ├── lista.js         ← Tracker personal
+│   ├── perfil.js        ← Perfil y reseñas del usuario
+│   └── utils.js         ← Funciones compartidas (localStorage, toast, etc.)
+└── data/
+    └── juegos.json      ← Base de datos de 30+ juegos
+```
+
+---
+
+## 🎨 DISEÑO Y ESTÉTICA
+
+**Tema**: Oscuro, moderno, inspirado en Steam/Metacritic pero más vivo.
+
+### Paleta de colores (CSS variables):
+```css
+:root {
+  --bg-primary: #0d0d14;
+  --bg-secondary: #13131f;
+  --bg-card: #1a1a2e;
+  --bg-card-hover: #1f1f38;
+  --accent-primary: #7c3aed;   /* Morado vibrante */
+  --accent-secondary: #a855f7;
+  --accent-glow: rgba(124,58,237,0.3);
+  --accent-gold: #f59e0b;      /* Para ratings y estrellas */
+  --accent-green: #10b981;     /* Para estado "Completado" */
+  --accent-blue: #3b82f6;      /* Para estado "Jugando" */
+  --accent-red: #ef4444;       /* Para estado "Abandonado" */
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted: #475569;
+  --border: rgba(124,58,237,0.2);
+  --border-hover: rgba(124,58,237,0.5);
+}
+```
+
+### Tipografía (cargar desde Google Fonts):
+```html
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+```
+- **Títulos grandes / logo**: `Orbitron` (futurista, para el nombre del sitio y títulos principales)
+- **Todo lo demás**: `Space+Grotesk` (moderna, legible)
+
+### Efectos visuales:
+- Navbar con `backdrop-filter: blur(20px)` y borde inferior sutil morado
+- Cards con `box-shadow: 0 0 0 1px var(--border)` y al hover: glow morado
+- Botones con gradiente `linear-gradient(135deg, #7c3aed, #a855f7)`
+- Animación de entrada `fadeInUp` con `animation-delay` escalonado en las cards
+- Fondo con patrón sutil: noise texture o grid de puntos muy tenue
+- Estrellas de rating animadas al hacer hover
+- Badges de género/plataforma con colores distintos por categoría
+
+---
+
+## 📄 PÁGINAS Y FUNCIONALIDADES
+
+---
+
+### 1. `index.html` — Página Principal
+
+#### Secciones:
+1. **Navbar global** (igual en todas las páginas):
+   - Logo "🎮 GameReviews" con `font-family: Orbitron`
+   - Links: Inicio | Ranking | Mi Lista | Perfil
+   - Buscador inline (lupa que expande un input)
+   - Avatar del usuario (letra del nombre guardado en localStorage)
+
+2. **Hero Section**:
+   - Título: "Descubre. Juega. Opina."
+   - Subtítulo: "La comunidad de reviews de videojuegos más honesta"
+   - Buscador grande centrado con placeholder animado
+   - Estadísticas: "X reseñas escritas • Y juegos catalogados • Z usuarios"
+   - Fondo con efecto de partículas o gradiente animado
+
+3. **Filtros y sidebar**:
+   - Géneros: Acción, RPG, Aventura, Deportes, Terror, Disparos, Carreras, Estrategia, Indie, Simulación
+   - Plataformas: PS5, Xbox, PC, Switch, Multi
+   - Ordenar por: Más valorados | Más reseñados | Recientes | A-Z | Precio
+   - Filtro de rating mínimo (slider 0-5)
+
+4. **Grid de juegos**:
+   - Cards responsivas `minmax(200px, 1fr)`
+   - Cada card muestra: imagen, nombre, género, plataforma, rating comunitario (promedio de reseñas locales), número de reseñas, precio, botón "Ver" y botón "+" para agregar a lista
+   - Indicador si el juego ya está en "Mi Lista"
+   - Al hacer clic → navega a `juego.html?id=X`
+
+---
+
+### 2. `juego.html` — Detalle del Juego
+
+#### Secciones:
+
+1. **Hero del juego**:
+   - Imagen grande de fondo con blur + overlay oscuro
+   - Imagen principal del juego (cover)
+   - Nombre, géneros, plataformas, año
+   - Rating Metacritic (del JSON) vs Rating Comunidad (calculado de reseñas locales)
+   - Descripción completa
+   - Botones: "Agregar a Mi Lista" (con selector de estado: Quiero jugar / Jugando / Completado / Abandonado) | "Escribir Reseña"
+
+2. **Trailer / Video embed** (YouTube iframe)
+
+3. **🤖 Análisis IA** — SECCIÓN ESPECIAL:
+   - Card destacada con ícono de IA y borde morado brillante
+   - Botón "Analizar con IA ✨"
+   - Al hacer clic, llama a la API de Anthropic con este prompt:
+     ```
+     Eres un crítico experto de videojuegos. Basándote en el juego "[NOMBRE]" del género "[GÉNERO]", plataforma "[PLATAFORMA]", descripción "[DESCRIPCIÓN]" y las siguientes reseñas de usuarios: [RESEÑAS], proporciona:
+     1. Un análisis general del juego (2-3 párrafos)
+     2. Pros principales (lista de 4-5 puntos)
+     3. Contras principales (lista de 3-4 puntos)
+     4. A quién se lo recomendarías
+     5. Puntuación sugerida del 1 al 10 con justificación
+     Sé honesto, específico y útil. Responde en español.
+     ```
+   - Muestra la respuesta con efecto de streaming (typewriter)
+   - Si no hay reseñas locales, el análisis se basa solo en el juego
+
+4. **🎨 Skins y DLC** (datos del JSON):
+   - Grid de skins disponibles con imagen, nombre y precio
+   - Packs/DLC con descripción y precio
+
+5. **📝 Reseñas de la Comunidad**:
+   - Formulario de nueva reseña:
+     - Campo: "Tu nombre" (se guarda en localStorage)
+     - Rating: estrellas interactivas (1-5, hacer clic para seleccionar)
+     - Textarea: "Tu reseña" (mínimo 50 caracteres)
+     - Checkbox: "¿Lo recomendarías?" (Sí / No)
+     - Botón "Publicar Reseña"
+   - Lista de reseñas existentes:
+     - Avatar con inicial del nombre
+     - Nombre + fecha
+     - Estrellas del rating
+     - Texto de la reseña
+     - Badge "✅ Recomendado" o "❌ No recomendado"
+     - Botón "👍 Útil" (contador)
+     - Botón "🗑 Eliminar" (solo si es del usuario actual)
+   - Si no hay reseñas: mensaje con ilustración y call-to-action
+
+6. **🎮 Juegos Similares**:
+   - 4 cards de juegos del mismo género
+
+---
+
+### 3. `ranking.html` — Ranking Global
+
+#### Secciones:
+
+1. **Header con tabs**:
+   - Top Reseñados | Top Valorados | Top por Género | Más Buscados
+
+2. **Top 10 principal** (diseño especial):
+   - Posición #1: card grande con medalla dorada, fondo especial
+   - Posición #2 y #3: cards medianas con medallas plata/bronce
+   - Posiciones #4-#10: lista horizontal compacta
+   - Cada entrada: posición, imagen, nombre, rating, número de reseñas, plataforma
+
+3. **Ranking completo por género**:
+   - Tabs de género, muestra top 5 de cada uno
+   - Cards con animación al cambiar tab
+
+4. **Estadísticas globales**:
+   - Cards de métricas: Total reseñas escritas | Juego más valorado | Género más popular | Plataforma más activa
+
+5. **🤖 Análisis IA del Ranking**:
+   - Botón "¿Qué dice la IA sobre estos rankings?"
+   - Llama a Anthropic API con los top 5 juegos y pide un análisis de tendencias
+   - Muestra respuesta en streaming
+
+---
+
+### 4. `mi-lista.html` — Tracker Personal
+
+#### Secciones:
+
+1. **Header personal**:
+   - Saludo con nombre del usuario
+   - Estadísticas: X jugando | Y completados | Z en wishlist | W abandonados
+
+2. **Tabs de estado**:
+   - Todos | ⏳ Quiero Jugar | 🎮 Jugando | ✅ Completados | ❌ Abandonados
+
+3. **Lista de juegos con controles**:
+   - Card de cada juego con imagen, nombre, género
+   - Selector de estado (dropdown)
+   - Input de progreso (horas jugadas)
+   - Rating personal (estrellas, independiente del rating comunitario)
+   - Nota personal (textarea pequeño)
+   - Fecha agregado
+   - Botón eliminar de lista
+
+4. **Gráfico de progreso**:
+   - Dona chart simple (CSS puro) mostrando distribución por estado
+   - "X% completados de tu lista"
+
+5. **🤖 Recomendaciones IA**:
+   - Botón "Recomiéndame un juego ✨"
+   - Envía a Anthropic: lista de juegos completados + géneros favoritos
+   - IA recomienda 3 juegos con justificación personalizada
+   - Muestra con efecto typewriter
+
+---
+
+### 5. `perfil.html` — Perfil de Usuario
+
+#### Secciones:
+
+1. **Card de perfil**:
+   - Avatar grande con inicial (editable: cambiar color del avatar)
+   - Nombre editable (input inline)
+   - Bio corta (textarea editable)
+   - Stats: Reseñas escritas | Juegos en lista | Juego favorito
+
+2. **Mis Reseñas**:
+   - Todas las reseñas escritas por el usuario
+   - Con opción de editar o eliminar
+   - Ordenar por: recientes, rating dado
+
+3. **Géneros Favoritos**:
+   - Calculado automáticamente de los juegos en la lista
+   - Visualización con barras de progreso animadas
+
+4. **Configuración**:
+   - Nombre de usuario
+   - Color del avatar
+   - Exportar mis datos (JSON)
+   - Limpiar todos los datos (con confirmación)
+
+---
+
+## 💾 ESTRUCTURA DE DATOS EN localStorage
+
+```javascript
+// Usuario
+localStorage.setItem('gr_usuario', JSON.stringify({
+  nombre: "Gamer123",
+  bio: "Amante del RPG y el terror",
+  avatarColor: "#7c3aed",
+  fechaRegistro: "2024-01-15"
+}));
+
+// Lista personal de juegos
+localStorage.setItem('gr_lista', JSON.stringify([
+  {
+    juegoId: 1,
+    estado: "completado",        // quiero_jugar | jugando | completado | abandonado
+    horasJugadas: 45,
+    ratingPersonal: 5,
+    notaPersonal: "Increíble historia",
+    fechaAgregado: "2024-03-10"
+  }
+]));
+
+// Reseñas (TODAS, de todos los juegos)
+localStorage.setItem('gr_reseñas', JSON.stringify([
+  {
+    id: "rev_1710000000000",
+    juegoId: 1,
+    autor: "Gamer123",
+    rating: 5,
+    texto: "Una obra maestra absoluta...",
+    recomendado: true,
+    fecha: "2024-03-10T15:30:00Z",
+    utilidad: 3,          // contador de "útil"
+    esPropia: true        // para saber si puede eliminarla
+  }
+]));
+
+// Votos de utilidad (para no votar dos veces)
+localStorage.setItem('gr_votos', JSON.stringify(["rev_1710000000000"]));
+```
+
+---
+
+## 📊 `data/juegos.json` — Base de Datos
+
+Incluye **mínimo 30 juegos** con esta estructura:
+
+```json
+[
+  {
+    "id": 1,
+    "nombre": "God of War Ragnarök",
+    "slug": "god-of-war-ragnarok",
+    "categoria": "accion",
+    "generos": ["accion", "aventura"],
+    "precio": 59.99,
+    "precioOriginal": 69.99,
+    "descuento": 15,
+    "imagen": "URL_IMAGEN",
+    "imagenBanner": "URL_IMAGEN_HORIZONTAL",
+    "descripcion": "Texto largo...",
+    "descripcionCorta": "Texto corto...",
+    "plataforma": "PS5",
+    "plataformas": ["PS5"],
+    "desarrollador": "Santa Monica Studio",
+    "publicador": "Sony Interactive Entertainment",
+    "fechaLanzamiento": "2022-11-09",
+    "rating": 4.9,
+    "ratingMetacritic": 94,
+    "ratingUsuariosMetacritic": 8.7,
+    "video": "https://www.youtube.com/embed/EE-4GvjKcfs",
+    "tags": ["single-player", "historia", "mitología", "combate"],
+    "skins": [
+      {"nombre": "Armadura Draupnir", "precio": 4.99, "imagen": "URL"}
+    ],
+    "packs": [
+      {"nombre": "Pack Deluxe", "precio": 9.99, "contenido": "3 skins + 2 emotes"}
+    ]
+  }
+]
+```
+
+**Los 30+ juegos deben incluir** (distribuidos entre géneros):
+- God of War Ragnarök, Spider-Man 2, Elden Ring, Cyberpunk 2077, The Witcher 3, Red Dead Redemption 2, GTA V, Zelda: Tears of the Kingdom, Zelda: Breath of the Wild, Hogwarts Legacy, FIFA 25, NBA 2K25, Call of Duty BO6, Fortnite, Minecraft, Stardew Valley, Hollow Knight, Celeste, Hades, Disco Elysium, Baldur's Gate 3, Starfield, Alan Wake 2, Resident Evil 4 Remake, Silent Hill 2 Remake, Gran Turismo 7, Forza Horizon 5, Street Fighter 6, Mortal Kombat 1, Final Fantasy XVI
+
+---
+
+## 🤖 INTEGRACIÓN CON ANTHROPIC API
+
+### Configuración:
+```javascript
+// En utils.js
+const ANTHROPIC_API_URL = "https://api.anthropic.com/v1/messages";
+const ANTHROPIC_MODEL = "claude-sonnet-4-20250514";
+
+async function llamarIA(systemPrompt, userPrompt, onChunk) {
+  const response = await fetch(ANTHROPIC_API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      // La API key se maneja automáticamente en Replit con secrets
+    },
+    body: JSON.stringify({
+      model: ANTHROPIC_MODEL,
+      max_tokens: 1000,
+      stream: true,
+      system: systemPrompt,
+      messages: [{ role: "user", content: userPrompt }]
+    })
+  });
+
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+  
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    
+    const chunk = decoder.decode(value);
+    const lines = chunk.split('\n').filter(l => l.startsWith('data: '));
+    
+    for (const line of lines) {
+      try {
+        const data = JSON.parse(line.slice(6));
+        if (data.type === 'content_block_delta') {
+          onChunk(data.delta.text);
+        }
+      } catch (e) {}
+    }
+  }
+}
+```
+
+### Configurar la API key en Replit:
+1. En Replit, ir a "Secrets" (candado en el sidebar)
+2. Crear secret: `ANTHROPIC_API_KEY` = tu key
+3. Acceder con: `process.env.ANTHROPIC_API_KEY` (si usas un servidor) o configurar un proxy simple
+
+> **IMPORTANTE**: Si es pure frontend sin servidor, crear un archivo `server.js` con Express como proxy que reciba las peticiones del frontend y las reenvíe a Anthropic con la API key desde las variables de entorno de Replit.
+
+### Proxy server simple (`server.js`):
+```javascript
+const express = require('express');
+const fetch = require('node-fetch');
+const app = express();
+
+app.use(express.static('.'));
+app.use(express.json());
+
+app.post('/api/ia', async (req, res) => {
+  const response = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': process.env.ANTHROPIC_API_KEY,
+      'anthropic-version': '2023-06-01'
+    },
+    body: JSON.stringify(req.body)
+  });
+  
+  res.setHeader('Content-Type', 'text/event-stream');
+  response.body.pipe(res);
+});
+
+app.listen(3000);
+```
+
+---
+
+## 🔧 FUNCIONALIDADES TÉCNICAS IMPORTANTES
+
+### Sistema de reseñas:
+```javascript
+// Guardar reseña
+function publicarReseña(juegoId, rating, texto, recomendado) {
+  const usuario = getUsuario();
+  const reseña = {
+    id: `rev_${Date.now()}`,
+    juegoId,
+    autor: usuario.nombre,
+    rating,
+    texto,
+    recomendado,
+    fecha: new Date().toISOString(),
+    utilidad: 0,
+    esPropia: true
+  };
+  
+  const reseñas = getReseñas();
+  reseñas.push(reseña);
+  localStorage.setItem('gr_reseñas', JSON.stringify(reseñas));
+  return reseña;
+}
+
+// Calcular rating promedio de un juego
+function calcularRatingComunidad(juegoId) {
+  const reseñas = getReseñas().filter(r => r.juegoId === juegoId);
+  if (!reseñas.length) return null;
+  const suma = reseñas.reduce((s, r) => s + r.rating, 0);
+  return (suma / reseñas.length).toFixed(1);
+}
+```
+
+### Buscador con debounce:
+```javascript
+let searchTimeout;
+document.getElementById('buscador').addEventListener('input', (e) => {
+  clearTimeout(searchTimeout);
+  searchTimeout = setTimeout(() => buscar(e.target.value), 300);
+});
+
+function buscar(query) {
+  const q = query.toLowerCase().trim();
+  const resultados = todosLosJuegos.filter(j => 
+    j.nombre.toLowerCase().includes(q) ||
+    j.categoria.toLowerCase().includes(q) ||
+    j.desarrollador.toLowerCase().includes(q) ||
+    j.tags?.some(t => t.includes(q))
+  );
+  renderJuegos(resultados);
+}
+```
+
+### Toast notifications:
+```javascript
+function mostrarToast(mensaje, tipo = 'success') {
+  // tipo: 'success' | 'error' | 'info' | 'warning'
+  const colores = {
+    success: '#10b981',
+    error: '#ef4444', 
+    info: '#3b82f6',
+    warning: '#f59e0b'
+  };
+  
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.style.borderLeftColor = colores[tipo];
+  toast.innerHTML = `<span>${mensaje}</span>`;
+  document.body.appendChild(toast);
+  
+  setTimeout(() => toast.classList.add('show'), 10);
+  setTimeout(() => {
+    toast.classList.remove('show');
+    setTimeout(() => toast.remove(), 300);
+  }, 3000);
+}
+```
+
+---
+
+## 📱 RESPONSIVIDAD
+
+**Breakpoints**:
+- Mobile: `< 640px` — 1 columna, sidebar como drawer
+- Tablet: `640px - 1024px` — 2 columnas
+- Desktop: `> 1024px` — layout completo con sidebar
+
+**Mobile específico**:
+- Navbar con menú hamburguesa
+- Bottom navigation bar con íconos: 🏠 Inicio | 🏆 Ranking | 🎮 Lista | 👤 Perfil
+- Cards de juego adaptadas (imagen más pequeña)
+
+---
+
+## ✨ DETALLES EXTRAS QUE ELEVAN LA CALIDAD
+
+1. **Skeleton loading**: Mostrar placeholders animados mientras cargan los juegos
+2. **Infinite scroll** o paginación (mostrar 12 juegos, "Cargar más" al final)
+3. **Modo sin JS**: Mensaje explicativo
+4. **Tooltips** en botones con `title` o custom CSS
+5. **Confirmación al eliminar**: Modal pequeño antes de eliminar reseña
+6. **Animación de rating**: Al hacer hover sobre las estrellas, se llenan de color
+7. **Scroll to top** botón flotante al hacer scroll hacia abajo
+8. **Indicador de "Nuevo"**: Badge en juegos lanzados hace menos de 30 días
+9. **Compartir**: Botón de share nativo (`navigator.share`) para compartir la URL del juego
+10. **Accesibilidad**: `aria-label` en botones icon-only, contraste adecuado, focus visible
+
+---
+
+## 🚀 ORDEN DE CONSTRUCCIÓN SUGERIDO
+
+1. `utils.js` + `data/juegos.json` (30 juegos completos)
+2. `css/style.css` (variables, base, componentes reutilizables)
+3. `index.html` + `app.js` (catálogo funcional)
+4. `juego.html` + `juego.js` (detalle + reseñas)
+5. Integración de IA en `juego.html`
+6. `ranking.html` + `ranking.js`
+7. `mi-lista.html` + `lista.js`
+8. `perfil.html` + `perfil.js`
+9. `server.js` (proxy para la API key)
+10. Pulido visual, animaciones, responsividad
+
+---
+
+## ⚙️ DEPENDENCIAS (`package.json`)
+
+```json
+{
+  "name": "gamereviews",
+  "version": "1.0.0",
+  "dependencies": {
+    "express": "^4.18.2",
+    "node-fetch": "^2.7.0"
+  },
+  "scripts": {
+    "start": "node server.js"
+  }
+}
+```
+
+**Google Fonts** (cargar en cada HTML):
+```html
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+```
+
+---
+
+## 🎯 RESULTADO ESPERADO
+
+Una plataforma web completa y funcional con:
+- ✅ Catálogo de 30+ juegos con búsqueda y filtros avanzados
+- ✅ Sistema de reseñas comunitarias persistido en localStorage
+- ✅ Rankings calculados dinámicamente de las reseñas
+- ✅ Tracker personal de juegos con estados y notas
+- ✅ Perfil de usuario editable
+- ✅ IA integrada en 3 puntos clave (análisis de juego, ranking, recomendaciones)
+- ✅ Diseño oscuro premium con tema morado
+- ✅ Responsive en mobile, tablet y desktop
+- ✅ Animaciones suaves y UX pulida
+
+**Este proyecto debe verse y sentirse como un producto real, no un proyecto académico.**
