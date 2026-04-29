@@ -9,6 +9,7 @@ import { Search, SlidersHorizontal, Gamepad2, Users, MessageSquare } from "lucid
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { TopDealsStrip } from "@/components/top-deals-strip";
 
 export default function Home() {
   const { reviews } = useReviews();
@@ -139,6 +140,8 @@ export default function Home() {
           </motion.div>
         </div>
       </section>
+
+      <TopDealsStrip />
 
       {/* Filters & Grid */}
       <section id="catalog" className="space-y-6">

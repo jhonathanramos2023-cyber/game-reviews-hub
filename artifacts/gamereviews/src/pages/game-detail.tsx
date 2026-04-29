@@ -4,6 +4,8 @@ import gamesData from "@/data/games.json";
 import { useReviews } from "@/hooks/use-reviews";
 import { useList, ListStatus } from "@/hooks/use-list";
 import { useUser } from "@/hooks/use-user";
+import { usePlan } from "@/hooks/use-plan";
+import { useUpgradeModal } from "@/components/upgrade-modal";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -17,6 +19,8 @@ import { Stars } from "@/components/stars";
 import { AiAnalysis } from "@/components/ai-analysis";
 import { GameCard } from "@/components/game-card";
 import { GameImage } from "@/components/game-image";
+import { DealsSection } from "@/components/deals-section";
+import { PriceAlertButton } from "@/components/price-alert-button";
 import { Gamepad2, Calendar, Monitor, Tag, Plus, Check, ThumbsUp, Trash2, Shield, Youtube, Star, MessageSquare } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -28,6 +32,8 @@ export default function GameDetail() {
   const { user } = useUser();
   const { list, addToList, updateItem, removeFromList } = useList();
   const { reviews, addReview, deleteReview, getGameReviews, voteReview, hasVoted } = useReviews();
+  const { canWriteReview, canAddToList } = usePlan();
+  const { triggerUpgrade } = useUpgradeModal();
 
   const [rating, setRating] = useState(0);
   const [reviewText, setReviewText] = useState("");
@@ -61,6 +67,13 @@ export default function GameDetail() {
         updateItem(game.id, { estado: val as ListStatus });
         toast.success("Estado actualizado");
       } else {
+        if (!canAddToList()) {
+          triggerUpgrade(
+            "Límite de juegos alcanzado", 
+            "Con el plan Gratis puedes añadir hasta 10 juegos a tu lista. Hazte PRO para tener una lista ilimitada."
+          );
+          return;
+        }
         addToList(game.id, val as ListStatus);
         toast.success("Añadido a tu lista");
       }
@@ -72,6 +85,16 @@ export default function GameDetail() {
       toast.error("Debes tener un nombre de usuario para publicar");
       return;
     }
+    
+    if (!canWriteReview()) {
+      triggerUpgrade(
+        "Límite de reseñas alcanzado", 
+        "Con el plan Gratis puedes escribir 5 reseñas por mes. Hazte PRO para escribir sin límites.",
+        "pro"
+      );
+      return;
+    }
+
     if (rating === 0) {
       toast.error("Por favor, selecciona una calificación");
       return;
@@ -178,7 +201,7 @@ export default function GameDetail() {
 
               <div className="h-10 w-px bg-border/50 hidden sm:block" />
 
-              <div className="flex gap-2 w-full sm:w-auto mt-4 sm:mt-0">
+              <div className="flex gap-2 w-full sm:w-auto mt-4 sm:mt-0 flex-wrap">
                 <Select value={inList ? listItem.estado : "none"} onValueChange={handleListChange}>
                   <SelectTrigger className={`w-[200px] font-bold ${inList ? 'bg-primary text-primary-foreground border-primary' : 'bg-background'}`}>
                     <SelectValue placeholder="Añadir a mi lista" />
@@ -197,6 +220,7 @@ export default function GameDetail() {
                 }}>
                   Opinar
                 </Button>
+                <PriceAlertButton juegoId={game.id} nombreJuego={game.nombre} />
               </div>
             </motion.div>
           </div>
@@ -207,6 +231,8 @@ export default function GameDetail() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Left Column: Details & Video */}
         <div className="lg:col-span-2 space-y-8">
+          <DealsSection nombre={game.nombre} gameId={game.slug} />
+
           <section className="bg-card border border-border p-6 rounded-2xl">
             <h3 className="text-2xl font-display font-bold mb-4">Acerca del juego</h3>
             <p className="text-foreground/80 leading-relaxed text-lg">

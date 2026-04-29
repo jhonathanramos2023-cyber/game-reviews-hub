@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import { useUser } from "@/hooks/use-user";
 import { useReviews } from "@/hooks/use-reviews";
 import { useList } from "@/hooks/use-list";
+import { usePlan } from "@/hooks/use-plan";
 import gamesData from "@/data/games.json";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,7 +14,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Stars } from "@/components/stars";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { UserCircle, Settings, Download, Trash2, Edit2, MessageSquare } from "lucide-react";
+import { UserCircle, Settings, Download, Trash2, Edit2, MessageSquare, Crown } from "lucide-react";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 
@@ -21,6 +22,7 @@ export default function Profile() {
   const { user, updateProfile, clearData, colors } = useUser();
   const { reviews, deleteReview } = useReviews();
   const { list } = useList();
+  const { plan } = usePlan();
 
   const [isEditing, setIsEditing] = useState(false);
   const [editName, setEditName] = useState(user?.nombre || "");
@@ -63,6 +65,7 @@ export default function Profile() {
       lista: JSON.parse(localStorage.getItem("gr_lista") || "[]"),
       resenas: JSON.parse(localStorage.getItem("gr_resenas") || "[]"),
       votos: JSON.parse(localStorage.getItem("gr_votos") || "[]"),
+      plan: JSON.parse(localStorage.getItem("gr_plan") || '"gratis"'),
     };
     
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
@@ -102,11 +105,18 @@ export default function Profile() {
                 </div>
               ) : (
                 <div>
-                  <h1 className="text-3xl font-display font-bold">{user.nombre}</h1>
+                  <div className="flex items-center justify-center md:justify-start gap-3">
+                    <h1 className="text-3xl font-display font-bold">{user.nombre}</h1>
+                    {plan === "pro" && <Badge className="bg-primary text-primary-foreground font-bold">PRO</Badge>}
+                    {plan === "elite" && <Badge className="bg-amber-500 text-black font-bold">ELITE</Badge>}
+                  </div>
                   <p className="text-muted-foreground mt-1">{user.bio}</p>
                   <p className="text-xs text-muted-foreground mt-2 opacity-50">
                     Miembro desde {new Date(user.fechaRegistro).toLocaleDateString()}
                   </p>
+                  <div className="mt-3 flex items-center justify-center md:justify-start gap-2 text-sm text-muted-foreground">
+                    <Crown className="h-4 w-4" /> Plan actual: {plan.charAt(0).toUpperCase() + plan.slice(1)} • <Link href="/suscripcion" className="text-primary hover:underline">Gestionar plan</Link>
+                  </div>
                 </div>
               )}
             </div>

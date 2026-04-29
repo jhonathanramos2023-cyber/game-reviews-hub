@@ -1,20 +1,24 @@
 import { Link, useLocation } from "wouter";
-import { Gamepad2, Trophy, List, User, Search, Menu, X } from "lucide-react";
+import { Gamepad2, Trophy, List, User, Search, Menu, X, Crown } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { useUser } from "@/hooks/use-user";
+import { usePlan } from "@/hooks/use-plan";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const [location] = useLocation();
   const { user } = useUser();
+  const { plan } = usePlan();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const navLinks = [
     { href: "/", label: "Inicio", icon: Gamepad2 },
     { href: "/ranking", label: "Ranking", icon: Trophy },
     { href: "/mi-lista", label: "Mi Lista", icon: List },
+    { href: "/suscripcion", label: "Suscripción", icon: Crown },
     { href: "/perfil", label: "Perfil", icon: User },
   ];
 
@@ -50,13 +54,21 @@ export function Layout({ children }: { children: React.ReactNode }) {
             </Button>
             
             {user ? (
-              <Link href="/perfil">
-                <Avatar className="h-8 w-8 cursor-pointer border border-primary/20 hover:border-primary transition-colors">
-                  <AvatarFallback style={{ backgroundColor: user.avatarColor, color: "#fff" }}>
-                    {user.nombre.charAt(0).toUpperCase()}
-                  </AvatarFallback>
-                </Avatar>
-              </Link>
+              <div className="flex items-center gap-2">
+                {plan === "pro" && (
+                  <Badge variant="default" className="hidden sm:flex bg-primary text-primary-foreground font-bold px-2 py-0 text-xs">PRO</Badge>
+                )}
+                {plan === "elite" && (
+                  <Badge variant="default" className="hidden sm:flex bg-amber-500 text-black font-bold px-2 py-0 text-xs">ELITE</Badge>
+                )}
+                <Link href="/perfil">
+                  <Avatar className="h-8 w-8 cursor-pointer border border-primary/20 hover:border-primary transition-colors">
+                    <AvatarFallback style={{ backgroundColor: user.avatarColor, color: "#fff" }}>
+                      {user.nombre.charAt(0).toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                </Link>
+              </div>
             ) : null}
           </div>
         </div>
@@ -95,13 +107,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </main>
 
       {/* Bottom Tab Bar for Mobile */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-background/95 backdrop-blur h-16 flex items-center justify-around px-2">
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-background/95 backdrop-blur h-16 flex items-center justify-around px-2 overflow-x-auto">
         {navLinks.map((link) => {
           const isActive = location === link.href || (link.href !== '/' && location.startsWith(link.href));
           return (
-            <Link key={link.href} href={link.href} className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${isActive ? 'text-primary' : 'text-muted-foreground'}`}>
+            <Link key={link.href} href={link.href} className={`flex flex-col items-center justify-center min-w-[60px] h-full space-y-1 shrink-0 ${isActive ? 'text-primary' : 'text-muted-foreground'}`}>
               <link.icon className={`h-5 w-5 ${isActive ? 'fill-primary/20' : ''}`} />
-              <span className="text-[10px] font-medium">{link.label}</span>
+              <span className="text-[10px] font-medium truncate max-w-full px-1">{link.label}</span>
             </Link>
           );
         })}

@@ -4,6 +4,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Sparkles, Loader2, AlertCircle } from "lucide-react";
 import { motion } from "framer-motion";
+import { usePlan } from "@/hooks/use-plan";
+import { useUpgradeModal } from "./upgrade-modal";
 
 interface AiAnalysisProps {
   systemPrompt: string;
@@ -20,6 +22,9 @@ export function AiAnalysis({
   buttonIcon = <Sparkles className="h-4 w-4 mr-2" />,
   autoStart = false
 }: AiAnalysisProps) {
+  const { canUseAi, markAiUse } = usePlan();
+  const { triggerUpgrade } = useUpgradeModal();
+  
   const [content, setContent] = useState("");
   const [isStreaming, setIsStreaming] = useState(false);
   const [isDone, setIsDone] = useState(false);
@@ -29,6 +34,15 @@ export function AiAnalysis({
 
   const startStream = async () => {
     if (isStreaming) return;
+    
+    if (!canUseAi()) {
+      triggerUpgrade(
+        "Límite de IA alcanzado", 
+        "Con el plan Gratis puedes usar la IA 3 veces al día. Hazte PRO para tener análisis ilimitados."
+      );
+      return;
+    }
+    markAiUse();
     
     setContent("");
     setError(null);

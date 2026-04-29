@@ -6,12 +6,14 @@ import NotFound from "@/pages/not-found";
 
 import { Layout } from "@/components/layout";
 import { OnboardingModal } from "@/components/onboarding-modal";
+import { UpgradeModalProvider } from "@/components/upgrade-modal";
 
 import Home from "@/pages/home";
 import GameDetail from "@/pages/game-detail";
 import Ranking from "@/pages/ranking";
 import MyList from "@/pages/my-list";
 import Profile from "@/pages/profile";
+import Subscription from "@/pages/subscription";
 
 const queryClient = new QueryClient();
 
@@ -23,6 +25,7 @@ function Router() {
       <Route path="/ranking" component={Ranking} />
       <Route path="/mi-lista" component={MyList} />
       <Route path="/perfil" component={Profile} />
+      <Route path="/suscripcion" component={Subscription} />
       <Route component={NotFound} />
     </Switch>
   );
@@ -33,10 +36,12 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
-          <Layout>
-            <Router />
-          </Layout>
-          <OnboardingModal />
+          <UpgradeModalProvider>
+            <Layout>
+              <Router />
+            </Layout>
+            <OnboardingModal />
+          </UpgradeModalProvider>
         </WouterRouter>
         <Toaster />
       </TooltipProvider>

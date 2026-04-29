@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { useList, ListStatus } from "@/hooks/use-list";
 import { useReviews } from "@/hooks/use-reviews";
+import { usePlan } from "@/hooks/use-plan";
+import { useUpgradeModal } from "./upgrade-modal";
 import { motion } from "framer-motion";
 import { Stars } from "./stars";
 import { GameImage } from "./game-image";
@@ -17,6 +19,8 @@ interface GameCardProps {
 export function GameCard({ game, index }: GameCardProps) {
   const { list, addToList, removeFromList } = useList();
   const { getGameReviews } = useReviews();
+  const { canAddToList } = usePlan();
+  const { triggerUpgrade } = useUpgradeModal();
 
   const listItem = list.find((i) => i.juegoId === game.id);
   const inList = !!listItem;
@@ -30,6 +34,13 @@ export function GameCard({ game, index }: GameCardProps) {
     if (inList) {
       removeFromList(game.id);
     } else {
+      if (!canAddToList()) {
+        triggerUpgrade(
+          "Límite de juegos alcanzado", 
+          "Con el plan Gratis puedes añadir hasta 10 juegos a tu lista. Hazte PRO para tener una lista ilimitada."
+        );
+        return;
+      }
       addToList(game.id, "quiero_jugar");
     }
   };
