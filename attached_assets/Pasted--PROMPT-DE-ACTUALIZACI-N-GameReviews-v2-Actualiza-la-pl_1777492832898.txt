@@ -1,0 +1,577 @@
+# 🔄 PROMPT DE ACTUALIZACIÓN — GameReviews v2
+
+Actualiza la plataforma GameReviews existente agregando estas nuevas funcionalidades.
+NO borres nada de lo que ya funciona, solo AGREGA y MEJORA.
+
+---
+
+## 1. 🔥 INTEGRACIÓN DE REBAJAS (IsThereAnyDeal API)
+
+### Registrarse y obtener API key:
+Ve a https://isthereanydeal.com/api/ y usa esta key de ejemplo o registra una nueva.
+
+### Nuevo endpoint en server.js (o el backend existente):
+
+```javascript
+// Proxy para IsThereAnyDeal - evitar CORS
+app.get('/api/deals/:slug', async (req, res) => {
+  try {
+    const { slug } = req.params;
+    const apiKey = process.env.ITAD_API_KEY; // agregar a Secrets de Replit
+
+    // Buscar el juego por nombre
+    const searchRes = await fetch(
+      `https://api.isthereanydeal.com/games/search/v1?key=${apiKey}&title=${encodeURIComponent(slug)}&results=1`
+    );
+    const searchData = await searchRes.json();
+    
+    if (!searchData?.length) return res.json({ deals: [], found: false });
+    
+    const gameId = searchData[0].id;
+
+    // Obtener precios actuales en todas las tiendas
+    const pricesRes = await fetch(
+      `https://api.isthereanydeal.com/games/prices/v2?key=${apiKey}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify([gameId])
+      }
+    );
+    const pricesData = await pricesRes.json();
+    const prices = pricesData?.[0]?.deals || [];
+
+    // Obtener precio histórico mínimo
+    const histRes = await fetch(
+      `https://api.isthereanydeal.com/games/historylow/v1?key=${apiKey}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify([gameId])
+      }
+    );
+    const histData = await histRes.json();
+    const historicalLow = histData?.[0]?.low || null;
+
+    res.json({
+      found: true,
+      gameId,
+      deals: prices.map(d => ({
+        tienda: d.shop.name,
+        precio: d.price.amount,
+        precioOriginal: d.regular.amount,
+        descuento: Math.round(((d.regular.amount - d.price.amount) / d.regular.amount) * 100),
+        url: d.url,
+        enOferta: d.price.amount < d.regular.amount
+      })),
+      precioHistoricoMinimo: historicalLow?.amount || null,
+      moneda: 'USD'
+    });
+  } catch (e) {
+    res.json({ deals: [], found: false, error: e.message });
+  }
+});
+
+// Endpoint para los juegos más baratos del momento (para la home)
+app.get('/api/deals/top/ofertas', async (req, res) => {
+  try {
+    const apiKey = process.env.ITAD_API_KEY;
+    const response = await fetch(
+      `https://api.isthereanydeal.com/deals/v2?key=${apiKey}&limit=10&sort=price:asc`
+    );
+    const data = await response.json();
+    res.json(data);
+  } catch (e) {
+    res.json({ list: [] });
+  }
+});
+```
+
+### Variables de entorno a agregar en Replit Secrets:
+```
+ITAD_API_KEY = tu_api_key_de_isthereanydeal
+```
+
+---
+
+## 2. 💰 COMPONENTE DE PRECIOS EN PÁGINA DE JUEGO (juego.tsx / juego.html)
+
+Agrega esta sección DEBAJO del hero del juego y ANTES del análisis IA:
+
+```
+┌─────────────────────────────────────────────────────┐
+│  🏷️ Precios en todas las tiendas                    │
+│                                ⟳ Actualizar         │
+├─────────────────────────────────────────────────────┤
+│  🟢 STEAM          $29.99  ~~$59.99~~  -50%  [Ver] │
+│  🔵 PlayStation    $39.99  ~~$59.99~~  -33%  [Ver] │
+│  🟢 GOG            $24.99  ~~$59.99~~  -58%  [Ver] │  
+│  ⚪ Xbox/PC        $59.99              —     [Ver] │
+│                                                     │
+│  📉 Precio histórico mínimo: $19.99 (Steam, 2023)  │
+└─────────────────────────────────────────────────────┘
+```
+
+**Lógica del componente (React/JS):**
+```javascript
+// Al cargar la página del juego, llamar automáticamente
+async function cargarPrecios(nombreJuego) {
+  const seccion = document.getElementById('precios-section');
+  seccion.innerHTML = '<div class="skeleton">Buscando precios...</div>';
+  
+  try {
+    const res = await fetch(`/api/deals/${encodeURIComponent(nombreJuego)}`);
+    const data = await res.json();
+    
+    if (!data.found || !data.deals.length) {
+      seccion.innerHTML = '<p class="muted">No se encontraron precios disponibles</p>';
+      return;
+    }
+    
+    // Ordenar: primero los que tienen descuento
+    const ordenados = data.deals.sort((a, b) => b.descuento - a.descuento);
+    
+    const iconos = {
+      'Steam': '🎮', 'PlayStation': '🎮', 'Xbox': '🟢',
+      'GOG': '🔵', 'Epic Games': '⚫', 'Nintendo': '🔴',
+      'Humble Store': '🟠', 'Fanatical': '🟣'
+    };
+    
+    seccion.innerHTML = `
+      <div class="precios-grid">
+        ${ordenados.map(d => `
+          <div class="precio-row ${d.enOferta ? 'en-oferta' : ''}">
+            <span class="tienda-nombre">${iconos[d.tienda] || '🛒'} ${d.tienda}</span>
+            <div class="precio-info">
+              ${d.enOferta ? `<span class="precio-original">$${d.precioOriginal}</span>` : ''}
+              <span class="precio-actual ${d.enOferta ? 'oferta' : ''}">$${d.precio}</span>
+              ${d.enOferta ? `<span class="badge-descuento">-${d.descuento}%</span>` : ''}
+            </div>
+            <a href="${d.url}" target="_blank" class="btn-ver-oferta">
+              ${d.enOferta ? '🔥 Ver oferta' : 'Ver precio'}
+            </a>
+          </div>
+        `).join('')}
+        ${data.precioHistoricoMinimo ? `
+          <div class="precio-historico">
+            📉 Precio histórico mínimo: <strong>$${data.precioHistoricoMinimo}</strong>
+          </div>
+        ` : ''}
+      </div>
+    `;
+  } catch (e) {
+    seccion.innerHTML = '<p class="muted">Error al cargar precios</p>';
+  }
+}
+```
+
+**CSS para los precios:**
+```css
+.precios-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.precio-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  transition: border-color 0.2s;
+}
+
+.precio-row.en-oferta {
+  border-color: rgba(16, 185, 129, 0.4);
+  background: rgba(16, 185, 129, 0.05);
+}
+
+.precio-row:hover { border-color: var(--border-hover); }
+
+.tienda-nombre { font-weight: 600; min-width: 140px; }
+
+.precio-info { display: flex; align-items: center; gap: 8px; }
+
+.precio-original {
+  color: var(--text-muted);
+  text-decoration: line-through;
+  font-size: 0.85rem;
+}
+
+.precio-actual { font-weight: 700; font-family: 'Orbitron', sans-serif; }
+
+.precio-actual.oferta { color: #10b981; }
+
+.badge-descuento {
+  background: rgba(16, 185, 129, 0.2);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.btn-ver-oferta {
+  background: linear-gradient(135deg, #7c3aed, #a855f7);
+  color: white;
+  border: none;
+  padding: 7px 16px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: opacity 0.2s;
+  white-space: nowrap;
+}
+
+.btn-ver-oferta:hover { opacity: 0.85; }
+
+.precio-historico {
+  padding: 10px 16px;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  text-align: center;
+  border-top: 1px solid var(--border);
+  margin-top: 4px;
+}
+```
+
+---
+
+## 3. 🔔 SECCIÓN DE OFERTAS EN LA HOME (index.tsx / index.html)
+
+Agrega una nueva sección entre el Hero y el catálogo principal:
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│  🔥 EN OFERTA AHORA                          Ver todas →     │
+├──────────────────────────────────────────────────────────────┤
+│  [img] Elden Ring        [img] GTA V          [img] RE4      │
+│  -60% en GOG             -75% en Steam        -40% en PS     │
+│  $23.99 ~~$59.99~~       $14.99 ~~$59.99~~    $29.99         │
+│  ⭐ 4.9  [Ver reseñas]   ⭐ 4.7  [Ver reseñas] ⭐ 4.8        │
+└──────────────────────────────────────────────────────────────┘
+```
+
+Scroll horizontal en mobile, grid en desktop.
+
+---
+
+## 4. 💳 SISTEMA DE SUSCRIPCIÓN (nueva página: suscripcion.html / suscripcion.tsx)
+
+### Página de planes:
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│              ✨ Elige tu plan GameReviews                    │
+│         Únete a la comunidad gamer más honesta              │
+└─────────────────────────────────────────────────────────────┘
+
+┌──────────────────┐  ┌──────────────────┐  ┌─────────────────┐
+│   🎮 GRATIS      │  │  ⭐ PRO  $4.99/m │  │ 👑 ELITE $9.99 │
+│                  │  │  ← MÁS POPULAR → │  │                 │
+│ ✅ Ver reseñas   │  │ ✅ Todo lo gratis │  │ ✅ Todo Pro     │
+│ ✅ 5 reseñas/mes │  │ ✅ Reseñas ∞     │  │ ✅ Reseñas ∞   │
+│ ✅ Lista 10 jgs  │  │ ✅ Lista ∞       │  │ ✅ Lista ∞     │
+│ ✅ 3 análisis IA │  │ ✅ IA ilimitada  │  │ ✅ IA ilimitada │
+│ ❌ Alertas ofert │  │ ✅ Alertas email │  │ ✅ Alertas SMS  │
+│ ❌ Histor. preci │  │ ✅ Historial 1yr │  │ ✅ Historial ∞  │
+│ ❌ Sin anuncios  │  │ ✅ Sin anuncios  │  │ ✅ Sin anuncios │
+│ ❌ Badge         │  │ ✅ Badge PRO ⭐  │  │ ✅ Badge 👑     │
+│ ❌ API acceso    │  │ ❌ API acceso    │  │ ✅ API pública  │
+│                  │  │                  │  │ ✅ Reporte IA   │
+│                  │  │                  │  │   mensual       │
+│ [Plan actual]    │  │ [Suscribirme]    │  │ [Suscribirme]  │
+└──────────────────┘  └──────────────────┘  └─────────────────┘
+
+💡 Pago simulado por ahora — integrar Stripe cuando estés listo
+```
+
+### Lógica del plan (localStorage por ahora):
+```javascript
+// En utils.js
+function getPlan() {
+  return localStorage.getItem('gr_plan') || 'gratis'; // 'gratis' | 'pro' | 'elite'
+}
+
+function setPlan(plan) {
+  localStorage.setItem('gr_plan', plan);
+  localStorage.setItem('gr_plan_fecha', new Date().toISOString());
+}
+
+// Límites por plan
+const LIMITES = {
+  gratis: {
+    reseñasPorMes: 5,
+    juegosEnLista: 10,
+    analisisIA: 3,
+    alertasOfertas: false,
+    sinAnuncios: false,
+    badge: null
+  },
+  pro: {
+    reseñasPorMes: Infinity,
+    juegosEnLista: Infinity,
+    analisisIA: Infinity,
+    alertasOfertas: true,
+    sinAnuncios: true,
+    badge: '⭐ PRO'
+  },
+  elite: {
+    reseñasPorMes: Infinity,
+    juegosEnLista: Infinity,
+    analisisIA: Infinity,
+    alertasOfertas: true,
+    sinAnuncios: true,
+    badge: '👑 ELITE',
+    apiAcceso: true,
+    reporteMensual: true
+  }
+};
+
+function puedeEscribirReseña() {
+  const plan = getPlan();
+  if (LIMITES[plan].reseñasPorMes === Infinity) return true;
+  
+  const reseñas = getReseñasDelMes(); // filtra por mes actual
+  return reseñas.length < LIMITES[plan].reseñasPorMes;
+}
+
+function puedeUsarIA() {
+  const plan = getPlan();
+  if (LIMITES[plan].analisisIA === Infinity) return true;
+  
+  const usos = parseInt(localStorage.getItem('gr_ia_usos_hoy') || '0');
+  return usos < LIMITES[plan].analisisIA;
+}
+```
+
+### Guardia de funciones premium:
+```javascript
+// Antes de ejecutar funciones premium, verificar plan
+function verificarPremium(feature, onSuccess) {
+  const plan = getPlan();
+  
+  if (feature === 'ia' && !puedeUsarIA()) {
+    mostrarModalUpgrade(
+      '🤖 Límite de análisis IA alcanzado',
+      'Con el plan Gratis tienes 3 análisis por día. Hazte PRO para análisis ilimitados.',
+      'pro'
+    );
+    return;
+  }
+  
+  if (feature === 'reseña' && !puedeEscribirReseña()) {
+    mostrarModalUpgrade(
+      '✍️ Límite de reseñas alcanzado',
+      'Con el plan Gratis puedes escribir 5 reseñas por mes. Hazte PRO para escribir sin límites.',
+      'pro'
+    );
+    return;
+  }
+  
+  onSuccess();
+}
+
+function mostrarModalUpgrade(titulo, descripcion, planRecomendado) {
+  // Modal con botón que lleva a /suscripcion
+  const modal = document.createElement('div');
+  modal.className = 'modal-overlay';
+  modal.innerHTML = `
+    <div class="modal-upgrade">
+      <div class="modal-icon">⚡</div>
+      <h3>${titulo}</h3>
+      <p>${descripcion}</p>
+      <a href="suscripcion.html" class="btn-upgrade">
+        Ver planes premium →
+      </a>
+      <button onclick="this.closest('.modal-overlay').remove()" class="btn-cerrar">
+        Más tarde
+      </button>
+    </div>
+  `;
+  document.body.appendChild(modal);
+}
+```
+
+---
+
+## 5. 🏷️ BADGES DE PLAN EN EL PERFIL
+
+En `perfil.tsx` / `perfil.html`, junto al nombre del usuario mostrar el badge:
+```javascript
+const plan = getPlan();
+const badges = { gratis: '', pro: '⭐ PRO', elite: '👑 ELITE' };
+
+// En el HTML del perfil:
+// <span class="badge-plan pro">${badges[plan]}</span>
+```
+
+CSS:
+```css
+.badge-plan {
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+.badge-plan.pro {
+  background: rgba(124,58,237,0.2);
+  color: #a855f7;
+  border: 1px solid rgba(124,58,237,0.4);
+}
+.badge-plan.elite {
+  background: rgba(245,158,11,0.2);
+  color: #f59e0b;
+  border: 1px solid rgba(245,158,11,0.4);
+}
+```
+
+---
+
+## 6. 🔔 ALERTAS DE OFERTAS (solo plan PRO/ELITE)
+
+En la página de cada juego, si el usuario tiene plan PRO o ELITE:
+
+```javascript
+function activarAlertaOferta(juegoId, nombreJuego) {
+  if (!['pro', 'elite'].includes(getPlan())) {
+    mostrarModalUpgrade(
+      '🔔 Alertas de ofertas',
+      'Recibe una notificación cuando este juego esté en oferta. Función exclusiva PRO.',
+      'pro'
+    );
+    return;
+  }
+  
+  const alertas = JSON.parse(localStorage.getItem('gr_alertas') || '[]');
+  const yaExiste = alertas.find(a => a.juegoId === juegoId);
+  
+  if (yaExiste) {
+    mostrarToast('🔕 Alerta desactivada', 'info');
+    localStorage.setItem('gr_alertas', JSON.stringify(alertas.filter(a => a.juegoId !== juegoId)));
+  } else {
+    alertas.push({ juegoId, nombreJuego, fechaActivada: new Date().toISOString() });
+    localStorage.setItem('gr_alertas', JSON.stringify(alertas));
+    mostrarToast('🔔 Te avisaremos cuando baje de precio', 'success');
+  }
+}
+```
+
+Botón en la página del juego (junto al botón de agregar a lista):
+```html
+<button onclick="activarAlertaOferta(${juego.id}, '${juego.nombre}')" class="btn-alerta">
+  🔔 Alertar precio
+</button>
+```
+
+---
+
+## 7. 📊 HISTORIAL DE PRECIOS (Plan PRO/ELITE)
+
+En la sección de precios del juego, si el usuario es PRO/ELITE, mostrar un mini gráfico con el historial de precios. Usar datos del endpoint de ITAD:
+
+```javascript
+// Endpoint adicional en server.js
+app.get('/api/deals/history/:gameId', async (req, res) => {
+  const { gameId } = req.params;
+  const apiKey = process.env.ITAD_API_KEY;
+  
+  const since = new Date();
+  since.setFullYear(since.getFullYear() - 1); // último año
+  
+  const res2 = await fetch(
+    `https://api.isthereanydeal.com/games/history/v2?key=${apiKey}&since=${since.toISOString()}`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify([gameId])
+    }
+  );
+  const data = await res2.json();
+  res.json(data?.[0] || {});
+});
+```
+
+Renderizar con un gráfico simple de Canvas (sin librerías externas):
+```javascript
+function dibujarHistorialPrecios(canvas, datos) {
+  // datos: array de { timestamp, price }
+  const ctx = canvas.getContext('2d');
+  // Línea de precio a lo largo del tiempo con color morado
+  // Marca el precio mínimo histórico con punto verde
+  // Si el usuario es gratis → mostrar blur + "Desbloquea con PRO"
+}
+```
+
+---
+
+## 8. 🧭 ACTUALIZAR NAVBAR
+
+Agregar en la navbar de todas las páginas:
+1. Link a "Suscripción" con icono ⭐
+2. Badge del plan actual del usuario (pequeño, junto al avatar)
+3. Indicador de ofertas activas (si hay juegos de tu lista en oferta, mostrar badge rojo con número)
+
+```html
+<!-- En el navbar -->
+<a href="suscripcion.html" class="nav-upgrade">
+  ⭐ <span id="nav-plan-badge">PRO</span>
+</a>
+```
+
+---
+
+## 9. 🔑 SECRETS A AGREGAR EN REPLIT
+
+En la sección "Secrets" de Replit, agregar:
+```
+ITAD_API_KEY = [obtener en https://isthereanydeal.com/api/]
+```
+
+La `ANTHROPIC_API_KEY` ya debe estar configurada del paso anterior.
+
+---
+
+## 10. 📦 DEPENDENCIAS ADICIONALES
+
+Si no están ya instaladas, agregar al package.json:
+```json
+"node-fetch": "^2.7.0"
+```
+
+Y ejecutar: `pnpm install` o `npm install`
+
+---
+
+## ✅ RESUMEN DE LO QUE DEBE QUEDAR FUNCIONANDO
+
+Al terminar esta actualización:
+
+1. ✅ Página de cada juego muestra precios en tiempo real de Steam, PlayStation, GOG, Xbox, etc.
+2. ✅ Home tiene sección de "En oferta ahora" con los mejores descuentos
+3. ✅ Página `/suscripcion` con 3 planes (Gratis / PRO $4.99 / Elite $9.99) — pago simulado por ahora
+4. ✅ Límites aplicados: reseñas, análisis IA, juegos en lista
+5. ✅ Modal de upgrade cuando se alcanza un límite
+6. ✅ Badge de plan en perfil y navbar
+7. ✅ Botón "Alertar precio" en cada juego (funcional para PRO/ELITE)
+8. ✅ Historial de precios en gráfico (desbloqueado para PRO/ELITE)
+9. ✅ IMPORTANTE: Todo sigue siendo solo reseñas y redirección — GameReviews NO vende juegos, solo redirige a las tiendas oficiales
+
+---
+
+## ⚠️ IMPORTANTE — LO QUE NO DEBE CAMBIAR
+
+- El diseño visual existente (colores, fuentes, animaciones)
+- El sistema de reseñas ya funcional
+- El tracker de Mi Lista
+- El ranking global
+- El perfil de usuario
+- Los datos en localStorage existentes
+
+Solo AGREGA las nuevas funcionalidades encima de lo que ya existe.
