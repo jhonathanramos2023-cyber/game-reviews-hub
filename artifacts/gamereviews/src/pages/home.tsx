@@ -1,11 +1,11 @@
 import { useState, useMemo } from "react";
+import { useLocation } from "wouter";
 import gamesData from "@/data/games.json";
 import { GameCard } from "@/components/game-card";
 import { useReviews } from "@/hooks/use-reviews";
 import { useUser } from "@/hooks/use-user";
-import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, SlidersHorizontal, Gamepad2, Users, MessageSquare } from "lucide-react";
+import { Search, SlidersHorizontal, Gamepad2, Users, MessageSquare, Dices } from "lucide-react";
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -14,10 +14,16 @@ import { TopDealsStrip } from "@/components/top-deals-strip";
 export default function Home() {
   const { reviews } = useReviews();
   const { user } = useUser();
+  const [, setLocation] = useLocation();
   const [search, setSearch] = useState("");
   const [genre, setGenre] = useState("todos");
   const [platform, setPlatform] = useState("todos");
   const [sort, setSort] = useState("rating");
+
+  const goRandom = () => {
+    const random = gamesData[Math.floor(Math.random() * gamesData.length)];
+    setLocation(`/juego/${random.id}`);
+  };
 
   // Derive stats
   const totalGames = gamesData.length;
@@ -98,16 +104,26 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="flex items-center w-full max-w-2xl mx-auto mt-8 bg-background border border-border rounded-full p-2 pl-6 shadow-lg shadow-primary/5 focus-within:border-primary/50 focus-within:ring-1 focus-within:ring-primary/50 transition-all"
+            className="flex flex-col sm:flex-row items-center w-full max-w-2xl mx-auto mt-8 gap-3"
           >
-            <Search className="h-5 w-5 text-muted-foreground mr-3" />
-            <input
-              type="text"
-              placeholder="Buscar juegos, desarrolladores..."
-              className="flex-1 bg-transparent border-none outline-none text-lg h-12"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
+            <div className="flex items-center w-full bg-background border border-border rounded-full p-2 pl-6 shadow-lg shadow-primary/5 focus-within:border-primary/50 focus-within:ring-1 focus-within:ring-primary/50 transition-all">
+              <Search className="h-5 w-5 text-muted-foreground mr-3" />
+              <input
+                type="text"
+                placeholder="Buscar juegos, desarrolladores..."
+                className="flex-1 bg-transparent border-none outline-none text-lg h-12 min-w-0"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </div>
+            <Button
+              onClick={goRandom}
+              variant="outline"
+              className="h-14 px-5 rounded-full border-primary/40 text-primary hover:bg-primary hover:text-primary-foreground gap-2 shrink-0 w-full sm:w-auto"
+            >
+              <Dices className="h-5 w-5" />
+              <span className="font-bold">Sorpréndeme</span>
+            </Button>
           </motion.div>
 
           <motion.div 

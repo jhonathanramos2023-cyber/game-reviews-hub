@@ -7,6 +7,7 @@ import { useUser } from "@/hooks/use-user";
 import { usePlan } from "@/hooks/use-plan";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { ScrollToTop } from "@/components/scroll-to-top";
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const [location] = useLocation();
@@ -105,6 +106,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <main className="container px-4 py-8 md:px-8 mx-auto max-w-7xl">
         {children}
       </main>
+
+      <ScrollToTop />
 
       {/* Bottom Tab Bar for Mobile */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-background/95 backdrop-blur h-16 flex items-center justify-around px-2 overflow-x-auto">

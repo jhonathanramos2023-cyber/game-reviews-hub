@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, Link } from "wouter";
 import gamesData from "@/data/games.json";
 import { useReviews } from "@/hooks/use-reviews";
@@ -21,7 +21,7 @@ import { GameCard } from "@/components/game-card";
 import { GameImage } from "@/components/game-image";
 import { DealsSection } from "@/components/deals-section";
 import { PriceAlertButton } from "@/components/price-alert-button";
-import { Gamepad2, Calendar, Monitor, Tag, Plus, Check, ThumbsUp, Trash2, Shield, Youtube, Star, MessageSquare } from "lucide-react";
+import { Calendar, Monitor, Tag, ThumbsUp, Trash2, Shield, Star, MessageSquare, Share2 } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function GameDetail() {
@@ -38,6 +38,41 @@ export default function GameDetail() {
   const [rating, setRating] = useState(0);
   const [reviewText, setReviewText] = useState("");
   const [recommended, setRecommended] = useState(true);
+
+  useEffect(() => {
+    if (!game) return;
+    try {
+      const raw = localStorage.getItem("gr_visitas");
+      const visitas = raw ? (JSON.parse(raw) as Record<string, number>) : {};
+      visitas[String(game.id)] = (visitas[String(game.id)] || 0) + 1;
+      localStorage.setItem("gr_visitas", JSON.stringify(visitas));
+    } catch {
+      /* localStorage may be unavailable */
+    }
+  }, [game]);
+
+  const handleShareReview = async (autor: string, texto: string, ratingValue: number) => {
+    const shareText = `${autor} le dio ${ratingValue}/5 a ${game?.nombre}: "${texto.slice(0, 120)}${texto.length > 120 ? "…" : ""}"`;
+    const shareData = {
+      title: `Reseña de ${game?.nombre} en GameReviews`,
+      text: shareText,
+      url: typeof window !== "undefined" ? window.location.href : "",
+    };
+    try {
+      if (typeof navigator !== "undefined" && "share" in navigator) {
+        await navigator.share(shareData);
+        return;
+      }
+    } catch {
+      /* user cancelled or share failed */
+    }
+    try {
+      await navigator.clipboard.writeText(`${shareText} ${shareData.url}`);
+      toast.success("Reseña copiada al portapapeles");
+    } catch {
+      toast.error("No se pudo compartir la reseña");
+    }
+  };
 
   if (!game) {
     return (
@@ -350,15 +385,26 @@ export default function GameDetail() {
                       <p className="text-foreground/90 whitespace-pre-wrap">{review.texto}</p>
                       
                       <div className="flex items-center justify-between mt-6 pt-4 border-t border-border/50">
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
-                          className={`gap-2 ${hasVoted(review.id) ? 'text-primary bg-primary/10' : 'text-muted-foreground'}`}
-                          onClick={() => handleVote(review.id)}
-                        >
-                          <ThumbsUp className="h-4 w-4" />
-                          Útil ({review.utilidad})
-                        </Button>
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            className={`gap-2 ${hasVoted(review.id) ? 'text-primary bg-primary/10' : 'text-muted-foreground'}`}
+                            onClick={() => handleVote(review.id)}
+                          >
+                            <ThumbsUp className="h-4 w-4" />
+                            Útil ({review.utilidad})
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="gap-2 text-muted-foreground"
+                            onClick={() => handleShareReview(review.autor, review.texto, review.rating)}
+                          >
+                            <Share2 className="h-4 w-4" />
+                            Compartir
+                          </Button>
+                        </div>
                         
                         {review.esPropia && (
                           <Button 

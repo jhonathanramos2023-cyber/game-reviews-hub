@@ -1,0 +1,356 @@
+# 🖼️ PROMPT — Arreglar imágenes + mejoras finales GameReviews v3
+
+NO borres nada de lo que ya funciona. Solo AGREGA y MEJORA.
+
+---
+
+## 1. 🖼️ ARREGLAR IMÁGENES CON RAWG API (GRATIS, SIN KEY)
+
+RAWG.io tiene una base de datos con imágenes de más de 500,000 juegos y su API es gratuita.
+
+### Endpoint en server.js / api-server:
+
+```javascript
+// Buscar imagen de un juego por nombre
+app.get('/api/imagen/:nombre', async (req, res) => {
+  try {
+    const nombre = encodeURIComponent(req.params.nombre);
+    // RAWG no requiere API key para búsquedas básicas
+    const response = await fetch(
+      `https://api.rawg.io/api/games?search=${nombre}&page_size=1&key=${process.env.RAWG_API_KEY || ''}`
+    );
+    const data = await response.json();
+    const juego = data.results?.[0];
+    
+    if (!juego) return res.json({ imagen: null });
+    
+    res.json({
+      imagen: juego.background_image,
+      imagenAdicional: juego.background_image_additional || null,
+      rating: juego.rating,
+      metacritic: juego.metacritic,
+      screenshots: juego.short_screenshots?.map(s => s.image) || []
+    });
+  } catch (e) {
+    res.json({ imagen: null });
+  }
+});
+
+// Obtener imágenes de múltiples juegos de una vez (para el catálogo)
+app.post('/api/imagenes/bulk', async (req, res) => {
+  try {
+    const { juegos } = req.body; // array de { id, nombre }
+    const rawgKey = process.env.RAWG_API_KEY || '';
+    
+    const resultados = await Promise.all(
+      juegos.map(async (j) => {
+        try {
+          const response = await fetch(
+            `https://api.rawg.io/api/games?search=${encodeURIComponent(j.nombre)}&page_size=1&key=${rawgKey}`
+          );
+          const data = await response.json();
+          const juego = data.results?.[0];
+          return {
+            id: j.id,
+            imagen: juego?.background_image || null,
+            imagenBanner: juego?.background_image_additional || juego?.background_image || null
+          };
+        } catch {
+          return { id: j.id, imagen: null };
+        }
+      })
+    );
+    
+    res.json(resultados);
+  } catch (e) {
+    res.json([]);
+  }
+});
+```
+
+### Agregar a Replit Secrets (opcional, aumenta límite de requests):
+```
+RAWG_API_KEY = [obtener GRATIS en https://rawg.io/apidocs — solo registrarse]
+```
+Sin la key también funciona pero con límite menor.
+
+---
+
+## 2. 🎨 COMPONENTE DE IMAGEN INTELIGENTE
+
+Reemplaza el componente de imagen actual en TODO el proyecto con este sistema:
+
+```typescript
+// src/components/SmartImage.tsx (o .jsx / .js según el proyecto)
+
+interface SmartImageProps {
+  src?: string;
+  nombre: string;
+  alt: string;
+  className?: string;
+  tipo?: 'card' | 'banner' | 'cover'; // card = cuadrada, banner = horizontal, cover = vertical
+}
+
+const imageCache = new Map<string, string>(); // cache en memoria
+
+export function SmartImage({ src, nombre, alt, className, tipo = 'card' }: SmartImageProps) {
+  const [imagenFinal, setImagenFinal] = useState(src || '');
+  const [cargando, setCargando] = useState(!src);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    if (src && !src.includes('placeholder') && !src.includes('via.placeholder')) {
+      // La imagen del JSON parece válida, intentar usarla
+      setImagenFinal(src);
+      return;
+    }
+
+    // Si no hay imagen válida, buscar en RAWG
+    const cacheKey = nombre.toLowerCase();
+    if (imageCache.has(cacheKey)) {
+      setImagenFinal(imageCache.get(cacheKey)!);
+      setCargando(false);
+      return;
+    }
+
+    setCargando(true);
+    fetch(`/api/imagen/${encodeURIComponent(nombre)}`)
+      .then(r => r.json())
+      .then(data => {
+        const img = data.imagen || '';
+        imageCache.set(cacheKey, img);
+        setImagenFinal(img);
+        setCargando(false);
+      })
+      .catch(() => {
+        setCargando(false);
+        setError(true);
+      });
+  }, [src, nombre]);
+
+  // Fallback elegante si no hay imagen
+  const Fallback = () => (
+    <div className={`image-fallback ${tipo} ${className || ''}`}
+      style={{
+        background: `linear-gradient(135deg, 
+          hsl(${nombre.charCodeAt(0) * 5 % 360}, 40%, 15%), 
+          hsl(${nombre.charCodeAt(1) * 7 % 360}, 30%, 8%))`,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: '8px'
+      }}>
+      <span style={{ fontSize: '2.5rem' }}>🎮</span>
+      <span style={{
+        fontSize: '0.75rem',
+        color: 'rgba(255,255,255,0.5)',
+        textAlign: 'center',
+        padding: '0 12px',
+        fontFamily: 'Space Grotesk'
+      }}>{nombre}</span>
+    </div>
+  );
+
+  if (cargando) return (
+    <div className={`image-skeleton ${className || ''}`} style={{
+      background: 'linear-gradient(90deg, #1a1a2e 25%, #2a2a4e 50%, #1a1a2e 75%)',
+      backgroundSize: '200% 100%',
+      animation: 'shimmer 1.5s infinite'
+    }} />
+  );
+
+  if (error || !imagenFinal) return <Fallback />;
+
+  return (
+    <img
+      src={imagenFinal}
+      alt={alt}
+      className={className}
+      onError={() => setError(true)}
+      loading="lazy"
+      style={{ objectFit: 'cover', width: '100%', height: '100%' }}
+    />
+  );
+}
+```
+
+CSS adicional:
+```css
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.image-skeleton {
+  width: 100%;
+  height: 100%;
+  min-height: 200px;
+  border-radius: inherit;
+}
+
+.image-fallback {
+  width: 100%;
+  height: 100%;
+  min-height: 200px;
+  border-radius: inherit;
+}
+```
+
+---
+
+## 3. 📸 ACTUALIZAR EL JSON CON IMÁGENES REALES
+
+Cuando arranque el servidor, hacer una sola llamada para pre-cargar las imágenes de todos los juegos del JSON y guardarlas en cache:
+
+```javascript
+// Al inicio del servidor (server.js), después de cargar juegos.json:
+async function precargarImagenes() {
+  const juegos = JSON.parse(fs.readFileSync('./data/juegos.json', 'utf8'));
+  const rawgKey = process.env.RAWG_API_KEY || '';
+  
+  console.log('🖼️ Precargando imágenes de RAWG...');
+  
+  // Procesar en grupos de 5 para no saturar la API
+  for (let i = 0; i < juegos.length; i += 5) {
+    const grupo = juegos.slice(i, i + 5);
+    await Promise.all(grupo.map(async (j) => {
+      if (j.imagen && !j.imagen.includes('placeholder')) return; // ya tiene imagen
+      
+      try {
+        const res = await fetch(
+          `https://api.rawg.io/api/games?search=${encodeURIComponent(j.nombre)}&page_size=1&key=${rawgKey}`
+        );
+        const data = await res.json();
+        if (data.results?.[0]?.background_image) {
+          j.imagen = data.results[0].background_image;
+          j.imagenBanner = data.results[0].background_image_additional || j.imagen;
+        }
+      } catch (e) {}
+    }));
+    
+    await new Promise(r => setTimeout(r, 500)); // pausa entre grupos
+  }
+  
+  // Guardar el JSON actualizado
+  fs.writeFileSync('./data/juegos.json', JSON.stringify(juegos, null, 2));
+  console.log('✅ Imágenes actualizadas en juegos.json');
+}
+
+precargarImagenes(); // llamar al inicio
+```
+
+---
+
+## 4. ✨ MEJORAS ADICIONALES QUE FALTAN
+
+### A. Página 404 personalizada
+```html
+<!-- Si alguien va a una URL que no existe -->
+<div style="text-align:center; padding: 80px 20px;">
+  <div style="font-size: 5rem;">🎮</div>
+  <h1 style="font-family: Orbitron;">ERROR 404</h1>
+  <p>Esta página no existe en el universo GameReviews</p>
+  <a href="/" class="btn-primary">Volver al inicio</a>
+</div>
+```
+
+### B. Loading screen al inicio
+```javascript
+// Mostrar pantalla de carga mientras cargan los juegos
+// Con el logo animado de GameReviews
+const LoadingScreen = () => (
+  <div style={{
+    position: 'fixed', inset: 0,
+    background: '#0d0d14',
+    display: 'flex', flexDirection: 'column',
+    alignItems: 'center', justifyContent: 'center',
+    zIndex: 9999
+  }}>
+    <div style={{ fontFamily: 'Orbitron', fontSize: '2rem', color: '#a855f7' }}>
+      🎮 GameReviews
+    </div>
+    <div style={{ marginTop: '24px', display: 'flex', gap: '8px' }}>
+      {[0,1,2].map(i => (
+        <div key={i} style={{
+          width: '8px', height: '8px',
+          borderRadius: '50%',
+          background: '#7c3aed',
+          animation: `bounce 0.6s ${i * 0.2}s infinite alternate`
+        }} />
+      ))}
+    </div>
+  </div>
+);
+```
+
+### C. Botón "Scroll to top"
+```javascript
+// Botón flotante que aparece al hacer scroll
+// Posición: abajo a la derecha, encima del footer
+// Solo visible cuando se ha scrolleado más de 300px
+```
+
+### D. Contador de visitas por juego
+```javascript
+// En localStorage, guardar cuántas veces se ve cada juego
+// Usarlo en el ranking como factor adicional: "Más vistos"
+function registrarVisita(juegoId) {
+  const visitas = JSON.parse(localStorage.getItem('gr_visitas') || '{}');
+  visitas[juegoId] = (visitas[juegoId] || 0) + 1;
+  localStorage.setItem('gr_visitas', JSON.stringify(visitas));
+}
+```
+
+### E. Modo "Descubrir" — juego aleatorio
+```javascript
+// Botón en la home: "🎲 Juego aleatorio"
+// Lleva a un juego random del catálogo
+// Ideal para cuando no sabes qué jugar
+function juegoAleatorio() {
+  const juegos = obtenerTodosLosJuegos();
+  const random = juegos[Math.floor(Math.random() * juegos.length)];
+  window.location.href = `/juego/${random.id}`;
+}
+```
+
+### F. Compartir reseña
+```javascript
+// Botón en cada reseña: "Compartir"
+// Usa la Web Share API nativa del navegador
+async function compartirReseña(juegoNombre, texto, rating) {
+  if (navigator.share) {
+    await navigator.share({
+      title: `Mi reseña de ${juegoNombre} en GameReviews`,
+      text: `Le di ${rating}⭐: "${texto.slice(0, 100)}..."`,
+      url: window.location.href
+    });
+  } else {
+    // Fallback: copiar URL al clipboard
+    navigator.clipboard.writeText(window.location.href);
+    mostrarToast('🔗 URL copiada al portapapeles');
+  }
+}
+```
+
+---
+
+## 5. 🎯 PRIORIDAD DE IMPLEMENTACIÓN
+
+Implementa en este orden:
+1. **Primero**: Endpoint `/api/imagen/:nombre` + `precargarImagenes()` al iniciar servidor
+2. **Segundo**: Componente `SmartImage` reemplazando todas las `<img>` del proyecto
+3. **Tercero**: Mejora D (contador visitas) y E (juego aleatorio) — son rápidas
+4. **Cuarto**: Mejora F (compartir reseña)
+5. **Quinto**: Loading screen y página 404
+6. **Último**: Botón scroll to top
+
+---
+
+## ⚠️ IMPORTANTE
+
+- NO cambiar el diseño visual existente
+- NO tocar el sistema de reseñas, carrito de alertas, ni suscripción
+- El SmartImage debe funcionar igual en mobile y desktop
+- Las imágenes deben cargarse con `loading="lazy"` para mejor rendimiento
+- Si RAWG no encuentra un juego, el fallback con gradiente y emoji debe verse elegante, no roto
