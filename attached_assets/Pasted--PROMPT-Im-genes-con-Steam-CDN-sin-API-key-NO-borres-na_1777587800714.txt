@@ -1,0 +1,279 @@
+# 🖼️ PROMPT — Imágenes con Steam CDN (sin API key)
+
+NO borres nada. NO cambies el diseño. NO toques el sistema de reseñas, suscripción, ni precios.
+SOLO actualiza las imágenes de los juegos usando Steam CDN que es 100% público y gratuito.
+
+---
+
+## LO QUE HAY QUE HACER
+
+Las imágenes de Steam CDN funcionan así:
+```
+https://cdn.cloudflare.steamstatic.com/steam/apps/[STEAM_APP_ID]/header.jpg        ← banner horizontal
+https://cdn.cloudflare.steamstatic.com/steam/apps/[STEAM_APP_ID]/library_600x900.jpg ← cover vertical
+https://cdn.cloudflare.steamstatic.com/steam/apps/[STEAM_APP_ID]/ss_1.jpg           ← screenshot
+```
+
+No necesitan API key, son URLs públicas que funcionan siempre.
+
+---
+
+## PASO 1 — Actualizar juegos.json con Steam IDs e imágenes reales
+
+Reemplaza las imágenes del archivo `data/juegos.json` (o donde esté el JSON de juegos)
+con estas URLs de Steam CDN. Aquí están los Steam IDs de cada juego:
+
+```json
+[
+  {
+    "id": 1,
+    "nombre": "God of War Ragnarök",
+    "steamId": 2322010,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/2322010/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/2322010/header.jpg"
+  },
+  {
+    "id": 2,
+    "nombre": "FIFA 25",
+    "steamId": 2669320,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/2669320/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/2669320/header.jpg"
+  },
+  {
+    "id": 3,
+    "nombre": "The Legend of Zelda: Tears of the Kingdom",
+    "steamId": null,
+    "imagen": "https://upload.wikimedia.org/wikipedia/en/4/4e/TotK_box_art.jpg",
+    "imagenBanner": "https://upload.wikimedia.org/wikipedia/en/4/4e/TotK_box_art.jpg"
+  },
+  {
+    "id": 4,
+    "nombre": "Call of Duty: Black Ops 6",
+    "steamId": 2933620,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/2933620/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/2933620/header.jpg"
+  },
+  {
+    "id": 5,
+    "nombre": "Elden Ring",
+    "steamId": 1245620,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/1245620/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/1245620/header.jpg"
+  },
+  {
+    "id": 6,
+    "nombre": "Resident Evil 4 Remake",
+    "steamId": 2050650,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/2050650/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/2050650/header.jpg"
+  },
+  {
+    "id": 7,
+    "nombre": "Gran Turismo 7",
+    "steamId": null,
+    "imagen": "https://upload.wikimedia.org/wikipedia/en/thumb/a/a2/Gran_Turismo_7_cover.jpg/220px-Gran_Turismo_7_cover.jpg",
+    "imagenBanner": "https://upload.wikimedia.org/wikipedia/en/thumb/a/a2/Gran_Turismo_7_cover.jpg/220px-Gran_Turismo_7_cover.jpg"
+  },
+  {
+    "id": 8,
+    "nombre": "Marvel's Spider-Man 2",
+    "steamId": 2460490,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/2460490/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/2460490/header.jpg"
+  },
+  {
+    "id": 9,
+    "nombre": "NBA 2K25",
+    "steamId": 2446780,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/2446780/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/2446780/header.jpg"
+  },
+  {
+    "id": 10,
+    "nombre": "Cyberpunk 2077",
+    "steamId": 1091500,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/1091500/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/1091500/header.jpg"
+  },
+  {
+    "id": 11,
+    "nombre": "Forza Horizon 5",
+    "steamId": 1551360,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/1551360/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/1551360/header.jpg"
+  },
+  {
+    "id": 12,
+    "nombre": "Silent Hill 2 Remake",
+    "steamId": 2124490,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/2124490/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/2124490/header.jpg"
+  },
+  {
+    "id": 13,
+    "nombre": "Baldur's Gate 3",
+    "steamId": 1086940,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/1086940/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/1086940/header.jpg"
+  },
+  {
+    "id": 14,
+    "nombre": "Red Dead Redemption 2",
+    "steamId": 1174180,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/1174180/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/1174180/header.jpg"
+  },
+  {
+    "id": 15,
+    "nombre": "The Witcher 3: Wild Hunt",
+    "steamId": 292030,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/292030/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/292030/header.jpg"
+  },
+  {
+    "id": 16,
+    "nombre": "GTA V",
+    "steamId": 271590,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/271590/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/271590/header.jpg"
+  },
+  {
+    "id": 17,
+    "nombre": "Hogwarts Legacy",
+    "steamId": 990080,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/990080/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/990080/header.jpg"
+  },
+  {
+    "id": 18,
+    "nombre": "Hades",
+    "steamId": 1145360,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/1145360/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/1145360/header.jpg"
+  },
+  {
+    "id": 19,
+    "nombre": "Hollow Knight",
+    "steamId": 367520,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/367520/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/367520/header.jpg"
+  },
+  {
+    "id": 20,
+    "nombre": "Stardew Valley",
+    "steamId": 413150,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/413150/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/413150/header.jpg"
+  },
+  {
+    "id": 21,
+    "nombre": "Minecraft",
+    "steamId": null,
+    "imagen": "https://upload.wikimedia.org/wikipedia/en/5/51/Minecraft_cover.png",
+    "imagenBanner": "https://upload.wikimedia.org/wikipedia/en/5/51/Minecraft_cover.png"
+  },
+  {
+    "id": 22,
+    "nombre": "Fortnite",
+    "steamId": null,
+    "imagen": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Fortnite_seasonal_logo.png/220px-Fortnite_seasonal_logo.png",
+    "imagenBanner": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Fortnite_seasonal_logo.png/220px-Fortnite_seasonal_logo.png"
+  },
+  {
+    "id": 23,
+    "nombre": "Alan Wake 2",
+    "steamId": 1874880,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/1874880/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/1874880/header.jpg"
+  },
+  {
+    "id": 24,
+    "nombre": "Final Fantasy XVI",
+    "steamId": 2515020,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/2515020/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/2515020/header.jpg"
+  },
+  {
+    "id": 25,
+    "nombre": "Street Fighter 6",
+    "steamId": 1737010,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/1737010/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/1737010/header.jpg"
+  },
+  {
+    "id": 26,
+    "nombre": "Mortal Kombat 1",
+    "steamId": 1971870,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/1971870/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/1971870/header.jpg"
+  },
+  {
+    "id": 27,
+    "nombre": "Starfield",
+    "steamId": 1716740,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/1716740/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/1716740/header.jpg"
+  },
+  {
+    "id": 28,
+    "nombre": "Disco Elysium",
+    "steamId": 632470,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/632470/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/632470/header.jpg"
+  },
+  {
+    "id": 29,
+    "nombre": "Celeste",
+    "steamId": 504230,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/504230/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/504230/header.jpg"
+  },
+  {
+    "id": 30,
+    "nombre": "Zelda: Breath of the Wild",
+    "steamId": null,
+    "imagen": "https://upload.wikimedia.org/wikipedia/en/c/c6/Breath_of_the_Wild_Box_Art.jpg",
+    "imagenBanner": "https://upload.wikimedia.org/wikipedia/en/c/c6/Breath_of_the_Wild_Box_Art.jpg"
+  }
+]
+```
+
+---
+
+## PASO 2 — Actualizar el componente SmartImage
+
+Modifica el componente de imagen existente para que use esta lógica de fallback en orden:
+
+```javascript
+async function obtenerImagenJuego(juego) {
+  // 1. Intentar imagen del JSON (Steam CDN)
+  if (juego.imagen && !juego.imagen.includes('placeholder')) {
+    return juego.imagen;
+  }
+
+  // 2. Si tiene steamId, construir URL de Steam CDN
+  if (juego.steamId) {
+    return `https://cdn.cloudflare.steamstatic.com/steam/apps/${juego.steamId}/library_600x900.jpg`;
+  }
+
+  // 3. Fallback: gradiente elegante con nombre del juego
+  return null; // el componente mostrará el fallback visual
+}
+```
+
+---
+
+## PASO 3 — Para juegos sin Steam (Nintendo exclusivos, etc.)
+
+Los juegos que tienen `steamId: null` usan URLs de Wikipedia que son públicas.
+Si alguna URL de Wikipedia falla, el fallback con gradiente se activa automáticamente.
+
+---
+
+## ⚠️ IMPORTANTE
+
+- NO eliminar el sistema de fallback con gradiente que ya existe
+- NO tocar reseñas, ranking, suscripción, precios ni ninguna otra función
+- Solo actualizar el campo `imagen` e `imagenBanner` en el JSON
+- Mantener todos los demás campos del JSON exactamente igual (precio, descripción, categoría, etc.)
+- Después de actualizar el JSON, hacer screenshot para verificar que las imágenes cargan
