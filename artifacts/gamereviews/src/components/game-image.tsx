@@ -27,6 +27,8 @@ function looksValid(src: string | undefined): boolean {
   if (!src) return false;
   if (src.includes("placeholder")) return false;
   if (src.includes("via.placeholder")) return false;
+  if (src.includes("wikipedia.org")) return false;
+  if (src.includes("wikimedia.org")) return false;
   return /^https?:\/\//.test(src);
 }
 
