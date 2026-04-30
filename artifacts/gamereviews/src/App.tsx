@@ -14,6 +14,7 @@ import Ranking from "@/pages/ranking";
 import MyList from "@/pages/my-list";
 import Profile from "@/pages/profile";
 import Subscription from "@/pages/subscription";
+import Admin from "@/pages/admin";
 
 const queryClient = new QueryClient();
 
@@ -26,6 +27,7 @@ function Router() {
       <Route path="/mi-lista" component={MyList} />
       <Route path="/perfil" component={Profile} />
       <Route path="/suscripcion" component={Subscription} />
+      <Route path="/admin" component={Admin} />
       <Route component={NotFound} />
     </Switch>
   );

@@ -1,19 +1,85 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useLocation } from "wouter";
 import gamesData from "@/data/games.json";
 import { GameCard } from "@/components/game-card";
 import { useReviews } from "@/hooks/use-reviews";
 import { useUser } from "@/hooks/use-user";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, SlidersHorizontal, Gamepad2, Users, MessageSquare, Dices } from "lucide-react";
-import { motion } from "framer-motion";
+import { Search, SlidersHorizontal, Gamepad2, Users, MessageSquare, Dices, Bot, Newspaper, Zap } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { TopDealsStrip } from "@/components/top-deals-strip";
+import { GameImage } from "@/components/game-image";
+
+const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
+
+interface AgenteJuego {
+  id: number;
+  nombre: string;
+  slug: string;
+  descripcionCorta: string;
+  imagen: string;
+  generos: string[];
+  plataformas: string[];
+  rating: number;
+  precio: number;
+  fechaAgregado: string;
+}
+
+interface Noticia {
+  id: string;
+  titulo: string;
+  resumen: string;
+  categoria: string;
+  urgente: boolean;
+  fecha: string;
+}
+
+function useAgenteData() {
+  const [juegos, setJuegos] = useState<AgenteJuego[]>([]);
+  const [noticias, setNoticias] = useState<Noticia[]>([]);
+  const [lastRun, setLastRun] = useState<string | null>(null);
+
+  useEffect(() => {
+    void (async () => {
+      try {
+        const [jRes, nRes, sRes] = await Promise.all([
+          fetch(`${BASE}/api/agente/juegos`),
+          fetch(`${BASE}/api/agente/noticias`),
+          fetch(`${BASE}/api/agente/status`),
+        ]);
+        const jData = (await jRes.json()) as { juegosDe24h: AgenteJuego[] };
+        const nData = (await nRes.json()) as { noticias: Noticia[] };
+        const sData = (await sRes.json()) as { ultimaEjecucion: string | null };
+        setJuegos(jData.juegosDe24h ?? []);
+        setNoticias(nData.noticias ?? []);
+        setLastRun(sData.ultimaEjecucion ?? null);
+      } catch {
+        /* silently skip if agent API not ready */
+      }
+    })();
+  }, []);
+
+  return { juegos, noticias, lastRun };
+}
+
+function timeAgo(iso: string | null): string {
+  if (!iso) return "";
+  const diff = Date.now() - new Date(iso).getTime();
+  const h = Math.floor(diff / 3600000);
+  const m = Math.floor((diff % 3600000) / 60000);
+  if (h > 23) return `hace ${Math.floor(h / 24)} día(s)`;
+  if (h > 0) return `hace ${h}h`;
+  if (m > 0) return `hace ${m} min`;
+  return "hace un momento";
+}
 
 export default function Home() {
   const { reviews } = useReviews();
   const { user } = useUser();
+  const { juegos: juegosDe24h, noticias, lastRun } = useAgenteData();
+  const hasAgenteContent = juegosDe24h.length > 0 || noticias.length > 0;
   const [, setLocation] = useLocation();
   const [search, setSearch] = useState("");
   const [genre, setGenre] = useState("todos");
@@ -158,6 +224,119 @@ export default function Home() {
       </section>
 
       <TopDealsStrip />
+
+      {/* Novedades de Hoy — AI Agent Section */}
+      <AnimatePresence>
+        {hasAgenteContent && (
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            className="space-y-6"
+          >
+            <div className="flex items-center justify-between flex-wrap gap-2">
+              <div className="flex items-center gap-3">
+                <div className="relative">
+                  <Bot className="w-6 h-6 text-primary" />
+                  <span className="absolute -top-1 -right-1 flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-primary" />
+                  </span>
+                </div>
+                <h2 className="text-2xl font-display font-bold">Novedades de Hoy</h2>
+                {lastRun && (
+                  <Badge variant="outline" className="border-primary/30 text-primary text-xs">
+                    🤖 Actualizado {timeAgo(lastRun)}
+                  </Badge>
+                )}
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setLocation("/admin")}
+                className="text-muted-foreground hover:text-primary text-xs gap-1"
+              >
+                <Zap className="w-3 h-3" />
+                Panel IA
+              </Button>
+            </div>
+
+            {/* Noticias */}
+            {noticias.length > 0 && (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {noticias.map((n) => (
+                  <motion.div
+                    key={n.id}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="bg-card/60 border border-border rounded-xl p-4 space-y-2 hover:border-primary/30 transition-colors"
+                  >
+                    <div className="flex items-center gap-2">
+                      <Newspaper className="w-4 h-4 text-primary shrink-0" />
+                      <Badge
+                        variant="outline"
+                        className={`text-[10px] border-primary/30 ${
+                          n.urgente ? "text-red-400 border-red-400/30" : "text-primary"
+                        }`}
+                      >
+                        {n.urgente ? "🔴 URGENTE" : n.categoria}
+                      </Badge>
+                    </div>
+                    <h3 className="font-bold text-sm leading-snug">{n.titulo}</h3>
+                    <p className="text-xs text-muted-foreground leading-relaxed">{n.resumen}</p>
+                  </motion.div>
+                ))}
+              </div>
+            )}
+
+            {/* Juegos nuevos del agente */}
+            {juegosDe24h.length > 0 && (
+              <div>
+                <p className="text-sm text-muted-foreground mb-4 flex items-center gap-2">
+                  <Bot className="w-4 h-4 text-primary" />
+                  Claude seleccionó y describió estos juegos automáticamente hoy
+                </p>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                  {juegosDe24h.map((juego, i) => (
+                    <motion.div
+                      key={juego.id}
+                      initial={{ opacity: 0, scale: 0.92 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: i * 0.07 }}
+                      className="group relative rounded-xl overflow-hidden border border-border hover:border-primary/50 transition-all bg-card cursor-pointer"
+                    >
+                      <div className="absolute top-2 left-2 z-10">
+                        <Badge className="bg-primary text-primary-foreground text-[10px] px-1.5 py-0.5 font-bold">
+                          NUEVO
+                        </Badge>
+                      </div>
+                      <div className="aspect-[3/4] relative">
+                        <GameImage
+                          src={juego.imagen}
+                          alt={juego.nombre}
+                          fallbackTitle={juego.nombre}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <div className="p-3 space-y-1">
+                        <h4 className="font-bold text-xs leading-snug line-clamp-2">{juego.nombre}</h4>
+                        <p className="text-muted-foreground text-[10px] line-clamp-2">{juego.descripcionCorta}</p>
+                        <div className="flex flex-wrap gap-1 mt-1">
+                          {juego.generos.slice(0, 2).map((g) => (
+                            <Badge key={g} variant="secondary" className="text-[9px] px-1 py-0">
+                              {g}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </motion.section>
+        )}
+      </AnimatePresence>
 
       {/* Filters & Grid */}
       <section id="catalog" className="space-y-6">

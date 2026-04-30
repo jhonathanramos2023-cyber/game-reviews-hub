@@ -9,7 +9,7 @@ This is a pnpm monorepo with two artifacts:
 - `artifacts/gamereviews` — React + Vite frontend (the actual app)
 - `artifacts/api-server` — Express server that proxies AI streaming requests to Anthropic Claude
 
-All user data (profile, game list, reviews, votes) is persisted in browser **localStorage**. Game catalog is a static JSON file. The backend exists only to proxy the Anthropic AI streaming endpoint so the API key stays server-side.
+All user data (profile, game list, reviews, votes) is persisted in browser **localStorage**. Game catalog is a static JSON file. The backend proxies Anthropic AI streaming, RAWG image lookups, ITAD deal prices, and runs an autonomous AI agent that updates the catalog daily.
 
 ### Workflows
 
@@ -48,7 +48,15 @@ All user data (profile, game list, reviews, votes) is persisted in browser **loc
 
 - Express + drizzle-orm scaffold (DB scaffold present but unused — no migrations needed)
 - `POST /api/ai/stream` — SSE endpoint accepting `{ system, prompt }` and streaming Anthropic Claude `claude-sonnet-4-6` deltas as `data: {"content":"..."}` events, ending with `data: {"done":true}`
+- `GET /api/agente/status` — returns agent status, last/next run times, 7-day stats, last 50 log lines
+- `POST /api/agente/run` — triggers a manual agent run (fetches RAWG trending → Claude curation → JSON update)
+- `GET /api/agente/juegos` — all agent-added games + last-24h subset
+- `GET /api/agente/noticias` — today's AI-generated news items
 - `GET /api/healthz` — health check
+
+### Autonomous AI Agent (`artifacts/api-server/src/agent/`)
+- `agente.ts` — core logic: fetches RAWG trending, calls Claude Sonnet to curate 3 games and generate Spanish descriptions + news, writes to `data/juegos-agente.json` and `data/noticias.json`, appends to `logs/agente.log`
+- `agenteCron.ts` — schedules the agent to run every day at 6am UTC using node-cron
 
 The AI client lives in `lib/integrations-anthropic-ai/` and is exposed as `@workspace/integrations-anthropic-ai`. It reads `AI_INTEGRATIONS_ANTHROPIC_BASE_URL` and `AI_INTEGRATIONS_ANTHROPIC_API_KEY` from the environment (set by the Anthropic Replit integration).
 

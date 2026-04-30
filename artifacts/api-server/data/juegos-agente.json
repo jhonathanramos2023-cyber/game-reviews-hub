@@ -1,0 +1,97 @@
+[
+  {
+    "id": 1777591325915,
+    "nombre": "Heroes of Might & Magic: Olden Era",
+    "slug": "heroes-of-might-magic-olden-era",
+    "descripcion": "La legendaria saga de estrategia por turnos regresa con una entrega que explora los orígenes del universo de Might & Magic como nunca antes. Construye tu ejército, conquista territorios y desata el poder de criaturas míticas en batallas épicas que pondrán a prueba cada decisión táctica que tomes.",
+    "descripcionCorta": "La estrategia por turnos más icónica vuelve con todo.",
+    "generos": [
+      "Estrategia"
+    ],
+    "plataformas": [
+      "PC"
+    ],
+    "etiquetas": [
+      "estrategia por turnos",
+      "fantasía épica",
+      "construcción de ejércitos",
+      "mapas de campaña",
+      "criaturas míticas"
+    ],
+    "porQueDestaca": "El regreso de una de las franquicias de estrategia más queridas de la historia es el evento del año para los fanáticos del género en toda Latinoamérica.",
+    "imagen": "https://media.rawg.io/media/screenshots/69e/69ece38d22dcc1c44de7ddb7901a1a41.jpg",
+    "imagenBanner": "https://media.rawg.io/media/screenshots/69e/69ece38d22dcc1c44de7ddb7901a1a41.jpg",
+    "rawgId": 987698,
+    "metacritic": null,
+    "fechaLanzamiento": "2026-04-30",
+    "rating": 0,
+    "precio": 39.99,
+    "desarrollador": "Limbic Entertainment",
+    "agregadoPorAgente": true,
+    "fechaAgregado": "2026-04-30T23:22:05.915Z"
+  },
+  {
+    "id": 1777591325916,
+    "nombre": "Invincible VS",
+    "slug": "invincible-vs",
+    "descripcion": "El universo del cómic y la aclamada serie animada de Invincible llega a los juegos de pelea con un título que promete enfrentamientos brutales entre sus personajes más icónicos. Elige a tu héroe o villano favorito y demuestra quién es el más poderoso en combates frenéticos llenos de poder y acción.",
+    "descripcionCorta": "Peleas brutales con los héroes de Invincible.",
+    "generos": [
+      "Pelea"
+    ],
+    "plataformas": [
+      "PC",
+      "PlayStation 5",
+      "Xbox Series S/X"
+    ],
+    "etiquetas": [
+      "pelea",
+      "superhéroes",
+      "multijugador",
+      "cómics",
+      "acción frenética"
+    ],
+    "porQueDestaca": "Con la popularidad explosiva de la serie animada, Invincible VS llega para convertirse en el juego de pelea más esperado por los fans del género en este 2026.",
+    "imagen": "https://media.rawg.io/media/screenshots/fdf/fdfec2a343d751fec655f551146976cb.jpg",
+    "imagenBanner": "https://media.rawg.io/media/screenshots/fdf/fdfec2a343d751fec655f551146976cb.jpg",
+    "rawgId": 1015414,
+    "metacritic": null,
+    "fechaLanzamiento": "2026-04-30",
+    "rating": 0,
+    "precio": 49.99,
+    "desarrollador": "Skybound Games",
+    "agregadoPorAgente": true,
+    "fechaAgregado": "2026-04-30T23:22:05.915Z"
+  },
+  {
+    "id": 1777591325917,
+    "nombre": "Industria 2",
+    "slug": "industria-2",
+    "descripcion": "La secuela del shooter en primera persona ambientado en una Europa alternativa regresa con nuevos escenarios, armas y una narrativa más profunda que combina acción trepidante con una historia envolvente. Explora entornos únicos llenos de detalles, resuelve los misterios de un mundo en guerra y sobrevive usando cada recurso a tu disposición.",
+    "descripcionCorta": "FPS narrativo con acción intensa en mundo alternativo.",
+    "generos": [
+      "Acción"
+    ],
+    "plataformas": [
+      "PC"
+    ],
+    "etiquetas": [
+      "FPS",
+      "historia profunda",
+      "armas",
+      "exploración",
+      "ciencia ficción alternativa"
+    ],
+    "porQueDestaca": "Industria 2 apuesta por una experiencia single-player con peso narrativo en un mercado saturado de shooters multijugador, siendo una propuesta refrescante para los amantes del género.",
+    "imagen": "https://media.rawg.io/media/games/98d/98d30eda32c6bc5f4468092cef226a89.jpg",
+    "imagenBanner": "https://media.rawg.io/media/games/98d/98d30eda32c6bc5f4468092cef226a89.jpg",
+    "rawgId": 978836,
+    "metacritic": null,
+    "fechaLanzamiento": "2026-04-29",
+    "rating": 0,
+    "precio": 24.99,
+    "desarrollador": "Bleakmill",
+    "agregadoPorAgente": true,
+    "fechaAgregado": "2026-04-30T23:22:05.915Z"
+  }
+]

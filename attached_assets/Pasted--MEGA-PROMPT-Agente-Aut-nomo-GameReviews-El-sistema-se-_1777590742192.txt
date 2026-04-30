@@ -1,0 +1,251 @@
+# 🤖 MEGA PROMPT — Agente Autónomo GameReviews
+# El sistema se actualiza SOLO cada 24 horas con IA
+
+---
+
+## OBJETIVO
+Construir un agente autónomo que corra en segundo plano y actualice GameReviews automáticamente cada día sin que el programador toque nada. La IA decide qué juegos agregar, genera las descripciones, obtiene las imágenes y actualiza la base de datos sola.
+
+---
+
+## LO QUE VA A HACER EL AGENTE CADA 24 HORAS
+
+1. Consultar RAWG API → detectar juegos nuevos o trending de las últimas 24h
+2. Consultar ITAD API → detectar juegos que entraron en oferta
+3. Pasarle esa data cruda a Claude → Claude genera descripciones, análisis y decide si vale la pena agregar el juego
+4. Actualizar automáticamente `data/juegos.json` con los juegos nuevos
+5. Crear un archivo `data/noticias.json` con novedades del día
+6. Loggear todo en `logs/agente.log` con timestamp
+
+---
+
+## ARQUITECTURA TÉCNICA
+
+### Nuevo archivo: `server/agente.ts`
+Este es el cerebro del agente. Debe hacer lo siguiente:
+
+```typescript
+// Corre cada 24 horas con node-cron
+// Schedule: '0 6 * * *' (6am todos los días)
+
+async function runAgente() {
+  // PASO 1: Obtener juegos trending de RAWG
+  const trendingGames = await fetchFromRAWG('/games', {
+    ordering: '-added',
+    dates: `${yesterday},${today}`,
+    page_size: 20
+  });
+
+  // PASO 2: Para cada juego nuevo, pedirle a Claude que evalúe si vale la pena
+  const prompt = `
+    Eres el editor de GameReviews, una plataforma de reseñas de videojuegos.
+    
+    Aquí hay ${trendingGames.length} juegos nuevos/trending de hoy:
+    ${JSON.stringify(trendingGames, null, 2)}
+    
+    Tu tarea:
+    1. Selecciona máximo 3 juegos que valgan la pena agregar a la plataforma
+    2. Para cada uno genera:
+       - descripcion: 2 oraciones atractivas en español
+       - descripcionCorta: 1 frase de máximo 10 palabras
+       - genero: array de géneros en español
+       - plataformas: array de plataformas
+       - etiquetas: array de 5 tags relevantes
+       - porQueDestaca: 1 oración de por qué este juego es notable
+    3. Devuelve SOLO un JSON array con los juegos seleccionados y sus campos generados
+    
+    Formato de respuesta (SOLO JSON, sin texto extra):
+    [
+      {
+        "nombre": "...",
+        "slug": "...",
+        "descripcion": "...",
+        "descripcionCorta": "...",
+        "genero": [...],
+        "plataformas": [...],
+        "etiquetas": [...],
+        "porQueDestaca": "...",
+        "imagen": "url de rawg",
+        "imagenBanner": "url de rawg",
+        "rawgId": 123,
+        "metacritic": 85,
+        "fechaLanzamiento": "2025-01-01"
+      }
+    ]
+  `;
+
+  const claudeResponse = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': process.env.ANTHROPIC_API_KEY,
+      'anthropic-version': '2023-06-01'
+    },
+    body: JSON.stringify({
+      model: 'claude-opus-4-5',
+      max_tokens: 2000,
+      messages: [{ role: 'user', content: prompt }]
+    })
+  });
+
+  // PASO 3: Parsear respuesta y agregar al JSON
+  const nuevosJuegos = JSON.parse(claudeResponse.content[0].text);
+  
+  // PASO 4: Leer juegos.json actual, agregar nuevos, guardar
+  const juegosActuales = await readJSON('data/juegos.json');
+  const juegosActualizados = [...juegosActuales, ...nuevosJuegos.map((j, i) => ({
+    ...j,
+    id: juegosActuales.length + i + 1,
+    rating: 0,
+    reseñas: [],
+    precio: 59.99,
+    dlcs: [],
+    skins: [],
+    agregadoPorAgente: true,
+    fechaAgregado: new Date().toISOString()
+  }))];
+  
+  await writeJSON('data/juegos.json', juegosActualizados);
+
+  // PASO 5: Generar noticias del día con Claude
+  const noticiasPrompt = `
+    Basándote en estos juegos trending de hoy: ${JSON.stringify(trendingGames.slice(0, 5))}
+    
+    Genera 3 noticias cortas de gaming para mostrar en la sección de novedades de GameReviews.
+    Cada noticia debe ser relevante, atractiva y en español.
+    
+    Devuelve SOLO JSON:
+    [
+      {
+        "titulo": "...",
+        "resumen": "2 oraciones máximo",
+        "categoria": "Lanzamiento|Actualización|Oferta|Comunidad",
+        "urgente": false
+      }
+    ]
+  `;
+
+  // ... mismo proceso con Claude para noticias
+  
+  // PASO 6: Log
+  await appendLog(`[${new Date().toISOString()}] Agente completado. ${nuevosJuegos.length} juegos agregados.`);
+}
+```
+
+---
+
+## NUEVO ENDPOINT EN server/routes.ts
+
+```typescript
+// GET /api/agente/status
+// Muestra el log del agente y cuándo corrió por última vez
+router.get('/api/agente/status', (req, res) => {
+  const log = readFileSync('logs/agente.log', 'utf-8');
+  res.json({ 
+    ultimaEjecucion: getLastRunTime(),
+    proximaEjecucion: getNextRunTime(),
+    log: log.split('\n').slice(-20) // últimas 20 líneas
+  });
+});
+
+// POST /api/agente/run
+// Ejecuta el agente manualmente (solo para admin)
+router.post('/api/agente/run', async (req, res) => {
+  await runAgente();
+  res.json({ success: true, mensaje: 'Agente ejecutado manualmente' });
+});
+```
+
+---
+
+## NUEVA SECCIÓN EN LA UI: Panel de Control del Agente
+
+Agrega una página `/admin` con este panel visual:
+
+### Diseño del panel:
+- Fondo oscuro, tema cyberpunk/matrix — letras verdes sobre negro
+- Título: "🤖 Centro de Control — Agente IA"
+- Muestra en tiempo real:
+  - Estado del agente: ACTIVO / INACTIVO (badge verde/rojo parpadeante)
+  - Última ejecución: "Hace 3 horas"
+  - Próxima ejecución: "En 21 horas"
+  - Juegos agregados hoy: número con animación counter
+  - Log en vivo con scroll automático (estilo terminal)
+- Botón "▶ Ejecutar Ahora" para correr el agente manualmente
+- Gráfico de los últimos 7 días: cuántos juegos se agregaron cada día
+
+---
+
+## NUEVA SECCIÓN EN INDEX: "Agregado Hoy por la IA"
+
+En la página principal, agrega una sección justo después del hero:
+
+```html
+<!-- Solo visible si hay juegos agregados en las últimas 24h -->
+<section class="seccion-agente">
+  <div class="badge-agente">🤖 Actualizado automáticamente hace 2 horas</div>
+  <h2>Novedades de Hoy</h2>
+  <!-- Cards de juegos nuevos con badge "NUEVO" -->
+  <!-- Cards de noticias generadas por IA -->
+</section>
+```
+
+---
+
+## DEPENDENCIAS A INSTALAR
+
+```bash
+npm install node-cron
+```
+
+node-cron ya viene con el stack de Node/Express, solo necesita instalarse.
+
+---
+
+## VARIABLES DE ENTORNO (Secrets en Replit)
+
+Las que ya tienes:
+- `ANTHROPIC_API_KEY` ✅
+- `RAWG_API_KEY` ✅  
+- `ITAD_API_KEY` ✅
+
+No necesitas ninguna nueva.
+
+---
+
+## ARCHIVOS NUEVOS A CREAR
+
+```
+server/
+  agente.ts          ← cerebro del agente
+  agenteCron.ts      ← configura el schedule de 24h
+logs/
+  agente.log         ← historial de ejecuciones
+data/
+  noticias.json      ← noticias generadas por IA (array vacío inicial)
+client/
+  pages/
+    admin.tsx         ← panel de control visual
+```
+
+---
+
+## INSTRUCCIONES IMPORTANTES
+
+1. **NO borres nada** del código existente
+2. El agente corre en segundo plano — no afecta el rendimiento del sitio
+3. Si el agente falla (API caída, etc.), loggea el error y continúa — nunca crashea el servidor
+4. Los juegos agregados por el agente tienen `agregadoPorAgente: true` para distinguirlos
+5. El panel `/admin` no necesita autenticación por ahora — es un proyecto de portafolio
+6. Después de implementar, ejecuta el agente manualmente una vez con el botón del panel para verificar que funciona
+7. Muéstrame un screenshot del panel de admin y de la sección "Novedades de Hoy" en la home cuando termines
+
+---
+
+## RESULTADO ESPERADO
+
+- La plataforma se actualiza sola cada día a las 6am
+- Claude decide qué juegos son relevantes y genera el contenido
+- El programador no toca nada — todo es automático
+- Hay un panel visual para monitorear y controlar el agente
+- Los usuarios ven contenido fresco cada día sin intervención manual
