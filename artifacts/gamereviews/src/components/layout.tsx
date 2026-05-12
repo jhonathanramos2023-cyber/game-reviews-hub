@@ -109,6 +109,21 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
       <ScrollToTop />
 
+      {/* Legal Footer */}
+      <footer className="border-t border-border/40 bg-background/80 mt-8 py-6 px-4 md:px-8 pb-20 md:pb-6">
+        <div className="container mx-auto max-w-7xl space-y-2">
+          <p className="text-xs text-muted-foreground leading-relaxed text-center">
+            GameReviews Hub es una plataforma de reseñas independiente. No estamos afiliados con PlayStation, Xbox, Nintendo, Steam, Epic Games ni ninguna otra plataforma. Los enlaces te redirigen a las tiendas oficiales de cada plataforma.
+          </p>
+          <p className="text-xs text-muted-foreground text-center">
+            Las imágenes y marcas pertenecen a sus respectivos dueños. Los precios son provistos por{" "}
+            <a href="https://isthereanydeal.com" target="_blank" rel="noopener noreferrer" className="underline hover:text-primary transition-colors">
+              IsThereAnyDeal
+            </a>.
+          </p>
+        </div>
+      </footer>
+
       {/* Bottom Tab Bar for Mobile */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-background/95 backdrop-blur h-16 flex items-center justify-around px-2 overflow-x-auto">
         {navLinks.map((link) => {

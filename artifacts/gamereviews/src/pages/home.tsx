@@ -102,10 +102,19 @@ export default function Home() {
     return Array.from(new Set(all)).sort();
   }, []);
 
-  const platforms = useMemo(() => {
-    const all = gamesData.flatMap(g => g.plataformas);
-    return Array.from(new Set(all)).sort();
+  const platformCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    gamesData.forEach((g) => {
+      g.plataformas.forEach((p: string) => {
+        counts[p] = (counts[p] ?? 0) + 1;
+      });
+    });
+    return counts;
   }, []);
+
+  const platforms = useMemo(() => {
+    return Object.keys(platformCounts).sort();
+  }, [platformCounts]);
 
   // Filter and sort games
   const filteredGames = useMemo(() => {
@@ -113,9 +122,12 @@ export default function Home() {
 
     if (search) {
       const s = search.toLowerCase();
-      result = result.filter(g => 
-        g.nombre.toLowerCase().includes(s) || 
-        g.desarrollador.toLowerCase().includes(s)
+      result = result.filter(g =>
+        g.nombre.toLowerCase().includes(s) ||
+        g.desarrollador.toLowerCase().includes(s) ||
+        g.generos.some((gen: string) => gen.toLowerCase().includes(s)) ||
+        g.plataformas.some((p: string) => p.toLowerCase().includes(s)) ||
+        (g.tags ?? []).some((t: string) => t.toLowerCase().includes(s))
       );
     }
 
@@ -366,7 +378,9 @@ export default function Home() {
               <SelectContent>
                 <SelectItem value="todos">Todas las plataformas</SelectItem>
                 {platforms.map(p => (
-                  <SelectItem key={p} value={p}>{p}</SelectItem>
+                  <SelectItem key={p} value={p}>
+                    {p} <span className="text-muted-foreground text-xs ml-1">({platformCounts[p] ?? 0})</span>
+                  </SelectItem>
                 ))}
               </SelectContent>
             </Select>

@@ -1,0 +1,788 @@
+# 🚀 PROMPT FINAL — GameReviews Hub v4 (Versión para Publicar)
+
+Actualiza GameReviews Hub con todas estas mejoras. NO borres nada que ya funcione.
+Este es el prompt definitivo antes de publicar oficialmente.
+
+---
+
+## 1. 🗄️ BASE DE DATOS REAL (SQLite + mejor-sqlite3)
+
+El proyecto actualmente usa localStorage, lo que significa que cada usuario solo ve SUS propias reseñas.
+Para que sea una comunidad real donde TODOS vean las reseñas de TODOS, necesitamos una base de datos real en el servidor.
+
+### Instalar:
+```bash
+npm install better-sqlite3
+npm install @types/better-sqlite3
+```
+
+### Crear archivo `server/database.js`:
+
+```javascript
+const Database = require('better-sqlite3');
+const path = require('path');
+
+const db = new Database(path.join(__dirname, 'gamereviews.db'));
+
+// Crear tablas si no existen
+db.exec(`
+  CREATE TABLE IF NOT EXISTS resenas (
+    id TEXT PRIMARY KEY,
+    juego_id INTEGER NOT NULL,
+    juego_nombre TEXT NOT NULL,
+    autor TEXT NOT NULL,
+    rating INTEGER NOT NULL CHECK(rating >= 1 AND rating <= 5),
+    texto TEXT NOT NULL,
+    recomendado INTEGER NOT NULL DEFAULT 1,
+    fecha TEXT NOT NULL,
+    utilidad INTEGER NOT NULL DEFAULT 0,
+    plataforma TEXT DEFAULT 'PC'
+  );
+
+  CREATE TABLE IF NOT EXISTS votos_utilidad (
+    resena_id TEXT NOT NULL,
+    usuario_hash TEXT NOT NULL,
+    PRIMARY KEY (resena_id, usuario_hash)
+  );
+
+  CREATE TABLE IF NOT EXISTS visitas_juego (
+    juego_id INTEGER PRIMARY KEY,
+    contador INTEGER NOT NULL DEFAULT 0,
+    ultima_visita TEXT
+  );
+
+  CREATE TABLE IF NOT EXISTS alertas_precio (
+    juego_id INTEGER NOT NULL,
+    juego_nombre TEXT NOT NULL,
+    usuario_hash TEXT NOT NULL,
+    fecha_activada TEXT NOT NULL,
+    PRIMARY KEY (juego_id, usuario_hash)
+  );
+`);
+
+module.exports = db;
+```
+
+### Endpoints nuevos en `server.js`:
+
+```javascript
+const db = require('./server/database');
+
+// ===== RESEÑAS =====
+
+// Obtener todas las reseñas de un juego
+app.get('/api/resenas/:juegoId', (req, res) => {
+  const { juegoId } = req.params;
+  const resenas = db.prepare(
+    'SELECT * FROM resenas WHERE juego_id = ? ORDER BY fecha DESC'
+  ).all(juegoId);
+  res.json(resenas);
+});
+
+// Obtener TODAS las reseñas (para ranking y estadísticas)
+app.get('/api/resenas', (req, res) => {
+  const resenas = db.prepare(
+    'SELECT * FROM resenas ORDER BY fecha DESC LIMIT 100'
+  ).all();
+  res.json(resenas);
+});
+
+// Crear nueva reseña
+app.post('/api/resenas', (req, res) => {
+  const { id, juego_id, juego_nombre, autor, rating, texto, recomendado, fecha, plataforma } = req.body;
+
+  if (!texto || texto.length < 10) {
+    return res.status(400).json({ error: 'La reseña debe tener al menos 10 caracteres' });
+  }
+  if (!rating || rating < 1 || rating > 5) {
+    return res.status(400).json({ error: 'El rating debe ser entre 1 y 5' });
+  }
+
+  try {
+    db.prepare(`
+      INSERT INTO resenas (id, juego_id, juego_nombre, autor, rating, texto, recomendado, fecha, plataforma)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `).run(id, juego_id, juego_nombre, autor, rating, texto, recomendado ? 1 : 0, fecha, plataforma || 'PC');
+    res.json({ success: true, id });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// Eliminar reseña (solo el autor puede)
+app.delete('/api/resenas/:id', (req, res) => {
+  const { id } = req.params;
+  const { autor } = req.body;
+  const resena = db.prepare('SELECT * FROM resenas WHERE id = ?').get(id);
+  if (!resena) return res.status(404).json({ error: 'Reseña no encontrada' });
+  if (resena.autor !== autor) return res.status(403).json({ error: 'No autorizado' });
+  db.prepare('DELETE FROM resenas WHERE id = ?').run(id);
+  res.json({ success: true });
+});
+
+// Votar utilidad de reseña
+app.post('/api/resenas/:id/utilidad', (req, res) => {
+  const { id } = req.params;
+  const { usuarioHash } = req.body;
+  try {
+    db.prepare('INSERT INTO votos_utilidad (resena_id, usuario_hash) VALUES (?, ?)').run(id, usuarioHash);
+    db.prepare('UPDATE resenas SET utilidad = utilidad + 1 WHERE id = ?').run(id);
+    res.json({ success: true });
+  } catch (e) {
+    res.status(400).json({ error: 'Ya votaste esta reseña' });
+  }
+});
+
+// ===== ESTADÍSTICAS =====
+
+// Rating promedio de un juego (calculado de la BD)
+app.get('/api/stats/juego/:juegoId', (req, res) => {
+  const { juegoId } = req.params;
+  const stats = db.prepare(`
+    SELECT 
+      COUNT(*) as total_resenas,
+      AVG(rating) as rating_promedio,
+      SUM(CASE WHEN recomendado = 1 THEN 1 ELSE 0 END) as total_recomendados
+    FROM resenas WHERE juego_id = ?
+  `).get(juegoId);
+  res.json(stats);
+});
+
+// Top juegos más reseñados (para ranking)
+app.get('/api/stats/ranking', (req, res) => {
+  const ranking = db.prepare(`
+    SELECT 
+      juego_id,
+      juego_nombre,
+      COUNT(*) as total_resenas,
+      AVG(rating) as rating_promedio,
+      SUM(utilidad) as total_utilidad
+    FROM resenas
+    GROUP BY juego_id
+    ORDER BY total_resenas DESC, rating_promedio DESC
+    LIMIT 20
+  `).all();
+  res.json(ranking);
+});
+
+// ===== VISITAS =====
+app.post('/api/visitas/:juegoId', (req, res) => {
+  const { juegoId } = req.params;
+  db.prepare(`
+    INSERT INTO visitas_juego (juego_id, contador, ultima_visita)
+    VALUES (?, 1, datetime('now'))
+    ON CONFLICT(juego_id) DO UPDATE SET
+      contador = contador + 1,
+      ultima_visita = datetime('now')
+  `).run(juegoId);
+  res.json({ success: true });
+});
+
+app.get('/api/visitas', (req, res) => {
+  const visitas = db.prepare('SELECT * FROM visitas_juego ORDER BY contador DESC').all();
+  res.json(visitas);
+});
+```
+
+### Actualizar el frontend para usar la BD:
+
+En lugar de guardar reseñas en localStorage, el frontend debe:
+1. Al cargar la página de un juego → `GET /api/resenas/:juegoId`
+2. Al publicar una reseña → `POST /api/resenas`
+3. Al eliminar → `DELETE /api/resenas/:id`
+4. Al votar útil → `POST /api/resenas/:id/utilidad`
+5. Las reseñas del usuario actual se identifican comparando el nombre guardado en localStorage
+
+**IMPORTANTE:** Mantener localStorage solo para datos personales del usuario (nombre, Mi Lista, plan, etc.) La BD es solo para reseñas compartidas.
+
+---
+
+## 2. 🎮 MÁS JUEGOS — Catálogo Expandido (60+ juegos)
+
+Agrega estos juegos al archivo `data/juegos.json`, manteniendo TODOS los que ya existen.
+Incluye juegos de PlayStation, Xbox, Nintendo, Steam y PC exclusivos:
+
+```json
+[
+  {
+    "id": 33,
+    "nombre": "God of War (2018)",
+    "steamId": 1593500,
+    "categoria": "accion",
+    "generos": ["accion", "aventura"],
+    "precio": 49.99,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/1593500/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/1593500/header.jpg",
+    "descripcion": "Kratos y su hijo Atreus emprenden un peligroso viaje por los Nueve Reinos de la mitología nórdica.",
+    "plataforma": "PS5/PC",
+    "plataformas": ["PS5", "PC"],
+    "desarrollador": "Santa Monica Studio",
+    "publicador": "Sony Interactive Entertainment",
+    "fechaLanzamiento": "2022-01-14",
+    "rating": 4.9,
+    "ratingMetacritic": 94,
+    "video": "https://www.youtube.com/embed/K0u_kAWLJOA",
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/1593500/God_of_War/",
+      "playstation": "https://www.playstation.com/es-us/games/god-of-war/",
+      "epic": null,
+      "xbox": null,
+      "nintendo": null
+    },
+    "tags": ["single-player", "historia", "mitologia", "combate", "ps-exclusive"],
+    "skins": [],
+    "packs": []
+  },
+  {
+    "id": 34,
+    "nombre": "Demon's Souls Remake",
+    "steamId": null,
+    "categoria": "rpg",
+    "precio": 69.99,
+    "imagen": "https://image.api.playstation.com/vulcan/img/rnd/202010/2614/F3e99qRxkxf8k8mTDCOZHVnJ.png",
+    "imagenBanner": "https://image.api.playstation.com/vulcan/img/rnd/202010/2614/F3e99qRxkxf8k8mTDCOZHVnJ.png",
+    "descripcion": "El clásico RPG de acción que definió el género soulslike, completamente reconstruido para PS5.",
+    "plataforma": "PS5",
+    "plataformas": ["PS5"],
+    "desarrollador": "Bluepoint Games",
+    "publicador": "Sony Interactive Entertainment",
+    "fechaLanzamiento": "2020-11-12",
+    "rating": 4.7,
+    "ratingMetacritic": 92,
+    "video": "https://www.youtube.com/embed/2TMs2E8SnE8",
+    "enlacesCompra": {
+      "steam": null,
+      "playstation": "https://www.playstation.com/es-us/games/demons-souls/",
+      "xbox": null,
+      "nintendo": null
+    },
+    "tags": ["soulslike", "rpg", "dificil", "ps-exclusive"]
+  },
+  {
+    "id": 35,
+    "nombre": "Returnal",
+    "steamId": 1649240,
+    "categoria": "disparos",
+    "precio": 59.99,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/1649240/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/1649240/header.jpg",
+    "descripcion": "Un roguelike de disparos en tercera persona ambientado en un planeta alienígena con una narrativa oscura y misteriosa.",
+    "plataforma": "PS5/PC",
+    "plataformas": ["PS5", "PC"],
+    "desarrollador": "Housemarque",
+    "publicador": "Sony Interactive Entertainment",
+    "fechaLanzamiento": "2021-04-30",
+    "rating": 4.6,
+    "ratingMetacritic": 86,
+    "video": "https://www.youtube.com/embed/nJiMnNnYyIY",
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/1649240/Returnal/",
+      "playstation": "https://www.playstation.com/es-us/games/returnal/"
+    }
+  },
+  {
+    "id": 36,
+    "nombre": "Halo Infinite",
+    "steamId": 1240440,
+    "categoria": "disparos",
+    "precio": 39.99,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/1240440/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/1240440/header.jpg",
+    "descripcion": "Master Chief regresa en la aventura más ambiciosa de Halo con mundo semiabierto y multijugador gratuito.",
+    "plataforma": "Xbox/PC",
+    "plataformas": ["Xbox Series X", "Xbox One", "PC"],
+    "desarrollador": "343 Industries",
+    "publicador": "Xbox Game Studios",
+    "fechaLanzamiento": "2021-12-08",
+    "rating": 4.3,
+    "ratingMetacritic": 87,
+    "video": "https://www.youtube.com/embed/PyMlV5_HRWk",
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/1240440/Halo_Infinite/",
+      "xbox": "https://www.xbox.com/es-US/games/store/halo-infinite/9NP14FXCH7DT",
+      "microsoft": "https://www.microsoft.com/es-us/p/halo-infinite"
+    }
+  },
+  {
+    "id": 37,
+    "nombre": "Forza Motorsport",
+    "steamId": 2440510,
+    "categoria": "carreras",
+    "precio": 69.99,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/2440510/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/2440510/header.jpg",
+    "descripcion": "La simulación de carreras más realista de Xbox, completamente reconstruida con física de nueva generación.",
+    "plataforma": "Xbox/PC",
+    "plataformas": ["Xbox Series X", "PC"],
+    "desarrollador": "Turn 10 Studios",
+    "publicador": "Xbox Game Studios",
+    "fechaLanzamiento": "2023-10-10",
+    "rating": 4.4,
+    "ratingMetacritic": 84,
+    "video": "https://www.youtube.com/embed/wqHHa_yMKP8",
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/2440510/Forza_Motorsport/",
+      "xbox": "https://www.xbox.com/es-US/games/store/forza-motorsport"
+    }
+  },
+  {
+    "id": 38,
+    "nombre": "Super Mario Odyssey",
+    "steamId": null,
+    "categoria": "aventura",
+    "precio": 59.99,
+    "imagen": "https://assets.nintendo.com/image/upload/ar_16:9,b_auto:border,c_lpad/b_white/f_auto/q_auto/dpr_auto/c_scale,w_300/v1/ncom/software/switch/70010000001130/c42553b4fd0312c31e70b8d5134b8f392c2c766ae5cfe6b61be86ef3e60c3754",
+    "imagenBanner": "https://assets.nintendo.com/image/upload/c_fill,w_1200/q_auto:best/f_auto/ncom/software/switch/70010000001130/c42553b4fd0312c31e70b8d5134b8f392c2c766ae5cfe6b61be86ef3e60c3754",
+    "descripcion": "Mario explora mundos abiertos y captura enemigos con su sombrero mágico Cappy en esta aventura de plataformas.",
+    "plataforma": "Switch",
+    "plataformas": ["Nintendo Switch"],
+    "desarrollador": "Nintendo EPD",
+    "publicador": "Nintendo",
+    "fechaLanzamiento": "2017-10-27",
+    "rating": 4.9,
+    "ratingMetacritic": 97,
+    "video": "https://www.youtube.com/embed/wGQHQc_3ycE",
+    "enlacesCompra": {
+      "nintendo": "https://www.nintendo.com/es-us/store/products/super-mario-odyssey-switch/"
+    }
+  },
+  {
+    "id": 39,
+    "nombre": "Animal Crossing: New Horizons",
+    "steamId": null,
+    "categoria": "simulacion",
+    "precio": 59.99,
+    "imagen": "https://assets.nintendo.com/image/upload/ar_16:9,b_auto:border,c_lpad/b_white/f_auto/q_auto/dpr_auto/c_scale,w_300/v1/ncom/software/switch/70010000025266/ca85e4a4b5b8b930ec41697ab783f207b7d1c08ed5e6c4d33ffbdb6c6671c34f",
+    "imagenBanner": "https://assets.nintendo.com/image/upload/c_fill,w_1200/q_auto:best/f_auto/ncom/software/switch/70010000025266/ca85e4a4b5b8b930ec41697ab783f207b7d1c08ed5e6c4d33ffbdb6c6671c34f",
+    "descripcion": "Construye y personaliza tu isla paradisíaca en este relajante juego de simulación social.",
+    "plataforma": "Switch",
+    "plataformas": ["Nintendo Switch"],
+    "desarrollador": "Nintendo EPD",
+    "publicador": "Nintendo",
+    "fechaLanzamiento": "2020-03-20",
+    "rating": 4.7,
+    "ratingMetacritic": 90,
+    "video": "https://www.youtube.com/embed/xFFs9UfA_os",
+    "enlacesCompra": {
+      "nintendo": "https://www.nintendo.com/es-us/store/products/animal-crossing-new-horizons-switch/"
+    }
+  },
+  {
+    "id": 40,
+    "nombre": "Metroid Dread",
+    "steamId": null,
+    "categoria": "accion",
+    "precio": 59.99,
+    "imagen": "https://assets.nintendo.com/image/upload/ar_16:9,b_auto:border,c_lpad/b_white/f_auto/q_auto/dpr_auto/c_scale,w_300/v1/ncom/software/switch/70010000046443/0aa5b5d6e1d4df19cef71ac0e5617e8ba38e5dad3c2a98ccce08f3f5dc76ac0a",
+    "imagenBanner": "https://assets.nintendo.com/image/upload/c_fill,w_1200/q_auto:best/f_auto/ncom/software/switch/70010000046443/0aa5b5d6e1d4df19cef71ac0e5617e8ba38e5dad3c2a98ccce08f3f5dc76ac0a",
+    "descripcion": "Samus Aran regresa en un thriller de acción y terror que concluye la saga principal de Metroid.",
+    "plataforma": "Switch",
+    "plataformas": ["Nintendo Switch"],
+    "desarrollador": "MercurySteam",
+    "publicador": "Nintendo",
+    "fechaLanzamiento": "2021-10-08",
+    "rating": 4.8,
+    "ratingMetacritic": 88,
+    "video": "https://www.youtube.com/embed/4u_CIDiMVcY",
+    "enlacesCompra": {
+      "nintendo": "https://www.nintendo.com/es-us/store/products/metroid-dread-switch/"
+    }
+  },
+  {
+    "id": 41,
+    "nombre": "Death Stranding Director's Cut",
+    "steamId": 1850570,
+    "categoria": "aventura",
+    "precio": 39.99,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/1850570/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/1850570/header.jpg",
+    "descripcion": "Hideo Kojima redefine el género de los juegos de acción con esta experiencia única sobre conexión y humanidad.",
+    "plataforma": "PS5/PC",
+    "plataformas": ["PS5", "PC"],
+    "desarrollador": "Kojima Productions",
+    "publicador": "505 Games",
+    "fechaLanzamiento": "2021-09-24",
+    "rating": 4.5,
+    "ratingMetacritic": 87,
+    "video": "https://www.youtube.com/embed/VkdoFRQIEiY",
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/1850570/Death_Stranding_Directors_Cut/",
+      "playstation": "https://www.playstation.com/es-us/games/death-stranding-directors-cut/",
+      "epic": "https://store.epicgames.com/es-ES/p/death-stranding"
+    }
+  },
+  {
+    "id": 42,
+    "nombre": "Persona 5 Royal",
+    "steamId": 1687950,
+    "categoria": "rpg",
+    "precio": 59.99,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/1687950/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/1687950/header.jpg",
+    "descripcion": "Un JRPG aclamado por la crítica con un estilo visual único, historia profunda y mecánicas de combate innovadoras.",
+    "plataforma": "Multi",
+    "plataformas": ["PS5", "PS4", "Xbox Series X", "Nintendo Switch", "PC"],
+    "desarrollador": "Atlus",
+    "publicador": "Atlus",
+    "fechaLanzamiento": "2020-03-31",
+    "rating": 4.9,
+    "ratingMetacritic": 95,
+    "video": "https://www.youtube.com/embed/oOVYLPLuRj0",
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/1687950/Persona_5_Royal/",
+      "playstation": "https://www.playstation.com/es-us/games/persona-5-royal/",
+      "xbox": "https://www.xbox.com/es-US/games/store/persona-5-royal/9P5NS95NKLDQ",
+      "nintendo": "https://www.nintendo.com/es-us/store/products/persona-5-royal-switch/"
+    }
+  },
+  {
+    "id": 43,
+    "nombre": "Monster Hunter: World",
+    "steamId": 582010,
+    "categoria": "rpg",
+    "precio": 29.99,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/582010/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/582010/header.jpg",
+    "descripcion": "Caza monstruros épicos en un ecosistema vivo y lleno de vida en este RPG de acción de Capcom.",
+    "plataforma": "Multi",
+    "plataformas": ["PS4", "Xbox One", "PC"],
+    "desarrollador": "Capcom",
+    "publicador": "Capcom",
+    "fechaLanzamiento": "2018-01-26",
+    "rating": 4.7,
+    "ratingMetacritic": 90,
+    "video": "https://www.youtube.com/embed/fe--oQDiLIs",
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/582010/Monster_Hunter_World/",
+      "playstation": "https://www.playstation.com/es-us/games/monster-hunter-world/",
+      "xbox": "https://www.xbox.com/es-US/games/store/monster-hunter-world/BWKJ0XLBTP0C"
+    }
+  },
+  {
+    "id": 44,
+    "nombre": "Sekiro: Shadows Die Twice",
+    "steamId": 814380,
+    "categoria": "accion",
+    "precio": 59.99,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/814380/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/814380/header.jpg",
+    "descripcion": "Un ninja en el Japón feudal del siglo XVI combate contra enemigos sobrenaturales en este exigente juego de FromSoftware.",
+    "plataforma": "Multi",
+    "plataformas": ["PS4", "Xbox One", "PC"],
+    "desarrollador": "FromSoftware",
+    "publicador": "Activision",
+    "fechaLanzamiento": "2019-03-22",
+    "rating": 4.8,
+    "ratingMetacritic": 90,
+    "video": "https://www.youtube.com/embed/rXMX4YJ7Lks",
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/814380/Sekiro_Shadows_Die_Twice/",
+      "playstation": "https://www.playstation.com/es-us/games/sekiro-shadows-die-twice/",
+      "xbox": "https://www.xbox.com/es-US/games/store/sekiro-shadows-die-twice"
+    }
+  },
+  {
+    "id": 45,
+    "nombre": "It Takes Two",
+    "steamId": 1426210,
+    "categoria": "aventura",
+    "precio": 39.99,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/1426210/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/1426210/header.jpg",
+    "descripcion": "La mejor experiencia cooperativa de los últimos años. Una pareja en proceso de divorcio debe trabajar juntos para volver a ser humanos.",
+    "plataforma": "Multi",
+    "plataformas": ["PS5", "PS4", "Xbox Series X", "Xbox One", "PC"],
+    "desarrollador": "Hazelight Studios",
+    "publicador": "Electronic Arts",
+    "fechaLanzamiento": "2021-03-26",
+    "rating": 4.9,
+    "ratingMetacritic": 89,
+    "video": "https://www.youtube.com/embed/s1VEREaQYB0",
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/1426210/It_Takes_Two/",
+      "playstation": "https://www.playstation.com/es-us/games/it-takes-two/",
+      "xbox": "https://www.xbox.com/es-US/games/store/it-takes-two/9PBGQQ27XFHZ",
+      "epic": "https://store.epicgames.com/es-ES/p/it-takes-two"
+    }
+  },
+  {
+    "id": 46,
+    "nombre": "Splatoon 3",
+    "steamId": null,
+    "categoria": "disparos",
+    "precio": 59.99,
+    "imagen": "https://assets.nintendo.com/image/upload/ar_16:9,b_auto:border,c_lpad/b_white/f_auto/q_auto/dpr_auto/c_scale,w_300/v1/ncom/software/switch/70010000057138/62c33cf9d28b5b3a0fa5e8f1e0ea7ed6d1c5f4a41b88a25e1e8d48d",
+    "imagenBanner": "https://assets.nintendo.com/image/upload/c_fill,w_1200/q_auto:best/f_auto/ncom/software/switch/70010000057138",
+    "descripcion": "El shooter de Nintendo más colorido regresa con nuevos modos, armas y una campaña para un jugador mejorada.",
+    "plataforma": "Switch",
+    "plataformas": ["Nintendo Switch"],
+    "desarrollador": "Nintendo EPD",
+    "publicador": "Nintendo",
+    "fechaLanzamiento": "2022-09-09",
+    "rating": 4.6,
+    "ratingMetacritic": 83,
+    "video": "https://www.youtube.com/embed/gqN4PSB7-sA",
+    "enlacesCompra": {
+      "nintendo": "https://www.nintendo.com/es-us/store/products/splatoon-3-switch/"
+    }
+  },
+  {
+    "id": 47,
+    "nombre": "Doom Eternal",
+    "steamId": 782330,
+    "categoria": "disparos",
+    "precio": 39.99,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/782330/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/782330/header.jpg",
+    "descripcion": "El Doom Slayer regresa más poderoso que nunca en este frenético shooter que lleva la acción al máximo.",
+    "plataforma": "Multi",
+    "plataformas": ["PS4", "PS5", "Xbox One", "Xbox Series X", "PC", "Nintendo Switch"],
+    "desarrollador": "id Software",
+    "publicador": "Bethesda Softworks",
+    "fechaLanzamiento": "2020-03-20",
+    "rating": 4.7,
+    "ratingMetacritic": 88,
+    "video": "https://www.youtube.com/embed/r5Fqk2tHpBY",
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/782330/DOOM_Eternal/",
+      "playstation": "https://www.playstation.com/es-us/games/doom-eternal/",
+      "xbox": "https://www.xbox.com/es-US/games/store/doom-eternal/9PLX5PDQH6XP"
+    }
+  },
+  {
+    "id": 48,
+    "nombre": "Among Us",
+    "steamId": 945360,
+    "categoria": "estrategia",
+    "precio": 4.99,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/945360/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/945360/header.jpg",
+    "descripcion": "El juego de deducción social más popular del mundo. ¿Quién es el impostor entre la tripulación?",
+    "plataforma": "Multi",
+    "plataformas": ["PC", "Nintendo Switch", "PS4", "Xbox One"],
+    "desarrollador": "Innersloth",
+    "publicador": "Innersloth",
+    "fechaLanzamiento": "2018-06-15",
+    "rating": 4.2,
+    "ratingMetacritic": 85,
+    "video": "https://www.youtube.com/embed/NSKiHFgHJgw",
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/945360/Among_Us/",
+      "nintendo": "https://www.nintendo.com/es-us/store/products/among-us-switch/",
+      "xbox": "https://www.xbox.com/es-US/games/store/among-us/9NG07QJNK38J"
+    }
+  }
+]
+```
+
+Agrega estos juegos al JSON existente (no reemplaces, **concatena** al array actual).
+
+---
+
+## 3. 🔗 ENLACES DE COMPRA EN PÁGINA DE JUEGO
+
+En la página de detalle de cada juego, agrega una sección **"¿Dónde comprarlo?"** con botones que redirigen a las tiendas oficiales:
+
+```
+┌─────────────────────────────────────────────────────┐
+│  🛒 ¿Dónde comprarlo?                               │
+├─────────────────────────────────────────────────────┤
+│  🎮 Steam          [Ver en Steam →]                 │
+│  🔵 PlayStation    [Ver en PS Store →]              │
+│  🟢 Xbox           [Ver en Xbox Store →]            │
+│  🔴 Nintendo       [Ver en Nintendo Store →]        │
+│  ⚫ Epic Games     [Ver en Epic →]                  │
+│                                                     │
+│  ⚠️ GameReviews no vende juegos. Te redirigimos    │
+│     a las tiendas oficiales.                        │
+└─────────────────────────────────────────────────────┘
+```
+
+CSS para los botones:
+```css
+.tienda-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.2s;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.tienda-btn:hover { transform: translateY(-2px); opacity: 0.9; }
+.tienda-btn.steam { background: #1b2838; color: #c7d5e0; }
+.tienda-btn.playstation { background: #003791; color: white; }
+.tienda-btn.xbox { background: #107C10; color: white; }
+.tienda-btn.nintendo { background: #E4000F; color: white; }
+.tienda-btn.epic { background: #2a2a2a; color: white; }
+```
+
+Lógica:
+```javascript
+function renderEnlacesCompra(juego) {
+  const tiendas = juego.enlacesCompra || {};
+  const iconos = {
+    steam: '🎮', playstation: '🔵', xbox: '🟢',
+    nintendo: '🔴', epic: '⚫', microsoft: '🟢'
+  };
+  const nombres = {
+    steam: 'Steam', playstation: 'PlayStation Store',
+    xbox: 'Xbox Store', nintendo: 'Nintendo Store',
+    epic: 'Epic Games', microsoft: 'Microsoft Store'
+  };
+
+  const enlaces = Object.entries(tiendas)
+    .filter(([_, url]) => url !== null)
+    .map(([tienda, url]) => `
+      <a href="${url}" target="_blank" rel="noopener noreferrer"
+         class="tienda-btn ${tienda}">
+        ${iconos[tienda] || '🛒'} ${nombres[tienda] || tienda}
+        <span style="margin-left:auto">→</span>
+      </a>
+    `).join('');
+
+  return enlaces.length > 0 ? `
+    <div class="enlaces-compra">
+      <h3 class="section-title">🛒 ¿Dónde comprarlo?</h3>
+      <div class="tiendas-grid">${enlaces}</div>
+      <p class="aviso-legal">
+        ⚠️ GameReviews no vende juegos. Los enlaces te redirigen a las tiendas oficiales.
+      </p>
+    </div>
+  ` : '';
+}
+```
+
+---
+
+## 4. 💬 ARREGLAR EL SISTEMA DE COMENTARIOS
+
+El sistema de reseñas no funciona correctamente porque usaba localStorage (solo el usuario veía sus propias reseñas). Con la BD implementada en el punto 1, ahora:
+
+1. Las reseñas se guardan en el servidor SQLite
+2. TODOS los usuarios ven las reseñas de TODOS
+3. El formulario de reseña debe:
+   - Pedir nombre de usuario (guardado en localStorage)
+   - Mostrar campo de texto mínimo 50 caracteres
+   - Estrellas interactivas para el rating
+   - Checkbox "¿Lo recomendarías?"
+   - Select de plataforma en que jugó (PC, PS5, Xbox, Switch, etc.)
+   - Botón "Publicar Reseña"
+4. Cada reseña muestra:
+   - Avatar con inicial del nombre
+   - Nombre + fecha formateada en español
+   - Estrellas del rating
+   - Plataforma donde jugó
+   - Texto de la reseña
+   - Badge "✅ Recomendado" o "❌ No recomendado"
+   - Botón "👍 Útil (X)" con contador
+   - Botón "🗑 Eliminar" solo si es del usuario actual
+
+---
+
+## 5. 📊 NUEVA ESTRUCTURA DEL JSON DE JUEGOS
+
+Actualiza TODOS los juegos existentes para que tengan el campo `enlacesCompra`:
+
+Para juegos de Steam, la URL siempre es:
+`https://store.steampowered.com/app/{STEAM_ID}/`
+
+Para PlayStation:
+`https://www.playstation.com/es-us/games/{slug}/`
+
+Para Xbox:
+`https://www.xbox.com/es-US/games/store/{nombre}`
+
+Para Nintendo:
+`https://www.nintendo.com/es-us/store/products/{slug}/`
+
+---
+
+## 6. 🔍 MEJORAR EL BUSCADOR
+
+El buscador actual busca por nombre. Mejóralo para que también busque por:
+- Plataforma (ps5, xbox, switch, pc)
+- Género (accion, rpg, terror, etc.)
+- Desarrollador
+- Rating mínimo (filtro deslizante)
+- Año de lanzamiento
+
+---
+
+## 7. 📱 CATEGORÍA "PLATAFORMA" EN EL SIDEBAR
+
+Agrega filtros por plataforma en el sidebar izquierdo del catálogo:
+
+```
+🎮 Plataformas
+  [PS5]          (X juegos)
+  [Xbox Series X] (X juegos)
+  [Nintendo Switch] (X juegos)
+  [PC/Steam]     (X juegos)
+  [Multi]        (X juegos)
+```
+
+---
+
+## 8. ⚠️ AVISO LEGAL EN EL FOOTER
+
+Agrega al footer de TODAS las páginas:
+
+```html
+<footer class="footer-legal">
+  <p>
+    GameReviews Hub es una plataforma de reseñas independiente.
+    No estamos afiliados con PlayStation, Xbox, Nintendo, Steam, Epic Games ni ninguna otra plataforma.
+    Los enlaces te redirigen a las tiendas oficiales de cada plataforma.
+  </p>
+  <p>
+    Las imágenes y marcas pertenecen a sus respectivos dueños.
+    Los precios son provistos por <a href="https://isthereanydeal.com" target="_blank">IsThereAnyDeal</a>.
+  </p>
+</footer>
+```
+
+---
+
+## 9. 📋 CHECKLIST FINAL ANTES DE PUBLICAR
+
+Verifica que TODO esto funcione correctamente:
+
+- [ ] Las reseñas se guardan en SQLite y son visibles para todos los usuarios
+- [ ] Los enlaces de compra redirigen a las tiendas oficiales correctas
+- [ ] El catálogo tiene 45+ juegos de PS, Xbox, Nintendo, Steam y PC
+- [ ] Los filtros por plataforma funcionan
+- [ ] Los precios de ITAD cargan correctamente
+- [ ] El análisis de IA funciona con streaming
+- [ ] El sistema de planes (Gratis/PRO/Elite) funciona
+- [ ] La página es responsive en mobile
+- [ ] El aviso legal aparece en el footer
+- [ ] No hay errores de TypeScript
+- [ ] El servidor arranca correctamente con `npm start`
+
+---
+
+## ⚠️ IMPORTANTE — LO QUE NO DEBE CAMBIAR
+
+- El diseño visual (colores morados, fuentes Orbitron + Space Grotesk)
+- El sistema de Mi Lista (puede seguir en localStorage, es personal)
+- El sistema de planes y suscripción
+- Las alertas de precio
+- El ranking
+- El perfil de usuario
+- Las animaciones existentes
+- La integración con ITAD y Steam CDN
+
+---
+
+## 🎯 PRIORIDAD DE IMPLEMENTACIÓN
+
+1. **PRIMERO:** Base de datos SQLite + endpoints de reseñas
+2. **SEGUNDO:** Actualizar frontend para usar la BD (comentarios comunitarios)
+3. **TERCERO:** Agregar los nuevos juegos al JSON con enlaces de compra
+4. **CUARTO:** Sección "¿Dónde comprarlo?" en página de juego
+5. **QUINTO:** Filtros por plataforma en sidebar
+6. **SEXTO:** Aviso legal en footer
+7. **SÉPTIMO:** Verificar checklist completo

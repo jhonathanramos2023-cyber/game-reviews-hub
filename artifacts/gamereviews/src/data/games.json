@@ -53,7 +53,11 @@
         "contenido": "3 skins + 2 emotes + banda sonora"
       }
     ],
-    "steamId": 2322010
+    "steamId": 2322010,
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/2322010/",
+      "playstation": "https://www.playstation.com/es-us/games/god-of-war-ragnarok/"
+    }
   },
   {
     "id": 2,
@@ -102,7 +106,11 @@
         "contenido": "5 trajes legendarios"
       }
     ],
-    "steamId": 2460490
+    "steamId": 2460490,
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/2460490/",
+      "playstation": "https://www.playstation.com/es-us/games/marvels-spider-man-2/"
+    }
   },
   {
     "id": 3,
@@ -149,7 +157,11 @@
         "contenido": "Expansión masiva con nueva región"
       }
     ],
-    "steamId": 1245620
+    "steamId": 1245620,
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/1245620/",
+      "playstation": "https://www.playstation.com/es-us/games/marvels-spider-man-miles-morales/"
+    }
   },
   {
     "id": 4,
@@ -201,7 +213,11 @@
         "contenido": "Nueva historia con Idris Elba"
       }
     ],
-    "steamId": 1091500
+    "steamId": 1091500,
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/1091500/",
+      "playstation": "https://www.playstation.com/es-us/games/returnal/"
+    }
   },
   {
     "id": 5,
@@ -249,7 +265,12 @@
         "contenido": "Juego base + Hearts of Stone + Blood and Wine"
       }
     ],
-    "steamId": 292030
+    "steamId": 292030,
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/292030/",
+      "playstation": "https://www.playstation.com/es-us/games/the-witcher-3/",
+      "nintendo": "https://www.nintendo.com/es-us/store/products/the-witcher-3/"
+    }
   },
   {
     "id": 6,
@@ -295,7 +316,11 @@
         "contenido": "Juego + contenido online"
       }
     ],
-    "steamId": 1174180
+    "steamId": 1174180,
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/1174180/",
+      "playstation": "https://www.playstation.com/es-us/games/red-dead-redemption-2/"
+    }
   },
   {
     "id": 7,
@@ -342,7 +367,11 @@
         "contenido": "8M GTA$ para gastar en GTA Online"
       }
     ],
-    "steamId": 271590
+    "steamId": 271590,
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/271590/",
+      "playstation": "https://www.playstation.com/es-us/games/gta-v/"
+    }
   },
   {
     "id": 8,
@@ -380,7 +409,10 @@
     ],
     "skins": [],
     "packs": [],
-    "steamId": null
+    "steamId": null,
+    "enlacesCompra": {
+      "nintendo": "https://www.nintendo.com/es-us/store/products/the-legend-of-zelda-tears-of-the-kingdom-switch/"
+    }
   },
   {
     "id": 9,
@@ -424,7 +456,10 @@
         "contenido": "DLC The Master Trials + The Champions Ballad"
       }
     ],
-    "steamId": null
+    "steamId": null,
+    "enlacesCompra": {
+      "nintendo": "https://www.nintendo.com/es-us/store/products/the-legend-of-zelda-breath-of-the-wild-switch/"
+    }
   },
   {
     "id": 10,
@@ -472,7 +507,12 @@
       }
     ],
     "packs": [],
-    "steamId": 990080
+    "steamId": 990080,
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/990080/",
+      "playstation": "https://www.playstation.com/es-us/games/hogwarts-legacy/",
+      "nintendo": "https://www.nintendo.com/es-us/store/products/hogwarts-legacy/"
+    }
   },
   {
     "id": 11,
@@ -519,7 +559,12 @@
         "contenido": "Moneda premium para Ultimate Team"
       }
     ],
-    "steamId": 2669320
+    "steamId": 2669320,
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/2669320/",
+      "playstation": "https://www.playstation.com/es-us/games/fc-25/",
+      "nintendo": "https://www.nintendo.com/es-us/store/products/fc-25/"
+    }
   },
   {
     "id": 12,
@@ -559,7 +604,12 @@
     ],
     "skins": [],
     "packs": [],
-    "steamId": 2446780
+    "steamId": 2446780,
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/2446780/",
+      "playstation": "https://www.playstation.com/es-us/games/nba-2k25/",
+      "nintendo": "https://www.nintendo.com/es-us/store/products/nba-2k25/"
+    }
   },
   {
     "id": 13,
@@ -611,7 +661,11 @@
         "contenido": "100 niveles de recompensas"
       }
     ],
-    "steamId": 2933620
+    "steamId": 2933620,
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/2933620/",
+      "playstation": "https://www.playstation.com/es-us/games/cod-bo6/"
+    }
   },
   {
     "id": 14,
@@ -670,7 +724,11 @@
         "contenido": "100 niveles de recompensas exclusivas"
       }
     ],
-    "steamId": null
+    "steamId": null,
+    "enlacesCompra": {
+      "playstation": "https://www.playstation.com/es-us/games/fortnite/",
+      "nintendo": "https://www.nintendo.com/es-us/store/products/fortnite/"
+    }
   },
   {
     "id": 15,
@@ -724,7 +782,11 @@
         "contenido": "Moneda para el marketplace"
       }
     ],
-    "steamId": null
+    "steamId": null,
+    "enlacesCompra": {
+      "playstation": "https://www.playstation.com/es-us/games/minecraft/",
+      "nintendo": "https://www.nintendo.com/es-us/store/products/minecraft/"
+    }
   },
   {
     "id": 16,
@@ -766,7 +828,12 @@
     ],
     "skins": [],
     "packs": [],
-    "steamId": 413150
+    "steamId": 413150,
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/413150/",
+      "playstation": "https://www.playstation.com/es-us/games/stardew-valley/",
+      "nintendo": "https://www.nintendo.com/es-us/store/products/stardew-valley/"
+    }
   },
   {
     "id": 17,
@@ -808,7 +875,12 @@
     ],
     "skins": [],
     "packs": [],
-    "steamId": 367520
+    "steamId": 367520,
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/367520/",
+      "playstation": "https://www.playstation.com/es-us/games/hollow-knight/",
+      "nintendo": "https://www.nintendo.com/es-us/store/products/hollow-knight/"
+    }
   },
   {
     "id": 18,
@@ -849,7 +921,12 @@
     ],
     "skins": [],
     "packs": [],
-    "steamId": 504230
+    "steamId": 504230,
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/504230/",
+      "playstation": "https://www.playstation.com/es-us/games/celeste/",
+      "nintendo": "https://www.nintendo.com/es-us/store/products/celeste/"
+    }
   },
   {
     "id": 19,
@@ -891,7 +968,12 @@
     ],
     "skins": [],
     "packs": [],
-    "steamId": 1145360
+    "steamId": 1145360,
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/1145360/",
+      "playstation": "https://www.playstation.com/es-us/games/hades/",
+      "nintendo": "https://www.nintendo.com/es-us/store/products/hades/"
+    }
   },
   {
     "id": 20,
@@ -933,7 +1015,12 @@
     ],
     "skins": [],
     "packs": [],
-    "steamId": 632470
+    "steamId": 632470,
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/632470/",
+      "playstation": "https://www.playstation.com/es-us/games/disco-elysium/",
+      "nintendo": "https://www.nintendo.com/es-us/store/products/disco-elysium/"
+    }
   },
   {
     "id": 21,
@@ -979,7 +1066,11 @@
         "contenido": "Banda sonora + DLCs cosméticos"
       }
     ],
-    "steamId": 1086940
+    "steamId": 1086940,
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/1086940/",
+      "playstation": "https://www.playstation.com/es-us/games/baldurs-gate-3/"
+    }
   },
   {
     "id": 22,
@@ -1024,7 +1115,10 @@
         "contenido": "Nueva expansión de historia"
       }
     ],
-    "steamId": 1716740
+    "steamId": 1716740,
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/1716740/"
+    }
   },
   {
     "id": 23,
@@ -1070,7 +1164,11 @@
         "contenido": "Night Springs + The Lake House"
       }
     ],
-    "steamId": 1874880
+    "steamId": 1874880,
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/1874880/",
+      "playstation": "https://www.playstation.com/es-us/games/alan-wake-2/"
+    }
   },
   {
     "id": 24,
@@ -1116,7 +1214,11 @@
         "contenido": "Campaña de Ada Wong"
       }
     ],
-    "steamId": 2050650
+    "steamId": 2050650,
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/2050650/",
+      "playstation": "https://www.playstation.com/es-us/games/re4-remake/"
+    }
   },
   {
     "id": 25,
@@ -1154,7 +1256,11 @@
     ],
     "skins": [],
     "packs": [],
-    "steamId": 2124490
+    "steamId": 2124490,
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/2124490/",
+      "playstation": "https://www.playstation.com/es-us/games/silent-hill-2-remake/"
+    }
   },
   {
     "id": 26,
@@ -1193,7 +1299,10 @@
     ],
     "skins": [],
     "packs": [],
-    "steamId": null
+    "steamId": null,
+    "enlacesCompra": {
+      "playstation": "https://www.playstation.com/es-us/games/gran-turismo-7/"
+    }
   },
   {
     "id": 27,
@@ -1237,7 +1346,10 @@
         "contenido": "Pistas Hot Wheels en el cielo"
       }
     ],
-    "steamId": 1551360
+    "steamId": 1551360,
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/1551360/"
+    }
   },
   {
     "id": 28,
@@ -1289,7 +1401,11 @@
         "contenido": "4 personajes nuevos + skins"
       }
     ],
-    "steamId": 1737010
+    "steamId": 1737010,
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/1737010/",
+      "playstation": "https://www.playstation.com/es-us/games/street-fighter-6/"
+    }
   },
   {
     "id": 29,
@@ -1334,7 +1450,12 @@
         "contenido": "6 personajes + 5 Kameos"
       }
     ],
-    "steamId": 1971870
+    "steamId": 1971870,
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/1971870/",
+      "playstation": "https://www.playstation.com/es-us/games/mortal-kombat-1/",
+      "nintendo": "https://www.nintendo.com/es-us/store/products/mortal-kombat-1/"
+    }
   },
   {
     "id": 30,
@@ -1379,7 +1500,11 @@
         "contenido": "Nueva expansión con Leviatán"
       }
     ],
-    "steamId": 2515020
+    "steamId": 2515020,
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/2515020/",
+      "playstation": "https://www.playstation.com/es-us/games/final-fantasy-xvi/"
+    }
   },
   {
     "id": 31,
@@ -1418,7 +1543,11 @@
     ],
     "skins": [],
     "packs": [],
-    "steamId": 1850570
+    "steamId": 1850570,
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/1850570/",
+      "playstation": "https://www.playstation.com/es-us/games/death-stranding/"
+    }
   },
   {
     "id": 32,
@@ -1465,6 +1594,670 @@
         "contenido": "Juego base + todas las expansiones"
       }
     ],
-    "steamId": 289070
+    "steamId": 289070,
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/289070/",
+      "playstation": "https://www.playstation.com/es-us/games/civilization-vi/",
+      "nintendo": "https://www.nintendo.com/es-us/store/products/civilization-vi/"
+    }
+  },
+  {
+    "id": 33,
+    "nombre": "God of War (2018)",
+    "slug": "god-of-war-2018",
+    "steamId": 1593500,
+    "categoria": "accion",
+    "generos": [
+      "accion",
+      "aventura"
+    ],
+    "precio": 49.99,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/1593500/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/1593500/header.jpg",
+    "descripcion": "Kratos y su hijo Atreus emprenden un peligroso viaje por los Nueve Reinos de la mitología nórdica.",
+    "descripcionCorta": "Kratos y Atreus: mitología nórdica épica en nueva generación.",
+    "plataforma": "PS5/PC",
+    "plataformas": [
+      "PS5",
+      "PC"
+    ],
+    "desarrollador": "Santa Monica Studio",
+    "publicador": "Sony Interactive Entertainment",
+    "fechaLanzamiento": "2022-01-14",
+    "rating": 4.9,
+    "ratingMetacritic": 94,
+    "ratingUsuariosMetacritic": 9.1,
+    "video": "https://www.youtube.com/embed/K0u_kAWLJOA",
+    "tags": [
+      "single-player",
+      "historia",
+      "mitologia",
+      "combate",
+      "ps-exclusive"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/1593500/",
+      "playstation": "https://www.playstation.com/es-us/games/god-of-war/"
+    }
+  },
+  {
+    "id": 34,
+    "nombre": "Demon's Souls Remake",
+    "slug": "demons-souls",
+    "steamId": null,
+    "categoria": "rpg",
+    "generos": [
+      "rpg",
+      "accion"
+    ],
+    "precio": 69.99,
+    "imagen": "https://media.rawg.io/media/games/fa1/fa12f38534a37e8dbbcefc897e0bc9e6.jpg",
+    "imagenBanner": "https://media.rawg.io/media/games/fa1/fa12f38534a37e8dbbcefc897e0bc9e6.jpg",
+    "descripcion": "El clásico RPG de acción que definió el género soulslike, completamente reconstruido para PS5.",
+    "descripcionCorta": "El soulslike original, reconstruido para PS5.",
+    "plataforma": "PS5",
+    "plataformas": [
+      "PS5"
+    ],
+    "desarrollador": "Bluepoint Games",
+    "publicador": "Sony Interactive Entertainment",
+    "fechaLanzamiento": "2020-11-12",
+    "rating": 4.7,
+    "ratingMetacritic": 92,
+    "ratingUsuariosMetacritic": 8.4,
+    "video": "https://www.youtube.com/embed/2TMs2E8SnE8",
+    "tags": [
+      "soulslike",
+      "rpg",
+      "dificil",
+      "ps-exclusive"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {
+      "playstation": "https://www.playstation.com/es-us/games/demons-souls/"
+    }
+  },
+  {
+    "id": 35,
+    "nombre": "Returnal",
+    "slug": "returnal",
+    "steamId": 1649240,
+    "categoria": "disparos",
+    "generos": [
+      "disparos",
+      "accion",
+      "roguelike"
+    ],
+    "precio": 59.99,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/1649240/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/1649240/header.jpg",
+    "descripcion": "Un roguelike de disparos en tercera persona ambientado en un planeta alienígena con una narrativa oscura y misteriosa.",
+    "descripcionCorta": "Roguelike de ciencia ficción alienígena brutalmente adictivo.",
+    "plataforma": "PS5/PC",
+    "plataformas": [
+      "PS5",
+      "PC"
+    ],
+    "desarrollador": "Housemarque",
+    "publicador": "Sony Interactive Entertainment",
+    "fechaLanzamiento": "2021-04-30",
+    "rating": 4.6,
+    "ratingMetacritic": 86,
+    "ratingUsuariosMetacritic": 8,
+    "video": "https://www.youtube.com/embed/nJiMnNnYyIY",
+    "tags": [
+      "roguelike",
+      "disparos",
+      "sci-fi",
+      "dificil"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/1649240/",
+      "playstation": "https://www.playstation.com/es-us/games/returnal/"
+    }
+  },
+  {
+    "id": 36,
+    "nombre": "Halo Infinite",
+    "slug": "halo-infinite",
+    "steamId": 1240440,
+    "categoria": "disparos",
+    "generos": [
+      "disparos",
+      "accion"
+    ],
+    "precio": 39.99,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/1240440/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/1240440/header.jpg",
+    "descripcion": "Master Chief regresa en la aventura más ambiciosa de Halo con mundo semiabierto y multijugador gratuito.",
+    "descripcionCorta": "El Master Chief vuelve. Mundo semiabierto y multijugador gratis.",
+    "plataforma": "Xbox/PC",
+    "plataformas": [
+      "Xbox Series X",
+      "Xbox One",
+      "PC"
+    ],
+    "desarrollador": "343 Industries",
+    "publicador": "Xbox Game Studios",
+    "fechaLanzamiento": "2021-12-08",
+    "rating": 4.3,
+    "ratingMetacritic": 87,
+    "ratingUsuariosMetacritic": 7.5,
+    "video": "https://www.youtube.com/embed/PyMlV5_HRWk",
+    "tags": [
+      "fps",
+      "xbox-exclusive",
+      "multijugador",
+      "sci-fi"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/1240440/",
+      "xbox": "https://www.xbox.com/es-US/games/store/halo-infinite/9NP14FXCH7DT"
+    }
+  },
+  {
+    "id": 37,
+    "nombre": "Forza Motorsport",
+    "slug": "forza-motorsport",
+    "steamId": 2440510,
+    "categoria": "carreras",
+    "generos": [
+      "carreras",
+      "simulacion"
+    ],
+    "precio": 69.99,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/2440510/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/2440510/header.jpg",
+    "descripcion": "La simulación de carreras más realista de Xbox, completamente reconstruida con física de nueva generación.",
+    "descripcionCorta": "Simulador de carreras next-gen con física revolucionaria.",
+    "plataforma": "Xbox/PC",
+    "plataformas": [
+      "Xbox Series X",
+      "PC"
+    ],
+    "desarrollador": "Turn 10 Studios",
+    "publicador": "Xbox Game Studios",
+    "fechaLanzamiento": "2023-10-10",
+    "rating": 4.4,
+    "ratingMetacritic": 84,
+    "ratingUsuariosMetacritic": 7.2,
+    "video": "https://www.youtube.com/embed/wqHHa_yMKP8",
+    "tags": [
+      "carreras",
+      "simulacion",
+      "xbox-exclusive"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/2440510/",
+      "xbox": "https://www.xbox.com/es-US/games/store/forza-motorsport"
+    }
+  },
+  {
+    "id": 38,
+    "nombre": "Super Mario Odyssey",
+    "slug": "super-mario-odyssey",
+    "steamId": null,
+    "categoria": "plataformas",
+    "generos": [
+      "plataformas",
+      "aventura"
+    ],
+    "precio": 59.99,
+    "imagen": "https://media.rawg.io/media/games/267/267bd0dbc496f52692487d07d014c061.jpg",
+    "imagenBanner": "https://media.rawg.io/media/games/267/267bd0dbc496f52692487d07d014c061.jpg",
+    "descripcion": "Mario explora mundos abiertos y captura enemigos con su sombrero mágico Cappy en esta aventura de plataformas.",
+    "descripcionCorta": "Mario y Cappy conquistan el mundo. Plataformas perfectas.",
+    "plataforma": "Switch",
+    "plataformas": [
+      "Nintendo Switch"
+    ],
+    "desarrollador": "Nintendo EPD",
+    "publicador": "Nintendo",
+    "fechaLanzamiento": "2017-10-27",
+    "rating": 4.9,
+    "ratingMetacritic": 97,
+    "ratingUsuariosMetacritic": 9,
+    "video": "https://www.youtube.com/embed/wGQHQc_3ycE",
+    "tags": [
+      "plataformas",
+      "nintendo-exclusive",
+      "casual",
+      "familia"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {
+      "nintendo": "https://www.nintendo.com/es-us/store/products/super-mario-odyssey-switch/"
+    }
+  },
+  {
+    "id": 39,
+    "nombre": "Animal Crossing: New Horizons",
+    "slug": "animal-crossing-new-horizons",
+    "steamId": null,
+    "categoria": "simulacion",
+    "generos": [
+      "simulacion",
+      "casual"
+    ],
+    "precio": 59.99,
+    "imagen": "https://media.rawg.io/media/games/b54/b54598d1b6edd38671a8f02fe3dce6bf.jpg",
+    "imagenBanner": "https://media.rawg.io/media/games/b54/b54598d1b6edd38671a8f02fe3dce6bf.jpg",
+    "descripcion": "Construye y personaliza tu isla paradisíaca en este relajante juego de simulación social.",
+    "descripcionCorta": "Tu isla perfecta. Construye, personaliza y relájate.",
+    "plataforma": "Switch",
+    "plataformas": [
+      "Nintendo Switch"
+    ],
+    "desarrollador": "Nintendo EPD",
+    "publicador": "Nintendo",
+    "fechaLanzamiento": "2020-03-20",
+    "rating": 4.7,
+    "ratingMetacritic": 90,
+    "ratingUsuariosMetacritic": 8.3,
+    "video": "https://www.youtube.com/embed/xFFs9UfA_os",
+    "tags": [
+      "simulacion",
+      "casual",
+      "nintendo-exclusive",
+      "relajante"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {
+      "nintendo": "https://www.nintendo.com/es-us/store/products/animal-crossing-new-horizons-switch/"
+    }
+  },
+  {
+    "id": 40,
+    "nombre": "Metroid Dread",
+    "slug": "metroid-dread",
+    "steamId": null,
+    "categoria": "accion",
+    "generos": [
+      "accion",
+      "aventura",
+      "plataformas"
+    ],
+    "precio": 59.99,
+    "imagen": "https://media.rawg.io/media/games/a4e/a4e8f6a04b61b8e8e5d80b7e40b28b35.jpg",
+    "imagenBanner": "https://media.rawg.io/media/games/a4e/a4e8f6a04b61b8e8e5d80b7e40b28b35.jpg",
+    "descripcion": "Samus Aran regresa en un thriller de acción y terror que concluye la saga principal de Metroid.",
+    "descripcionCorta": "Samus Aran vs. robots EMMI. Terror y acción metroidvania.",
+    "plataforma": "Switch",
+    "plataformas": [
+      "Nintendo Switch"
+    ],
+    "desarrollador": "MercurySteam",
+    "publicador": "Nintendo",
+    "fechaLanzamiento": "2021-10-08",
+    "rating": 4.8,
+    "ratingMetacritic": 88,
+    "ratingUsuariosMetacritic": 8.6,
+    "video": "https://www.youtube.com/embed/4u_CIDiMVcY",
+    "tags": [
+      "metroidvania",
+      "accion",
+      "nintendo-exclusive",
+      "terror"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {
+      "nintendo": "https://www.nintendo.com/es-us/store/products/metroid-dread-switch/"
+    }
+  },
+  {
+    "id": 41,
+    "nombre": "Death Stranding Director's Cut",
+    "slug": "death-stranding-directors-cut",
+    "steamId": 1850570,
+    "categoria": "aventura",
+    "generos": [
+      "aventura",
+      "accion"
+    ],
+    "precio": 39.99,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/1850570/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/1850570/header.jpg",
+    "descripcion": "Hideo Kojima redefine el género de los juegos de acción con esta experiencia única sobre conexión y humanidad.",
+    "descripcionCorta": "Conecta América. La obra más ambiciosa de Kojima.",
+    "plataforma": "PS5/PC",
+    "plataformas": [
+      "PS5",
+      "PC"
+    ],
+    "desarrollador": "Kojima Productions",
+    "publicador": "505 Games",
+    "fechaLanzamiento": "2021-09-24",
+    "rating": 4.5,
+    "ratingMetacritic": 87,
+    "ratingUsuariosMetacritic": 8.8,
+    "video": "https://www.youtube.com/embed/VkdoFRQIEiY",
+    "tags": [
+      "aventura",
+      "historia",
+      "mundo-abierto",
+      "kojima"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/1850570/",
+      "playstation": "https://www.playstation.com/es-us/games/death-stranding-directors-cut/",
+      "epic": "https://store.epicgames.com/es-ES/p/death-stranding"
+    }
+  },
+  {
+    "id": 42,
+    "nombre": "Persona 5 Royal",
+    "slug": "persona-5-royal",
+    "steamId": 1687950,
+    "categoria": "rpg",
+    "generos": [
+      "rpg",
+      "jrpg"
+    ],
+    "precio": 59.99,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/1687950/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/1687950/header.jpg",
+    "descripcion": "Un JRPG aclamado por la crítica con un estilo visual único, historia profunda y mecánicas de combate innovadoras.",
+    "descripcionCorta": "El JRPG más estilizado. Historia, combate y estética únicos.",
+    "plataforma": "Multi",
+    "plataformas": [
+      "PS5",
+      "PS4",
+      "Xbox Series X",
+      "Nintendo Switch",
+      "PC"
+    ],
+    "desarrollador": "Atlus",
+    "publicador": "Atlus",
+    "fechaLanzamiento": "2020-03-31",
+    "rating": 4.9,
+    "ratingMetacritic": 95,
+    "ratingUsuariosMetacritic": 9.2,
+    "video": "https://www.youtube.com/embed/oOVYLPLuRj0",
+    "tags": [
+      "jrpg",
+      "historia",
+      "estilo",
+      "turno"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/1687950/",
+      "playstation": "https://www.playstation.com/es-us/games/persona-5-royal/",
+      "xbox": "https://www.xbox.com/es-US/games/store/persona-5-royal/9P5NS95NKLDQ",
+      "nintendo": "https://www.nintendo.com/es-us/store/products/persona-5-royal-switch/"
+    }
+  },
+  {
+    "id": 43,
+    "nombre": "Monster Hunter: World",
+    "slug": "monster-hunter-world",
+    "steamId": 582010,
+    "categoria": "rpg",
+    "generos": [
+      "rpg",
+      "accion",
+      "cooperativo"
+    ],
+    "precio": 29.99,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/582010/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/582010/header.jpg",
+    "descripcion": "Caza monstruos épicos en un ecosistema vivo y lleno de vida en este RPG de acción de Capcom.",
+    "descripcionCorta": "Ecosistema vivo. Caza bestias colosales cooperando en grupo.",
+    "plataforma": "Multi",
+    "plataformas": [
+      "PS4",
+      "Xbox One",
+      "PC"
+    ],
+    "desarrollador": "Capcom",
+    "publicador": "Capcom",
+    "fechaLanzamiento": "2018-01-26",
+    "rating": 4.7,
+    "ratingMetacritic": 90,
+    "ratingUsuariosMetacritic": 8.7,
+    "video": "https://www.youtube.com/embed/fe--oQDiLIs",
+    "tags": [
+      "caza",
+      "cooperativo",
+      "rpg",
+      "accion"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/582010/",
+      "playstation": "https://www.playstation.com/es-us/games/monster-hunter-world/",
+      "xbox": "https://www.xbox.com/es-US/games/store/monster-hunter-world/BWKJ0XLBTP0C"
+    }
+  },
+  {
+    "id": 44,
+    "nombre": "Sekiro: Shadows Die Twice",
+    "slug": "sekiro-shadows-die-twice",
+    "steamId": 814380,
+    "categoria": "accion",
+    "generos": [
+      "accion",
+      "rpg"
+    ],
+    "precio": 59.99,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/814380/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/814380/header.jpg",
+    "descripcion": "Un ninja en el Japón feudal del siglo XVI combate contra enemigos sobrenaturales en este exigente juego de FromSoftware.",
+    "descripcionCorta": "Ninja en el Japón feudal. FromSoftware en su máximo nivel.",
+    "plataforma": "Multi",
+    "plataformas": [
+      "PS4",
+      "Xbox One",
+      "PC"
+    ],
+    "desarrollador": "FromSoftware",
+    "publicador": "Activision",
+    "fechaLanzamiento": "2019-03-22",
+    "rating": 4.8,
+    "ratingMetacritic": 90,
+    "ratingUsuariosMetacritic": 8.6,
+    "video": "https://www.youtube.com/embed/rXMX4YJ7Lks",
+    "tags": [
+      "soulslike",
+      "accion",
+      "ninja",
+      "dificil"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/814380/",
+      "playstation": "https://www.playstation.com/es-us/games/sekiro-shadows-die-twice/",
+      "xbox": "https://www.xbox.com/es-US/games/store/sekiro-shadows-die-twice"
+    }
+  },
+  {
+    "id": 45,
+    "nombre": "It Takes Two",
+    "slug": "it-takes-two",
+    "steamId": 1426210,
+    "categoria": "aventura",
+    "generos": [
+      "aventura",
+      "plataformas",
+      "cooperativo"
+    ],
+    "precio": 39.99,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/1426210/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/1426210/header.jpg",
+    "descripcion": "La mejor experiencia cooperativa de los últimos años. Una pareja en proceso de divorcio debe trabajar juntos para volver a ser humanos.",
+    "descripcionCorta": "El mejor co-op. Una historia de amor, risa y trabajo en equipo.",
+    "plataforma": "Multi",
+    "plataformas": [
+      "PS5",
+      "PS4",
+      "Xbox Series X",
+      "Xbox One",
+      "PC"
+    ],
+    "desarrollador": "Hazelight Studios",
+    "publicador": "Electronic Arts",
+    "fechaLanzamiento": "2021-03-26",
+    "rating": 4.9,
+    "ratingMetacritic": 89,
+    "ratingUsuariosMetacritic": 9,
+    "video": "https://www.youtube.com/embed/s1VEREaQYB0",
+    "tags": [
+      "cooperativo",
+      "aventura",
+      "historia",
+      "plataformas"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/1426210/",
+      "playstation": "https://www.playstation.com/es-us/games/it-takes-two/",
+      "xbox": "https://www.xbox.com/es-US/games/store/it-takes-two/9PBGQQ27XFHZ",
+      "epic": "https://store.epicgames.com/es-ES/p/it-takes-two"
+    }
+  },
+  {
+    "id": 46,
+    "nombre": "Splatoon 3",
+    "slug": "splatoon-3",
+    "steamId": null,
+    "categoria": "disparos",
+    "generos": [
+      "disparos",
+      "accion",
+      "multijugador"
+    ],
+    "precio": 59.99,
+    "imagen": "https://media.rawg.io/media/games/a4e/a4e8f6a04b61b8e8e5d80b7e40b28b35.jpg",
+    "imagenBanner": "https://media.rawg.io/media/games/a4e/a4e8f6a04b61b8e8e5d80b7e40b28b35.jpg",
+    "descripcion": "El shooter de Nintendo más colorido regresa con nuevos modos, armas y una campaña para un jugador mejorada.",
+    "descripcionCorta": "Shooter de tinta. Colorido, competitivo y adictivo.",
+    "plataforma": "Switch",
+    "plataformas": [
+      "Nintendo Switch"
+    ],
+    "desarrollador": "Nintendo EPD",
+    "publicador": "Nintendo",
+    "fechaLanzamiento": "2022-09-09",
+    "rating": 4.6,
+    "ratingMetacritic": 83,
+    "ratingUsuariosMetacritic": 7.8,
+    "video": "https://www.youtube.com/embed/gqN4PSB7-sA",
+    "tags": [
+      "shooter",
+      "multijugador",
+      "nintendo-exclusive",
+      "colorido"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {
+      "nintendo": "https://www.nintendo.com/es-us/store/products/splatoon-3-switch/"
+    }
+  },
+  {
+    "id": 47,
+    "nombre": "Doom Eternal",
+    "slug": "doom-eternal",
+    "steamId": 782330,
+    "categoria": "disparos",
+    "generos": [
+      "disparos",
+      "accion"
+    ],
+    "precio": 39.99,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/782330/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/782330/header.jpg",
+    "descripcion": "El Doom Slayer regresa más poderoso que nunca en este frenético shooter que lleva la acción al máximo.",
+    "descripcionCorta": "Matar demonios nunca fue tan elegante y brutal.",
+    "plataforma": "Multi",
+    "plataformas": [
+      "PS4",
+      "PS5",
+      "Xbox One",
+      "Xbox Series X",
+      "PC",
+      "Nintendo Switch"
+    ],
+    "desarrollador": "id Software",
+    "publicador": "Bethesda Softworks",
+    "fechaLanzamiento": "2020-03-20",
+    "rating": 4.7,
+    "ratingMetacritic": 88,
+    "ratingUsuariosMetacritic": 8.2,
+    "video": "https://www.youtube.com/embed/r5Fqk2tHpBY",
+    "tags": [
+      "fps",
+      "accion",
+      "demonios",
+      "velocidad"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/782330/",
+      "playstation": "https://www.playstation.com/es-us/games/doom-eternal/",
+      "xbox": "https://www.xbox.com/es-US/games/store/doom-eternal/9PLX5PDQH6XP"
+    }
+  },
+  {
+    "id": 48,
+    "nombre": "Among Us",
+    "slug": "among-us",
+    "steamId": 945360,
+    "categoria": "estrategia",
+    "generos": [
+      "estrategia",
+      "multijugador"
+    ],
+    "precio": 4.99,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/945360/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/945360/header.jpg",
+    "descripcion": "¿Quién es el impostor entre la tripulación? El juego de deducción social más popular del mundo.",
+    "descripcionCorta": "Nadie es de fiar. El mejor juego de deducción social.",
+    "plataforma": "Multi",
+    "plataformas": [
+      "PC",
+      "Nintendo Switch",
+      "PS4",
+      "Xbox One"
+    ],
+    "desarrollador": "Innersloth",
+    "publicador": "Innersloth",
+    "fechaLanzamiento": "2018-06-15",
+    "rating": 4.2,
+    "ratingMetacritic": 85,
+    "ratingUsuariosMetacritic": 7.5,
+    "video": "https://www.youtube.com/embed/NSKiHFgHJgw",
+    "tags": [
+      "multijugador",
+      "deduccion",
+      "social",
+      "impostor"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/945360/",
+      "nintendo": "https://www.nintendo.com/es-us/store/products/among-us-switch/",
+      "xbox": "https://www.xbox.com/es-US/games/store/among-us/9NG07QJNK38J"
+    }
   }
 ]
