@@ -1,7 +1,8 @@
-import { Router, type IRouter } from "express";
+import { Router, type IRouter, type Request, type Response } from "express";
 import path from "node:path";
 import { readFileSync, existsSync } from "node:fs";
 import { runAgente, type AgenteJuego, type Noticia } from "../agent/agente";
+import { json200 } from "../lib/http-json";
 
 const router: IRouter = Router();
 
@@ -71,7 +72,7 @@ function getLast7DaysStats(): Array<{ fecha: string; juegos: number }> {
   }));
 }
 
-router.get("/agente/status", (req, res) => {
+function handleAgenteStatus(_req: Request, res: Response): void {
   const lastRun = ultimaEjecucion ?? getLastRunFromLog();
   const juegos = readJSON<AgenteJuego[]>(JUEGOS_FILE, []);
   const hoy = new Date().toISOString().split("T")[0]!;
@@ -83,7 +84,7 @@ router.get("/agente/status", (req, res) => {
   nextRun.setUTCHours(6, 0, 0, 0);
   if (nextRun <= new Date()) nextRun.setUTCDate(nextRun.getUTCDate() + 1);
 
-  res.json({
+  json200(res, {
     activo: true,
     ejecutandose,
     ultimaEjecucion: lastRun,
@@ -93,11 +94,37 @@ router.get("/agente/status", (req, res) => {
     ultimasLineasLog: getRecentLogLines(),
     stats7dias: getLast7DaysStats(),
   });
-});
+}
+
+function handleAgenteJuegos(_req: Request, res: Response): void {
+  const juegos = readJSON<AgenteJuego[]>(JUEGOS_FILE, []);
+  const hoy = new Date().toISOString().split("T")[0]!;
+  const juegosDe24h = juegos.filter((j) => {
+    if (!j.fechaAgregado) return false;
+    const diff = Date.now() - new Date(j.fechaAgregado).getTime();
+    return diff < 24 * 60 * 60 * 1000;
+  });
+  json200(res, { juegos, juegosDe24h, total: juegos.length });
+}
+
+function handleAgenteNoticias(_req: Request, res: Response): void {
+  const noticias = readJSON<Noticia[]>(NOTICIAS_FILE, []);
+  json200(res, { noticias });
+}
+
+router.get("/agente/status", handleAgenteStatus);
+router.get("/status", handleAgenteStatus);
+
+router.get("/agente/juegos", handleAgenteJuegos);
+/** Alias: lista de juegos del agente (JSON en disco, misma fuente que /agente/juegos). */
+router.get("/juegos", handleAgenteJuegos);
+
+router.get("/agente/noticias", handleAgenteNoticias);
+router.get("/noticias", handleAgenteNoticias);
 
 router.post("/agente/run", async (req, res) => {
   if (ejecutandose) {
-    res.json({ success: false, mensaje: "El agente ya está en ejecución" });
+    json200(res, { success: false, mensaje: "El agente ya está en ejecución" });
     return;
   }
 
@@ -108,7 +135,7 @@ router.post("/agente/run", async (req, res) => {
     const resultado = await runAgente();
     ultimaEjecucion = new Date().toISOString();
     req.log.info(resultado, "Agente IA: ejecución manual completada");
-    res.json({
+    json200(res, {
       success: true,
       mensaje: `Agente completado. ${resultado.juegoAgregados} juegos agregados, ${resultado.noticias} noticias generadas.`,
       resultado,
@@ -119,22 +146,6 @@ router.post("/agente/run", async (req, res) => {
   } finally {
     ejecutandose = false;
   }
-});
-
-router.get("/agente/juegos", (_req, res) => {
-  const juegos = readJSON<AgenteJuego[]>(JUEGOS_FILE, []);
-  const hoy = new Date().toISOString().split("T")[0]!;
-  const juegosDe24h = juegos.filter((j) => {
-    if (!j.fechaAgregado) return false;
-    const diff = Date.now() - new Date(j.fechaAgregado).getTime();
-    return diff < 24 * 60 * 60 * 1000;
-  });
-  res.json({ juegos, juegosDe24h, total: juegos.length });
-});
-
-router.get("/agente/noticias", (_req, res) => {
-  const noticias = readJSON<Noticia[]>(NOTICIAS_FILE, []);
-  res.json({ noticias });
 });
 
 export default router;

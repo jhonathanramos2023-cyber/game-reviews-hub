@@ -4,7 +4,7 @@ export type AiStreamHandlers = {
   onError?: (message: string) => void;
 };
 
-const apiBase = `${import.meta.env.BASE_URL.replace(/\/$/, "")}/api`;
+import { resolveApiUrl } from "@/lib/api-base";
 
 export async function streamAi(
   system: string,
@@ -13,7 +13,7 @@ export async function streamAi(
   signal?: AbortSignal,
 ): Promise<void> {
   try {
-    const response = await fetch(`${apiBase}/ai/stream`, {
+    const response = await fetch(resolveApiUrl("/ai/stream"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ system, prompt }),

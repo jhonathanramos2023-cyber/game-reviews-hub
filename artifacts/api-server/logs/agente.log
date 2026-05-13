@@ -1,0 +1,13 @@
+[2026-04-30T23:20:42.971Z] Agente iniciando...
+[2026-04-30T23:20:42.971Z] RAWG: 6 juegos trending obtenidos
+[2026-04-30T23:20:42.971Z] ❌ ERROR: Cannot read properties of null (reading 'map')
+[2026-04-30T23:21:32.955Z] Agente iniciando...
+[2026-04-30T23:21:32.955Z] RAWG: 6 juegos trending obtenidos
+[2026-04-30T23:21:32.955Z] ❌ ERROR: Cannot read properties of null (reading 'map')
+[2026-04-30T23:21:45.310Z] Agente iniciando...
+[2026-04-30T23:21:45.310Z] RAWG: 6 juegos trending obtenidos
+[2026-04-30T23:21:45.310Z] Juegos: 3 nuevos agregados (total: 3)
+[2026-04-30T23:21:45.310Z] Noticias: 3 generadas
+[2026-04-30T23:22:12.369Z] ✅ Agente completado. 3 juegos agregados, 3 noticias generadas.
+[2026-05-13T07:12:52.063Z] Agente iniciando...
+[2026-05-13T07:12:52.063Z] IA no disponible (cliente Anthropic no configurado)

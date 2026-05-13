@@ -1,4 +1,5 @@
 import { Router, type IRouter } from "express";
+import { json200 } from "../lib/http-json";
 
 const router: IRouter = Router();
 
@@ -28,16 +29,16 @@ router.get("/imagen/:nombre", async (req, res) => {
     const name = decodeURIComponent(req.params.nombre);
     const response = await fetch(buildUrl(name));
     if (!response.ok) {
-      res.json({ imagen: null });
+      json200(res, { imagen: null });
       return;
     }
     const data = (await response.json()) as { results?: RawgGame[] };
     const juego = data.results?.[0];
     if (!juego) {
-      res.json({ imagen: null });
+      json200(res, { imagen: null });
       return;
     }
-    res.json({
+    json200(res, {
       imagen: juego.background_image ?? null,
       imagenAdicional: juego.background_image_additional ?? null,
       rating: juego.rating ?? null,
@@ -46,7 +47,7 @@ router.get("/imagen/:nombre", async (req, res) => {
     });
   } catch (err) {
     req.log.error({ err }, "RAWG image lookup failed");
-    res.json({ imagen: null });
+    json200(res, { imagen: null });
   }
 });
 

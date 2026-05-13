@@ -1,4 +1,5 @@
-import { Router, type IRouter } from "express";
+import { Router, type IRouter, type Request, type Response } from "express";
+import { json200 } from "../lib/http-json";
 
 const router: IRouter = Router();
 
@@ -40,10 +41,10 @@ interface ItadHistoryLowEntry {
   low?: { amount: number; shop?: ItadShop; timestamp?: string };
 }
 
-router.get("/deals/top/ofertas", async (_req, res) => {
+async function handleTopOfertas(_req: Request, res: Response): Promise<void> {
   const apiKey = getApiKey();
   if (!apiKey) {
-    res.json({ list: [], configured: false });
+    json200(res, { list: [], configured: false });
     return;
   }
   try {
@@ -51,20 +52,24 @@ router.get("/deals/top/ofertas", async (_req, res) => {
       `${ITAD_BASE}/deals/v2?key=${apiKey}&limit=12&sort=-cut&country=US`,
     );
     if (!response.ok) {
-      res.json({ list: [], configured: true, error: "ITAD request failed" });
+      json200(res, { list: [], configured: true, error: "ITAD request failed" });
       return;
     }
     const data = (await response.json()) as { list?: unknown[] };
-    res.json({ list: data.list ?? [], configured: true });
+    json200(res, { list: data.list ?? [], configured: true });
   } catch (err) {
-    res.json({ list: [], configured: true, error: (err as Error).message });
+    json200(res, { list: [], configured: true, error: (err as Error).message });
   }
-});
+}
+
+router.get("/deals/top/ofertas", handleTopOfertas);
+/** Alias for clients expecting /api/ofertas */
+router.get("/ofertas", handleTopOfertas);
 
 router.get("/deals/history/:gameId", async (req, res) => {
   const apiKey = getApiKey();
   if (!apiKey) {
-    res.json({ history: [], configured: false });
+    json200(res, { history: [], configured: false });
     return;
   }
   try {
@@ -80,7 +85,7 @@ router.get("/deals/history/:gameId", async (req, res) => {
       },
     );
     if (!response.ok) {
-      res.json({ history: [], configured: true });
+      json200(res, { history: [], configured: true });
       return;
     }
     const data = (await response.json()) as Array<{
@@ -92,16 +97,16 @@ router.get("/deals/history/:gameId", async (req, res) => {
       timestamp: h.timestamp,
       price: h.deal?.price?.amount ?? null,
     }));
-    res.json({ history, configured: true });
+    json200(res, { history, configured: true });
   } catch (err) {
-    res.json({ history: [], configured: true, error: (err as Error).message });
+    json200(res, { history: [], configured: true, error: (err as Error).message });
   }
 });
 
 router.get("/deals/:slug", async (req, res) => {
   const apiKey = getApiKey();
   if (!apiKey) {
-    res.json({ found: false, deals: [], configured: false });
+    json200(res, { found: false, deals: [], configured: false });
     return;
   }
   try {
@@ -111,12 +116,12 @@ router.get("/deals/:slug", async (req, res) => {
       `${ITAD_BASE}/games/search/v1?key=${apiKey}&title=${encodeURIComponent(title)}&results=1`,
     );
     if (!searchResp.ok) {
-      res.json({ found: false, deals: [], configured: true });
+      json200(res, { found: false, deals: [], configured: true });
       return;
     }
     const searchData = (await searchResp.json()) as ItadSearchEntry[];
     if (!searchData.length) {
-      res.json({ found: false, deals: [], configured: true });
+      json200(res, { found: false, deals: [], configured: true });
       return;
     }
     const gameId = searchData[0].id;
@@ -147,7 +152,7 @@ router.get("/deals/:slug", async (req, res) => {
     const prices = pricesData?.[0]?.deals ?? [];
     const historicalLow = histData?.[0]?.low ?? null;
 
-    res.json({
+    json200(res, {
       found: true,
       gameId,
       configured: true,
@@ -171,7 +176,7 @@ router.get("/deals/:slug", async (req, res) => {
     });
   } catch (err) {
     req.log.error({ err }, "deals fetch error");
-    res.json({
+    json200(res, {
       found: false,
       deals: [],
       configured: true,

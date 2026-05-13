@@ -1,4 +1,4 @@
-const apiBase = `${import.meta.env.BASE_URL.replace(/\/$/, "")}/api`;
+import { resolveApiUrl } from "@/lib/api-base";
 
 export interface Deal {
   tienda: string;
@@ -43,7 +43,7 @@ export async function fetchDealsForGame(
   nombre: string,
 ): Promise<DealsResponse> {
   try {
-    const res = await fetch(`${apiBase}/deals/${encodeURIComponent(nombre)}`);
+    const res = await fetch(resolveApiUrl(`/deals/${encodeURIComponent(nombre)}`));
     if (!res.ok) {
       return { found: false, configured: false, deals: [] };
     }
@@ -55,7 +55,7 @@ export async function fetchDealsForGame(
 
 export async function fetchTopDeals(): Promise<TopDealsResponse> {
   try {
-    const res = await fetch(`${apiBase}/deals/top/ofertas`);
+    const res = await fetch(resolveApiUrl("/deals/top/ofertas"));
     if (!res.ok) return { list: [], configured: false };
     return (await res.json()) as TopDealsResponse;
   } catch {
@@ -67,7 +67,7 @@ export async function fetchPriceHistory(
   gameId: string,
 ): Promise<PriceHistoryResponse> {
   try {
-    const res = await fetch(`${apiBase}/deals/history/${gameId}`);
+    const res = await fetch(resolveApiUrl(`/deals/history/${gameId}`));
     if (!res.ok) return { history: [], configured: false };
     return (await res.json()) as PriceHistoryResponse;
   } catch {

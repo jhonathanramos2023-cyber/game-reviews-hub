@@ -102,6 +102,9 @@ export default function GameDetail() {
     return (
       <div className="text-center py-20">
         <h2 className="text-3xl font-display font-bold mb-4">Juego no encontrado</h2>
+        <p className="text-muted-foreground mb-4">
+          ID recibido: <code className="px-1 py-0.5 rounded bg-muted text-xs">{String(id)}</code>
+        </p>
         <Link href="/">
           <Button>Volver al inicio</Button>
         </Link>
@@ -157,8 +160,8 @@ export default function GameDetail() {
       toast.error("Por favor, selecciona una calificación");
       return;
     }
-    if (reviewText.length < 50) {
-      toast.error(`La reseña debe tener al menos 50 caracteres (faltan ${50 - reviewText.length})`);
+    if (reviewText.length < 10) {
+      toast.error(`La reseña debe tener al menos 10 caracteres (faltan ${10 - reviewText.length})`);
       return;
     }
 
@@ -210,7 +213,8 @@ export default function GameDetail() {
     ((game as unknown) as { enlacesCompra?: Record<string, string | null | undefined> }).enlacesCompra ?? {}
   ).filter((entry): entry is [string, string] => typeof entry[1] === "string" && entry[1].length > 0);
 
-  return (
+  try {
+    return (
     <div className="space-y-12 pb-20">
       {/* Hero Banner */}
       <div className="relative -mt-8 -mx-4 md:-mx-8 h-[50vh] min-h-[400px] bg-background overflow-hidden">
@@ -405,7 +409,7 @@ export default function GameDetail() {
                 </div>
 
                 <Textarea
-                  placeholder="¿Qué te pareció el juego? Escribe al menos 50 caracteres..."
+                  placeholder="¿Qué te pareció el juego? Escribe al menos 10 caracteres..."
                   className="min-h-[120px] resize-y bg-background text-lg"
                   value={reviewText}
                   onChange={(e) => setReviewText(e.target.value)}
@@ -416,7 +420,7 @@ export default function GameDetail() {
                     <Checkbox
                       id="recommend"
                       checked={recommended}
-                      onCheckedChange={(c) => setRecommended(!!c)}
+                      onCheckedChange={(c) => setRecommended(c === true)}
                     />
                     <label
                       htmlFor="recommend"
@@ -442,11 +446,11 @@ export default function GameDetail() {
 
                   <div className="ml-auto flex items-center gap-4">
                     <span
-                      className={`text-xs ${reviewText.length < 50 ? "text-destructive" : "text-green-500"}`}
+                      className={`text-xs ${reviewText.length < 10 ? "text-destructive" : "text-green-500"}`}
                     >
-                      {reviewText.length}/50
+                      {reviewText.length}/10
                     </span>
-                    <Button onClick={handlePublishReview} className="font-bold" disabled={submitting}>
+                    <Button type="button" onClick={() => void handlePublishReview()} className="font-bold" disabled={submitting}>
                       {submitting ? (
                         <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> Publicando...</>
                       ) : (
@@ -663,4 +667,22 @@ export default function GameDetail() {
       </div>
     </div>
   );
+  } catch (err) {
+    console.error("[GameDetail] render error", err);
+    const message =
+      err instanceof Error ? err.message : typeof err === "string" ? err : "Unknown error";
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-black text-red-400 p-6">
+        <h1 className="text-2xl font-bold mb-4">Error al renderizar la página del juego</h1>
+        <pre className="whitespace-pre-wrap text-sm max-w-2xl text-left bg-zinc-900 border border-red-500/40 rounded p-4">
+          {String(message)}
+        </pre>
+        <div className="mt-4">
+          <Link href="/">
+            <Button variant="outline">Volver al inicio</Button>
+          </Link>
+        </div>
+      </div>
+    );
+  }
 }

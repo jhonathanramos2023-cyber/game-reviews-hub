@@ -3,8 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import { Bot, Play, RefreshCw, Zap, Clock, GamepadIcon, AlertCircle, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
-const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
+import { resolveApiUrl } from "@/lib/api-base";
 
 interface AgenteStatus {
   activo: boolean;
@@ -52,7 +51,7 @@ export default function Admin() {
 
   const fetchStatus = async () => {
     try {
-      const r = await fetch(`${BASE}/api/agente/status`);
+      const r = await fetch(resolveApiUrl("/agente/status"));
       const d = (await r.json()) as AgenteStatus;
       setStatus(d);
     } catch {
@@ -81,7 +80,7 @@ export default function Admin() {
     setRunning(true);
     setRunMsg(null);
     try {
-      const r = await fetch(`${BASE}/api/agente/run`, { method: "POST" });
+      const r = await fetch(resolveApiUrl("/agente/run"), { method: "POST" });
       const d = (await r.json()) as { success: boolean; mensaje: string };
       setRunMsg({ ok: d.success, text: d.mensaje });
       await fetchStatus();

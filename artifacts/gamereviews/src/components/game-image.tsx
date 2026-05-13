@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Gamepad2 } from "lucide-react";
+import { resolveApiUrl } from "@/lib/api-base";
 
 interface GameImageProps {
   src: string;
@@ -9,7 +10,6 @@ interface GameImageProps {
   fallbackTitle?: string;
 }
 
-const apiBase = `${import.meta.env.BASE_URL.replace(/\/$/, "")}/api`;
 const imageCache = new Map<string, string | null>();
 const inflight = new Map<string, Promise<string | null>>();
 
@@ -37,7 +37,7 @@ async function lookupRawgImage(name: string): Promise<string | null> {
   if (imageCache.has(key)) return imageCache.get(key) ?? null;
   const existing = inflight.get(key);
   if (existing) return existing;
-  const promise = fetch(`${apiBase}/imagen/${encodeURIComponent(name)}`)
+  const promise = fetch(resolveApiUrl(`/imagen/${encodeURIComponent(name)}`))
     .then((r) => (r.ok ? r.json() : { imagen: null }))
     .then((data: { imagen?: string | null }) => {
       const img = data.imagen ?? null;

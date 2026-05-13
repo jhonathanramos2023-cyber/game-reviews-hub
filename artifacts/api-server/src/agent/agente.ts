@@ -110,6 +110,9 @@ async function fetchTrendingGames(): Promise<RawgGame[]> {
 }
 
 async function callClaude(prompt: string): Promise<string> {
+  if (!anthropic) {
+    throw new Error("IA no disponible");
+  }
   const msg = await anthropic.messages.create({
     model: "claude-sonnet-4-6",
     max_tokens: 8192,
@@ -138,6 +141,12 @@ export async function runAgente(): Promise<{
   const startTs = new Date().toISOString();
   appendLog(`[${startTs}] Agente iniciando...`);
   logger.info("Agente IA iniciando ciclo");
+
+  if (!anthropic) {
+    appendLog(`[${startTs}] IA no disponible (cliente Anthropic no configurado)`);
+    logger.warn("Agente: sin API key de Anthropic, ciclo omitido");
+    return { juegoAgregados: 0, noticias: 0, error: "IA no disponible" };
+  }
 
   try {
     const trending = await fetchTrendingGames();

@@ -1,5 +1,6 @@
-import { useState, useMemo, useEffect } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useLocation } from "wouter";
+import { useQuery } from "@tanstack/react-query";
 import gamesData from "@/data/games.json";
 import { GameCard } from "@/components/game-card";
 import { useReviews } from "@/hooks/use-reviews";
@@ -11,8 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { TopDealsStrip } from "@/components/top-deals-strip";
 import { GameImage } from "@/components/game-image";
-
-const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
+import { resolveApiUrl } from "@/lib/api-base";
 
 interface AgenteJuego {
   id: number;
@@ -36,32 +36,67 @@ interface Noticia {
   fecha: string;
 }
 
+type AgenteHomeData = {
+  juegos: AgenteJuego[];
+  noticias: Noticia[];
+  lastRun: string | null;
+};
+
+async function parseAgenteResponseJson<T>(res: Response, fallback: T): Promise<T> {
+  if (!res.ok) return fallback;
+  try {
+    return (await res.json()) as T;
+  } catch {
+    return fallback;
+  }
+}
+
 function useAgenteData() {
-  const [juegos, setJuegos] = useState<AgenteJuego[]>([]);
-  const [noticias, setNoticias] = useState<Noticia[]>([]);
-  const [lastRun, setLastRun] = useState<string | null>(null);
+  const query = useQuery<AgenteHomeData>({
+    queryKey: ["agente", "home"],
+    queryFn: async (): Promise<AgenteHomeData> => {
+      const [jRes, nRes, sRes] = await Promise.all([
+        fetch(resolveApiUrl("/agente/juegos"), { cache: "no-store" }),
+        fetch(resolveApiUrl("/agente/noticias"), { cache: "no-store" }),
+        fetch(resolveApiUrl("/agente/status"), { cache: "no-store" }),
+      ]);
+
+      const jData = await parseAgenteResponseJson<{ juegosDe24h?: AgenteJuego[] }>(jRes, {});
+      const nData = await parseAgenteResponseJson<{ noticias?: Noticia[] }>(nRes, {});
+      const sData = await parseAgenteResponseJson<{ ultimaEjecucion?: string | null }>(sRes, {});
+
+      const okCount = [jRes.ok, nRes.ok, sRes.ok].filter(Boolean).length;
+      if (okCount === 0) {
+        throw new Error("agente fetch failed");
+      }
+
+      return {
+        juegos: jData.juegosDe24h ?? [],
+        noticias: nData.noticias ?? [],
+        lastRun: sData.ultimaEjecucion ?? null,
+      };
+    },
+    staleTime: 0,
+    refetchOnMount: true,
+  });
 
   useEffect(() => {
-    void (async () => {
-      try {
-        const [jRes, nRes, sRes] = await Promise.all([
-          fetch(`${BASE}/api/agente/juegos`),
-          fetch(`${BASE}/api/agente/noticias`),
-          fetch(`${BASE}/api/agente/status`),
-        ]);
-        const jData = (await jRes.json()) as { juegosDe24h: AgenteJuego[] };
-        const nData = (await nRes.json()) as { noticias: Noticia[] };
-        const sData = (await sRes.json()) as { ultimaEjecucion: string | null };
-        setJuegos(jData.juegosDe24h ?? []);
-        setNoticias(nData.noticias ?? []);
-        setLastRun(sData.ultimaEjecucion ?? null);
-      } catch {
-        /* silently skip if agent API not ready */
-      }
-    })();
-  }, []);
+    if (!query.data) return;
+    console.log("[home] agente query success", {
+      juegos: query.data.juegos.length,
+      noticias: query.data.noticias.length,
+      lastRun: query.data.lastRun,
+    });
+  }, [query.data]);
 
-  return { juegos, noticias, lastRun };
+  return {
+    juegos: query.data?.juegos ?? [],
+    noticias: query.data?.noticias ?? [],
+    lastRun: query.data?.lastRun ?? null,
+    isError: query.isError,
+    isPending: query.isPending,
+    refetch: query.refetch,
+  };
 }
 
 function timeAgo(iso: string | null): string {
@@ -80,6 +115,13 @@ export default function Home() {
   const { user } = useUser();
   const { juegos: juegosDe24h, noticias, lastRun } = useAgenteData();
   const hasAgenteContent = juegosDe24h.length > 0 || noticias.length > 0;
+
+  console.log("[home] render", {
+    juegosDe24h: juegosDe24h.length,
+    noticias: noticias.length,
+    hasAgenteContent,
+    lastRun,
+  });
   const [, setLocation] = useLocation();
   const [search, setSearch] = useState("");
   const [genre, setGenre] = useState("todos");

@@ -1,4 +1,5 @@
-import { Router, type IRouter } from "express";
+import { Router, type IRouter, type Request, type Response } from "express";
+import { json200 } from "../lib/http-json";
 import { db } from "@workspace/db";
 import { resenasTable, votosUtilidadTable } from "@workspace/db";
 import { eq, and, desc, sql } from "drizzle-orm";
@@ -22,7 +23,7 @@ router.get("/resenas/:juegoId", async (req, res) => {
       .from(resenasTable)
       .where(eq(resenasTable.juegoId, juegoId))
       .orderBy(desc(resenasTable.fecha));
-    res.json({ resenas });
+    json200(res, { resenas });
   } catch (err) {
     req.log.error({ err }, "Error fetching resenas");
     res.status(500).json({ error: "Error al obtener reseñas" });
@@ -36,34 +37,40 @@ router.get("/resenas", async (req, res) => {
       .from(resenasTable)
       .orderBy(desc(resenasTable.fecha))
       .limit(200);
-    res.json({ resenas });
+    json200(res, { resenas });
   } catch (err) {
     req.log.error({ err }, "Error fetching all resenas");
     res.status(500).json({ error: "Error al obtener reseñas" });
   }
 });
 
-router.post("/resenas", async (req, res) => {
+async function createResena(req: Request, res: Response) {
   try {
-    const { juegoId, juegoNombre, autor, rating, texto, recomendado, plataforma } = req.body as {
-      juegoId: number;
-      juegoNombre: string;
-      autor: string;
-      rating: number;
-      texto: string;
-      recomendado: boolean;
-      plataforma?: string;
-    };
+    const body = req.body as Record<string, unknown>;
+    const juegoId = Number(body["juegoId"]);
+    const juegoNombre = typeof body["juegoNombre"] === "string" ? body["juegoNombre"] : "";
+    const autor = typeof body["autor"] === "string" ? body["autor"] : "";
+    const texto = typeof body["texto"] === "string" ? body["texto"] : "";
+    const ratingRaw = Number(body["rating"]);
+    const recomendado = Boolean(body["recomendado"]);
+    const plataforma =
+      typeof body["plataforma"] === "string" ? body["plataforma"] : "PC";
 
-    if (!texto || texto.length < 10) {
+    if (!Number.isFinite(juegoId) || juegoId <= 0 || !Number.isInteger(juegoId)) {
+      res.status(400).json({ error: "juegoId inválido" });
+      return;
+    }
+
+    if (!texto.trim() || texto.trim().length < 10) {
       res.status(400).json({ error: "La reseña debe tener al menos 10 caracteres" });
       return;
     }
-    if (!rating || rating < 1 || rating > 5) {
+    const rating = Math.round(ratingRaw);
+    if (!Number.isFinite(ratingRaw) || rating < 1 || rating > 5) {
       res.status(400).json({ error: "El rating debe ser entre 1 y 5" });
       return;
     }
-    if (!autor?.trim()) {
+    if (!autor.trim()) {
       res.status(400).json({ error: "El autor es requerido" });
       return;
     }
@@ -71,21 +78,24 @@ router.post("/resenas", async (req, res) => {
     const id = randomBytes(6).toString("hex");
     await db.insert(resenasTable).values({
       id,
-      juegoId: Number(juegoId),
-      juegoNombre: sanitize(juegoNombre ?? ""),
+      juegoId,
+      juegoNombre: sanitize(juegoNombre),
       autor: sanitize(autor),
-      rating: Math.min(5, Math.max(1, Number(rating))),
+      rating,
       texto: sanitize(texto),
-      recomendado: Boolean(recomendado),
-      plataforma: sanitize(plataforma ?? "PC"),
+      recomendado,
+      plataforma: sanitize(plataforma || "PC"),
     });
 
-    res.json({ success: true, id });
+    json200(res, { success: true, id });
   } catch (err) {
     req.log.error({ err }, "Error creating resena");
     res.status(500).json({ error: "Error al crear reseña" });
   }
-});
+}
+
+router.post("/resenas", createResena);
+router.post("/reviews", createResena);
 
 router.delete("/resenas/:id", async (req, res) => {
   try {
@@ -108,7 +118,7 @@ router.delete("/resenas/:id", async (req, res) => {
     }
 
     await db.delete(resenasTable).where(eq(resenasTable.id, id));
-    res.json({ success: true });
+    json200(res, { success: true });
   } catch (err) {
     req.log.error({ err }, "Error deleting resena");
     res.status(500).json({ error: "Error al eliminar reseña" });
@@ -147,7 +157,7 @@ router.post("/resenas/:id/utilidad", async (req, res) => {
       .set({ utilidad: sql`${resenasTable.utilidad} + 1` })
       .where(eq(resenasTable.id, id));
 
-    res.json({ success: true });
+    json200(res, { success: true });
   } catch (err) {
     req.log.error({ err }, "Error voting utilidad");
     res.status(500).json({ error: "Error al votar" });
@@ -166,7 +176,11 @@ router.get("/stats/juego/:juegoId", async (req, res) => {
     const avgRating = total > 0 ? resenas.reduce((s, r) => s + r.rating, 0) / total : 0;
     const recomendados = resenas.filter((r) => r.recomendado).length;
 
-    res.json({ totalResenas: total, ratingPromedio: avgRating, totalRecomendados: recomendados });
+    json200(res, {
+      totalResenas: total,
+      ratingPromedio: avgRating,
+      totalRecomendados: recomendados,
+    });
   } catch (err) {
     req.log.error({ err }, "Error fetching stats");
     res.status(500).json({ error: "Error al obtener estadísticas" });

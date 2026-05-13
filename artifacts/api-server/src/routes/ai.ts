@@ -19,10 +19,20 @@ router.post("/ai/stream", async (req, res) => {
   }
 
   res.setHeader("Content-Type", "text/event-stream");
-  res.setHeader("Cache-Control", "no-cache, no-transform");
+  res.setHeader("Cache-Control", "no-store, no-cache, no-transform");
   res.setHeader("Connection", "keep-alive");
   res.setHeader("X-Accel-Buffering", "no");
   res.flushHeaders?.();
+
+  if (!anthropic) {
+    try {
+      res.write(`data: ${JSON.stringify({ error: "IA no disponible" })}\n\n`);
+    } catch {
+      // response may already be closed
+    }
+    res.end();
+    return;
+  }
 
   try {
     const stream = anthropic.messages.stream({
