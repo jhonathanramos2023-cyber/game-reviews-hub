@@ -1,0 +1,3 @@
+﻿[build]
+buildCommand = "cd ../.. && pnpm install --no-frozen-lockfile --ignore-scripts && cd artifacts/api-server && pnpm run build"
+startCommand = "node --enable-source-maps ./dist/index.mjs"
