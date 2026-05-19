@@ -2,7 +2,5 @@
 set -e
 export PATH="$HOME/.npm-global/bin:$PATH"
 npm install -g pnpm@11.1.1 --prefix "$HOME/.npm-global"
-cd artifacts/gamereviews
 pnpm install --ignore-scripts
-export VITE_API_ORIGIN=https://game-reviews-hub-api.onrender.com
-pnpm run build
+pnpm --filter @workspace/api-server run build
