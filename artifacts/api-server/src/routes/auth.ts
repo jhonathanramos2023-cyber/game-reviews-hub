@@ -7,6 +7,7 @@ import { usuariosTable } from "@workspace/db";
 import { json200 } from "../lib/http-json";
 import { clearAuthCookie, setAuthCookie, signToken } from "../lib/auth";
 import { requireAuth, type AuthenticatedRequest } from "../middleware/auth";
+import { mapDbError } from "../lib/db-errors";
 
 const router: IRouter = Router();
 const BCRYPT_ROUNDS = 12;
@@ -27,7 +28,10 @@ function publicUser(row: typeof usuariosTable.$inferSelect) {
     nombre: row.nombre,
     email: row.email,
     avatarUrl: row.avatarUrl,
-    fechaRegistro: row.fechaRegistro,
+    fechaRegistro:
+      row.fechaRegistro instanceof Date
+        ? row.fechaRegistro.toISOString()
+        : row.fechaRegistro,
     rol: row.rol,
   };
 }
@@ -89,7 +93,9 @@ router.post("/auth/register", async (req, res) => {
     json200(res, { success: true, user: publicUser(created) });
   } catch (err) {
     req.log.error({ err }, "Error en registro");
-    res.status(500).json({ error: "Error al registrar usuario" });
+    const message = mapDbError(err, "Error al registrar usuario");
+    const status = message.includes("ya está registrado") ? 409 : 500;
+    res.status(status).json({ error: message });
   }
 });
 
@@ -130,7 +136,7 @@ router.post("/auth/login", async (req, res) => {
     json200(res, { success: true, user: publicUser(user) });
   } catch (err) {
     req.log.error({ err }, "Error en login");
-    res.status(500).json({ error: "Error al iniciar sesión" });
+    res.status(500).json({ error: mapDbError(err, "Error al iniciar sesión") });
   }
 });
 

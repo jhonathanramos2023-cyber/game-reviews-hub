@@ -28,6 +28,31 @@ export function useUser() {
     });
   };
 
+  /** Sync local profile after API login/register (single write — avoids stale closure in updateProfile). */
+  const setUserFromAuth = (params: {
+    nombre: string;
+    avatarUrl?: string | null;
+    fechaRegistro?: string | Date | null;
+  }) => {
+    const color =
+      params.avatarUrl?.startsWith("#") === true
+        ? params.avatarUrl
+        : DEFAULT_COLORS[Math.floor(Math.random() * DEFAULT_COLORS.length)];
+    const fecha =
+      params.fechaRegistro instanceof Date
+        ? params.fechaRegistro.toISOString()
+        : typeof params.fechaRegistro === "string"
+          ? params.fechaRegistro
+          : new Date().toISOString();
+
+    setUser((prev) => ({
+      nombre: params.nombre || "Gamer",
+      bio: prev?.bio ?? "Soy un jugador apasionado.",
+      avatarColor: color,
+      fechaRegistro: fecha,
+    }));
+  };
+
   const updateProfile = (updates: Partial<User>) => {
     if (user) {
       setUser({ ...user, ...updates });
@@ -42,5 +67,5 @@ export function useUser() {
     window.location.reload();
   };
 
-  return { user, initUser, updateProfile, clearData, colors: DEFAULT_COLORS };
+  return { user, initUser, setUserFromAuth, updateProfile, clearData, colors: DEFAULT_COLORS };
 }

@@ -14,6 +14,7 @@ app.set("etag", false);
 
 const defaultOrigins = [
   "https://game-reviews-web.onrender.com",
+  "https://game-reviews-hub.onrender.com",
   "http://localhost:5173",
   "http://127.0.0.1:5173",
 ];

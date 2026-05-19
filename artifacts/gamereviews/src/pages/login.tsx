@@ -46,7 +46,7 @@ export default function Login() {
     setSuccess("");
     setSubmitting(true);
     try {
-      await login({ email, password, rememberMe });
+      await login({ email: email.trim().toLowerCase(), password, rememberMe });
       setSuccess("¡Bienvenido de nuevo!");
       setTimeout(() => setLocation(getRedirectTarget()), 400);
     } catch (err) {

@@ -31,7 +31,12 @@ export default function Register() {
     setSuccess("");
     setSubmitting(true);
     try {
-      await register({ nombre, email, password, rememberMe });
+      await register({
+        nombre: nombre.trim(),
+        email: email.trim().toLowerCase(),
+        password,
+        rememberMe,
+      });
       setSuccess("¡Cuenta creada! Redirigiendo…");
       setTimeout(() => setLocation("/"), 500);
     } catch (err) {
