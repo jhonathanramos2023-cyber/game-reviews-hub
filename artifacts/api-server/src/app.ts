@@ -7,8 +7,31 @@ import { logger } from "./lib/logger";
 
 const app: Express = express();
 
+app.set("trust proxy", 1);
+
 // Never send weak ETags — combined with conditional requests they yield 304 + empty body in some clients.
 app.set("etag", false);
+
+const defaultOrigins = [
+  "https://game-reviews-web.onrender.com",
+  "http://localhost:5173",
+  "http://127.0.0.1:5173",
+];
+
+function buildAllowedOrigins(): Set<string> {
+  const allowed = new Set(defaultOrigins);
+  for (const key of ["CORS_ORIGIN", "FRONTEND_URL"] as const) {
+    const raw = process.env[key];
+    if (!raw) continue;
+    for (const part of raw.split(",")) {
+      const origin = part.trim();
+      if (origin) allowed.add(origin);
+    }
+  }
+  return allowed;
+}
+
+const allowedOrigins = buildAllowedOrigins();
 
 app.use(
   pinoHttp({
@@ -29,10 +52,15 @@ app.use(
     },
   }),
 );
-const corsOrigin = process.env.CORS_ORIGIN ?? process.env.FRONTEND_URL ?? true;
 app.use(
   cors({
-    origin: corsOrigin,
+    origin(origin, callback) {
+      if (!origin || allowedOrigins.has(origin)) {
+        callback(null, true);
+        return;
+      }
+      callback(null, false);
+    },
     credentials: true,
   }),
 );

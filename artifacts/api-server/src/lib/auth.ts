@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import type { Response } from "express";
+import { authCookieOptions } from "./cookie-options";
 
 export type AuthTokenPayload = {
   sub: string;
@@ -34,18 +35,11 @@ export function verifyToken(token: string): AuthTokenPayload | null {
 
 export function setAuthCookie(res: Response, token: string, rememberMe: boolean): void {
   const maxAgeMs = rememberMe ? 30 * 24 * 60 * 60 * 1000 : 7 * 24 * 60 * 60 * 1000;
-  const secure = process.env.NODE_ENV === "production";
-  res.cookie(COOKIE_NAME, token, {
-    httpOnly: true,
-    secure,
-    sameSite: "lax",
-    maxAge: maxAgeMs,
-    path: "/",
-  });
+  res.cookie(COOKIE_NAME, token, authCookieOptions(maxAgeMs));
 }
 
 export function clearAuthCookie(res: Response): void {
-  res.clearCookie(COOKIE_NAME, { path: "/" });
+  res.clearCookie(COOKIE_NAME, authCookieOptions());
 }
 
 export function getTokenFromRequest(req: {

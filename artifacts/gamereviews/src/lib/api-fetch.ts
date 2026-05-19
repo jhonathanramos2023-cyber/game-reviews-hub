@@ -9,7 +9,7 @@ export async function apiFetch(
     credentials: "include",
     cache: init?.cache ?? "no-store",
     headers: {
-      "Content-Type": "application/json",
+      ...(init?.body != null ? { "Content-Type": "application/json" } : {}),
       ...init?.headers,
     },
   });
