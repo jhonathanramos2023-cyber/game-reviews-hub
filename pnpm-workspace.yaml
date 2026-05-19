@@ -35,9 +35,11 @@ onlyBuiltDependencies:
   - esbuild
   - msw
   - unrs-resolver
+  - bcrypt
 
 allowBuilds:
   esbuild: true
   '@swc/core': true
   msw: true
   unrs-resolver: true
+  bcrypt: true

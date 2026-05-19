@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Link } from "wouter";
 import { useUser } from "@/hooks/use-user";
-import { useReviews } from "@/hooks/use-reviews";
+import { useAuth } from "@/hooks/use-auth";
+import { useUserReviews } from "@/hooks/use-user-reviews";
 import { useList } from "@/hooks/use-list";
 import { usePlan } from "@/hooks/use-plan";
 import gamesData from "@/data/games.json";
@@ -14,23 +15,69 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Stars } from "@/components/stars";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { UserCircle, Settings, Download, Trash2, Edit2, MessageSquare, Crown } from "lucide-react";
+import { UserCircle, Settings, Download, Trash2, Edit2, MessageSquare, Crown, Pencil } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 
 export default function Profile() {
+  const { user: authUser } = useAuth();
   const { user, updateProfile, clearData, colors } = useUser();
-  const { reviews, deleteReview } = useReviews();
+  const { reviews: myReviews, loading: reviewsLoading, deleteReview, updateReview } =
+    useUserReviews(!!authUser);
   const { list } = useList();
   const { plan } = usePlan();
 
   const [isEditing, setIsEditing] = useState(false);
-  const [editName, setEditName] = useState(user?.nombre || "");
+  const [editName, setEditName] = useState(user?.nombre || authUser?.nombre || "");
   const [editBio, setEditBio] = useState(user?.bio || "");
+  const [editingReview, setEditingReview] = useState<(typeof myReviews)[0] | null>(null);
+  const [editRating, setEditRating] = useState(0);
+  const [editText, setEditText] = useState("");
+  const [editRecomendado, setEditRecomendado] = useState(true);
 
-  if (!user) return null;
+  if (!user && !authUser) return null;
 
-  const myReviews = reviews.filter(r => r.autor === user.nombre);
+  const displayUser = user ?? {
+    nombre: authUser!.nombre,
+    bio: "Soy un jugador apasionado.",
+    avatarColor: authUser!.avatarUrl?.startsWith("#") ? authUser!.avatarUrl! : "#8B5CF6",
+    fechaRegistro: authUser!.fechaRegistro,
+  };
+
+  const openEditReview = (review: (typeof myReviews)[0]) => {
+    setEditingReview(review);
+    setEditRating(review.rating);
+    setEditText(review.texto);
+    setEditRecomendado(review.recomendado);
+  };
+
+  const handleSaveReviewEdit = async () => {
+    if (!editingReview || editText.trim().length < 10) {
+      toast.error("La reseña debe tener al menos 10 caracteres");
+      return;
+    }
+    try {
+      await updateReview({
+        id: editingReview.id,
+        rating: editRating,
+        texto: editText,
+        recomendado: editRecomendado,
+        plataforma: editingReview.plataforma,
+      });
+      setEditingReview(null);
+      toast.success("Reseña actualizada");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Error al actualizar");
+    }
+  };
 
   // Calculate favorite genres based on completed games
   const favoriteGenres = (() => {
@@ -88,8 +135,8 @@ export default function Profile() {
         <CardContent className="px-6 pb-6 relative pt-0">
           <div className="flex flex-col md:flex-row items-center md:items-end gap-6 -mt-16 mb-6">
             <Avatar className="h-32 w-32 border-4 border-background shadow-xl">
-              <AvatarFallback style={{ backgroundColor: user.avatarColor, color: "#fff", fontSize: "3rem" }}>
-                {user.nombre.charAt(0).toUpperCase()}
+              <AvatarFallback style={{ backgroundColor: displayUser.avatarColor, color: "#fff", fontSize: "3rem" }}>
+                {displayUser.nombre.charAt(0).toUpperCase()}
               </AvatarFallback>
             </Avatar>
             
@@ -106,13 +153,13 @@ export default function Profile() {
               ) : (
                 <div>
                   <div className="flex items-center justify-center md:justify-start gap-3">
-                    <h1 className="text-3xl font-display font-bold">{user.nombre}</h1>
+                    <h1 className="text-3xl font-display font-bold">{displayUser.nombre}</h1>
                     {plan === "pro" && <Badge className="bg-primary text-primary-foreground font-bold">PRO</Badge>}
                     {plan === "elite" && <Badge className="bg-amber-500 text-black font-bold">ELITE</Badge>}
                   </div>
-                  <p className="text-muted-foreground mt-1">{user.bio}</p>
+                  <p className="text-muted-foreground mt-1">{displayUser.bio}</p>
                   <p className="text-xs text-muted-foreground mt-2 opacity-50">
-                    Miembro desde {new Date(user.fechaRegistro).toLocaleDateString()}
+                    Miembro desde {new Date(displayUser.fechaRegistro).toLocaleDateString()}
                   </p>
                   <div className="mt-3 flex items-center justify-center md:justify-start gap-2 text-sm text-muted-foreground">
                     <Crown className="h-4 w-4" /> Plan actual: {plan.charAt(0).toUpperCase() + plan.slice(1)} • <Link href="/suscripcion" className="text-primary hover:underline">Gestionar plan</Link>
@@ -187,7 +234,7 @@ export default function Profile() {
                   {colors.map(color => (
                     <button
                       key={color}
-                      className={`w-8 h-8 rounded-full rounded-tr-sm transition-transform hover:scale-110 ${user.avatarColor === color ? 'ring-2 ring-offset-2 ring-background ring-offset-foreground scale-110' : ''}`}
+                      className={`w-8 h-8 rounded-full rounded-tr-sm transition-transform hover:scale-110 ${displayUser.avatarColor === color ? 'ring-2 ring-offset-2 ring-background ring-offset-foreground scale-110' : ''}`}
                       style={{ backgroundColor: color }}
                       onClick={() => updateProfile({ avatarColor: color })}
                     />
@@ -231,7 +278,9 @@ export default function Profile() {
             <MessageSquare className="h-6 w-6 text-primary" /> Mis Reseñas
           </h3>
           
-          {myReviews.length === 0 ? (
+          {reviewsLoading ? (
+            <p className="text-muted-foreground text-center py-8">Cargando reseñas…</p>
+          ) : myReviews.length === 0 ? (
             <Card className="bg-card/50 border-dashed border-border text-center py-12">
               <CardContent>
                 <p className="text-muted-foreground">Aún no has escrito ninguna reseña.</p>
@@ -261,15 +310,22 @@ export default function Profile() {
                               </Link>
                               <div className="text-xs text-muted-foreground">{new Date(review.fecha).toLocaleDateString()}</div>
                             </div>
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-1">
                               <Stars rating={review.rating} />
-                              <Button 
-                                variant="ghost" 
-                                size="icon" 
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8 text-primary hover:bg-primary/10"
+                                onClick={() => openEditReview(review)}
+                              >
+                                <Pencil className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="icon"
                                 className="h-8 w-8 text-destructive hover:bg-destructive/10 -mr-2"
                                 onClick={() => {
-                                  deleteReview(review.id);
-                                  toast("Reseña eliminada");
+                                  void deleteReview(review.id).then(() => toast("Reseña eliminada"));
                                 }}
                               >
                                 <Trash2 className="h-4 w-4" />
@@ -294,6 +350,26 @@ export default function Profile() {
           )}
         </div>
       </div>
+
+      <Dialog open={!!editingReview} onOpenChange={(open) => !open && setEditingReview(null)}>
+        <DialogContent className="bg-card border-primary/30">
+          <DialogHeader>
+            <DialogTitle>Editar reseña</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <Stars rating={editRating} onRating={setEditRating} interactive max={5} />
+            <Textarea
+              value={editText}
+              onChange={(e) => setEditText(e.target.value)}
+              className="min-h-[120px] focus-visible:ring-primary"
+            />
+          </div>
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setEditingReview(null)}>Cancelar</Button>
+            <Button onClick={() => void handleSaveReviewEdit()}>Guardar</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

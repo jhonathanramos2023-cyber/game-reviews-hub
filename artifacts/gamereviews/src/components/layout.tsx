@@ -1,5 +1,8 @@
 import { Link, useLocation } from "wouter";
-import { Gamepad2, Trophy, List, User, Search, Menu, X, Crown } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { Gamepad2, Trophy, List, User, Menu, X, Crown, LogOut, LogIn } from "lucide-react";
+import { useAuth } from "@/hooks/use-auth";
+import { apiFetch, parseApiJson } from "@/lib/api-fetch";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -10,10 +13,33 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ScrollToTop } from "@/components/scroll-to-top";
 
 export function Layout({ children }: { children: React.ReactNode }) {
-  const [location] = useLocation();
-  const { user } = useUser();
+  const [location, setLocation] = useLocation();
+  const { user: localUser } = useUser();
+  const { user: authUser, logout, loading: authLoading } = useAuth();
   const { plan } = usePlan();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const onlineQuery = useQuery({
+    queryKey: ["stats", "online"],
+    queryFn: async () => {
+      const res = await apiFetch("/stats/online");
+      if (!res.ok) return { count: 0 };
+      return parseApiJson<{ count: number }>(res);
+    },
+    refetchInterval: 60_000,
+    staleTime: 30_000,
+  });
+
+  const displayName = authUser?.nombre ?? localUser?.nombre;
+  const avatarColor =
+    authUser?.avatarUrl?.startsWith("#")
+      ? authUser.avatarUrl
+      : localUser?.avatarColor ?? "#8B5CF6";
+
+  const handleLogout = async () => {
+    await logout();
+    setLocation("/");
+  };
 
   const navLinks = [
     { href: "/", label: "Inicio", icon: Gamepad2 },
@@ -54,7 +80,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
               {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </Button>
             
-            {user ? (
+            {onlineQuery.data?.count != null && onlineQuery.data.count > 0 && (
+              <Badge variant="outline" className="hidden sm:flex border-green-500/40 text-green-500 bg-green-500/10 text-xs">
+                <span className="w-1.5 h-1.5 rounded-full bg-green-500 mr-1.5 animate-pulse" />
+                {onlineQuery.data.count} en línea
+              </Badge>
+            )}
+            {!authLoading && authUser ? (
               <div className="flex items-center gap-2">
                 {plan === "pro" && (
                   <Badge variant="default" className="hidden sm:flex bg-primary text-primary-foreground font-bold px-2 py-0 text-xs">PRO</Badge>
@@ -64,12 +96,22 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 )}
                 <Link href="/perfil">
                   <Avatar className="h-8 w-8 cursor-pointer border border-primary/20 hover:border-primary transition-colors">
-                    <AvatarFallback style={{ backgroundColor: user.avatarColor, color: "#fff" }}>
-                      {user.nombre.charAt(0).toUpperCase()}
+                    <AvatarFallback style={{ backgroundColor: avatarColor, color: "#fff" }}>
+                      {(displayName ?? "U").charAt(0).toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
                 </Link>
+                <span className="hidden lg:inline text-sm font-medium max-w-[100px] truncate">{displayName}</span>
+                <Button variant="ghost" size="sm" className="hidden sm:flex gap-1" onClick={() => void handleLogout()}>
+                  <LogOut className="h-4 w-4" /> Salir
+                </Button>
               </div>
+            ) : !authLoading ? (
+              <Link href="/login">
+                <Button variant="outline" size="sm" className="gap-1 border-primary/40">
+                  <LogIn className="h-4 w-4" /> <span className="hidden sm:inline">Entrar</span>
+                </Button>
+              </Link>
             ) : null}
           </div>
         </div>

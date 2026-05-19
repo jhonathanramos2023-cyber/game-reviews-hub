@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
-import { useParams, Link } from "wouter";
+import { useParams, Link, useLocation } from "wouter";
 import gamesData from "@/data/games.json";
 import { useGameReviews } from "@/hooks/use-game-reviews";
 import { useList, ListStatus } from "@/hooks/use-list";
 import { useUser } from "@/hooks/use-user";
+import { useAuth } from "@/hooks/use-auth";
+import { ReviewReplies } from "@/components/review-replies";
 import { usePlan } from "@/hooks/use-plan";
 import { useUpgradeModal } from "@/components/upgrade-modal";
 import { Badge } from "@/components/ui/badge";
@@ -43,6 +45,8 @@ export default function GameDetail() {
   const game = gamesData.find((g) => g.id === gameId);
 
   const { user } = useUser();
+  const { user: authUser, isAdmin } = useAuth();
+  const [, setLocation] = useLocation();
   const { list, addToList, updateItem, removeFromList } = useList();
   const { canWriteReview, canAddToList } = usePlan();
   const { triggerUpgrade } = useUpgradeModal();
@@ -52,6 +56,7 @@ export default function GameDetail() {
     loading: reviewsLoading,
     addReview,
     deleteReview,
+    addReply,
     voteReview,
     hasVoted,
     reviewsWithOwnership,
@@ -112,7 +117,7 @@ export default function GameDetail() {
     );
   }
 
-  const displayedReviews = reviewsWithOwnership(user?.nombre);
+  const displayedReviews = reviewsWithOwnership(authUser?.nombre, isAdmin);
   const avgRating =
     gameReviews.length > 0
       ? gameReviews.reduce((acc, r) => acc + r.rating, 0) / gameReviews.length
@@ -144,8 +149,9 @@ export default function GameDetail() {
   };
 
   const handlePublishReview = async () => {
-    if (!user) {
-      toast.error("Debes tener un nombre de usuario para publicar");
+    if (!authUser) {
+      const redirect = encodeURIComponent(`/juego/${gameId}`);
+      setLocation(`/login?redirect=${redirect}`);
       return;
     }
     if (!canWriteReview()) {
@@ -168,7 +174,6 @@ export default function GameDetail() {
     try {
       setSubmitting(true);
       await addReview({
-        autor: user.nombre,
         rating,
         texto: reviewText,
         recomendado: recommended,
@@ -187,7 +192,7 @@ export default function GameDetail() {
   };
 
   const handleVote = async (reviewId: string) => {
-    const userHash = user?.nombre ?? "anonimo";
+    const userHash = authUser?.nombre ?? user?.nombre ?? "anonimo";
     const voted = await voteReview(reviewId, userHash);
     if (voted) {
       toast.success("Voto registrado");
@@ -196,9 +201,9 @@ export default function GameDetail() {
     }
   };
 
-  const handleDeleteReview = async (reviewId: string, autor: string) => {
+  const handleDeleteReview = async (reviewId: string) => {
     try {
-      await deleteReview(reviewId, autor);
+      await deleteReview(reviewId);
       toast("Reseña eliminada");
     } catch {
       toast.error("No se pudo eliminar la reseña");
@@ -399,7 +404,7 @@ export default function GameDetail() {
                     </AvatarFallback>
                   </Avatar>
                   <div>
-                    <div className="font-bold">{user?.nombre ?? "Jugador"}</div>
+                    <div className="font-bold">{authUser?.nombre ?? user?.nombre ?? "Jugador"}</div>
                     <div className="text-xs text-muted-foreground">Tu opinión importa</div>
                   </div>
                   <div className="ml-auto flex items-center gap-2 bg-background p-2 rounded-lg border border-border">
@@ -545,18 +550,25 @@ export default function GameDetail() {
                             </Button>
                           </div>
 
-                          {review.esPropia && (
+                          {review.puedeEliminar && (
                             <Button
                               variant="ghost"
                               size="sm"
                               className="text-destructive hover:bg-destructive/10"
-                              onClick={() => void handleDeleteReview(review.id, review.autor)}
+                              onClick={() => void handleDeleteReview(review.id)}
                             >
                               <Trash2 className="h-4 w-4 mr-2" />
                               Eliminar
                             </Button>
                           )}
                         </div>
+
+                        <ReviewReplies
+                          resenaId={review.id}
+                          respuestaCount={review.respuestaCount ?? 0}
+                          respuestas={review.respuestas ?? []}
+                          onReply={addReply}
+                        />
                       </CardContent>
                     </Card>
                   ))

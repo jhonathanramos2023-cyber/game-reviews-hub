@@ -16,6 +16,10 @@ import MyList from "@/pages/my-list";
 import Profile from "@/pages/profile";
 import Subscription from "@/pages/subscription";
 import Admin from "@/pages/admin";
+import Login from "@/pages/login";
+import Register from "@/pages/register";
+import { AuthProvider } from "@/hooks/use-auth";
+import { ProtectedRoute } from "@/components/protected-route";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -80,8 +84,18 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/juego/:id" component={GameDetail} />
       <Route path="/ranking" component={Ranking} />
-      <Route path="/mi-lista" component={MyList} />
-      <Route path="/perfil" component={Profile} />
+      <Route path="/login" component={Login} />
+      <Route path="/register" component={Register} />
+      <Route path="/mi-lista">
+        <ProtectedRoute>
+          <MyList />
+        </ProtectedRoute>
+      </Route>
+      <Route path="/perfil">
+        <ProtectedRoute>
+          <Profile />
+        </ProtectedRoute>
+      </Route>
       <Route path="/suscripcion" component={Subscription} />
       <Route path="/admin" component={Admin} />
       <Route component={NotFound} />
@@ -95,12 +109,14 @@ function App() {
       <TooltipProvider>
         <WouterRouter base={wouterBase}>
           <ErrorBoundary>
-            <UpgradeModalProvider>
-              <Layout>
-                <Router />
-              </Layout>
-              <OnboardingModal />
-            </UpgradeModalProvider>
+            <AuthProvider>
+              <UpgradeModalProvider>
+                <Layout>
+                  <Router />
+                </Layout>
+                <OnboardingModal />
+              </UpgradeModalProvider>
+            </AuthProvider>
           </ErrorBoundary>
         </WouterRouter>
         <Toaster />
