@@ -1,0 +1,21 @@
+﻿services:
+  - type: web
+    name: game-reviews-hub-api
+    runtime: node
+    rootDir: artifacts/api-server
+    buildCommand: npm install -g pnpm@11.1.1 && pnpm install --ignore-scripts && pnpm run build
+    startCommand: node --enable-source-maps ./dist/index.mjs
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3001
+
+  - type: static
+    name: game-reviews-web
+    rootDir: artifacts/gamereviews
+    buildCommand: npm install -g pnpm@11.1.1 && pnpm install --ignore-scripts && pnpm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_ORIGIN
+        value: https://game-reviews-hub-api.onrender.com
