@@ -64,7 +64,7 @@ export function useUser() {
     window.localStorage.removeItem("gr_lista");
     window.localStorage.removeItem("gr_resenas");
     window.localStorage.removeItem("gr_votos");
-    window.location.reload();
+    setUser(null);
   };
 
   return { user, initUser, setUserFromAuth, updateProfile, clearData, colors: DEFAULT_COLORS };

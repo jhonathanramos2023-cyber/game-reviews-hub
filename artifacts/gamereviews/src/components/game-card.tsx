@@ -10,9 +10,12 @@ import { useUpgradeModal } from "./upgrade-modal";
 import { motion } from "framer-motion";
 import { Stars } from "./stars";
 import { GameImage } from "./game-image";
+import gamesData from "@/data/games.json";
+
+type Game = (typeof gamesData)[number];
 
 interface GameCardProps {
-  game: any;
+  game: Game;
   index: number;
 }
 

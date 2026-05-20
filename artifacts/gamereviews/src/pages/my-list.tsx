@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, type ReactNode } from "react";
 import { Link } from "wouter";
 import gamesData from "@/data/games.json";
 import { useList, ListStatus } from "@/hooks/use-list";
@@ -22,7 +22,7 @@ const STATUS_LABELS: Record<ListStatus, string> = {
   abandonado: "Abandonado"
 };
 
-const STATUS_ICONS: Record<ListStatus, React.ReactNode> = {
+const STATUS_ICONS: Record<ListStatus, ReactNode> = {
   quiero_jugar: <List className="h-4 w-4" />,
   jugando: <Play className="h-4 w-4" />,
   completado: <Check className="h-4 w-4" />,
@@ -33,6 +33,9 @@ export default function MyList() {
   const { user } = useUser();
   const { list, updateItem, removeFromList } = useList();
   const [filter, setFilter] = useState<ListStatus | "todos">("todos");
+
+  const isListFilter = (value: string): value is ListStatus | "todos" =>
+    value === "todos" || value === "quiero_jugar" || value === "jugando" || value === "completado" || value === "abandonado";
 
   // Merge list data with full game data
   const enrichedList = useMemo(() => {
@@ -106,7 +109,7 @@ export default function MyList() {
         buttonIcon={<Gamepad2 className="h-4 w-4 mr-2" />}
       />
 
-      <Tabs value={filter} onValueChange={(v) => setFilter(v as any)} className="w-full">
+      <Tabs value={filter} onValueChange={(v) => isListFilter(v) && setFilter(v)} className="w-full">
         <TabsList className="grid grid-cols-2 md:grid-cols-5 bg-card h-auto p-1 rounded-xl mb-6">
           <TabsTrigger value="todos" className="py-2.5 rounded-lg text-sm font-bold">
             Todos ({list.length})

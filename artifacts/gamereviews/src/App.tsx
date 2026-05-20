@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
 
 import { Layout } from "@/components/layout";
+import { OnboardingModal } from "@/components/onboarding-modal";
 import { UpgradeModalProvider } from "@/components/upgrade-modal";
 
 import Home from "@/pages/home";
@@ -72,12 +73,6 @@ function normalizeBasePath(baseUrl: string | undefined): string {
 const wouterBase = normalizeBasePath(import.meta.env.BASE_URL);
 
 function Router() {
-  if (typeof window !== "undefined") {
-    console.log("[App] Router render", {
-      base: wouterBase,
-      pathname: window.location.pathname,
-    });
-  }
   return (
     <Switch>
       <Route path="/" component={Home} />
@@ -113,6 +108,7 @@ function App() {
                 <Layout>
                   <Router />
                 </Layout>
+                <OnboardingModal />
               </UpgradeModalProvider>
             </AuthProvider>
           </ErrorBoundary>

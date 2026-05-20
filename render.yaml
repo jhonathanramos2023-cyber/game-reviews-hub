@@ -16,6 +16,10 @@
     rootDir: artifacts/gamereviews
     buildCommand: npm install -g pnpm@11.1.1 && pnpm install --ignore-scripts && pnpm run build
     staticPublishPath: dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
     envVars:
       - key: VITE_API_ORIGIN
         value: https://game-reviews-hub-api.onrender.com

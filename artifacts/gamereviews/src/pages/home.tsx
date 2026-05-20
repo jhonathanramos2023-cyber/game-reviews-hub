@@ -80,15 +80,6 @@ function useAgenteData() {
     refetchOnMount: true,
   });
 
-  useEffect(() => {
-    if (!query.data) return;
-    console.log("[home] agente query success", {
-      juegos: query.data.juegos.length,
-      noticias: query.data.noticias.length,
-      lastRun: query.data.lastRun,
-    });
-  }, [query.data]);
-
   return {
     juegos: query.data?.juegos ?? [],
     noticias: query.data?.noticias ?? [],
@@ -116,12 +107,6 @@ export default function Home() {
   const { juegos: juegosDe24h, noticias, lastRun } = useAgenteData();
   const hasAgenteContent = juegosDe24h.length > 0 || noticias.length > 0;
 
-  console.log("[home] render", {
-    juegosDe24h: juegosDe24h.length,
-    noticias: noticias.length,
-    hasAgenteContent,
-    lastRun,
-  });
   const [, setLocation] = useLocation();
   const [search, setSearch] = useState("");
   const [genre, setGenre] = useState("todos");
