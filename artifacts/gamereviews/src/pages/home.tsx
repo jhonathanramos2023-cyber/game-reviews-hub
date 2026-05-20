@@ -369,6 +369,7 @@ export default function Home() {
                           src={juego.imagen}
                           alt={juego.nombre}
                           fallbackTitle={juego.nombre}
+                          slug={juego.slug}
                           className="w-full h-full object-cover"
                         />
                       </div>

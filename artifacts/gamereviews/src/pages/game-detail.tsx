@@ -239,6 +239,8 @@ export default function GameDetail() {
               src={game.imagen}
               alt={game.nombre}
               fallbackTitle={game.nombre}
+              fallbackBanner={game.imagenBanner}
+              slug={game.slug}
               loading="eager"
               className="w-full h-full object-cover"
             />

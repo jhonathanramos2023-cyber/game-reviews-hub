@@ -69,6 +69,8 @@ export function GameCard({ game, index }: GameCardProps) {
               src={game.imagen}
               alt={game.nombre}
               fallbackTitle={game.nombre}
+              fallbackBanner={game.imagenBanner}
+              slug={game.slug}
               className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105"
               loading="lazy"
             />

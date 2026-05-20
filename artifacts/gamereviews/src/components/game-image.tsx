@@ -8,6 +8,8 @@ interface GameImageProps {
   className?: string;
   loading?: "eager" | "lazy";
   fallbackTitle?: string;
+  fallbackBanner?: string;
+  slug?: string;
 }
 
 const imageCache = new Map<string, string | null>();
@@ -32,12 +34,24 @@ function looksValid(src: string | undefined): boolean {
   return /^https?:\/\//.test(src);
 }
 
-async function lookupRawgImage(name: string): Promise<string | null> {
-  const key = name.toLowerCase().trim();
+function cacheKey(name: string, slug?: string): string {
+  return `${name.toLowerCase().trim()}|${(slug ?? "").toLowerCase()}`;
+}
+
+async function lookupRawgImage(name: string, slug?: string): Promise<string | null> {
+  const key = cacheKey(name, slug);
   if (imageCache.has(key)) return imageCache.get(key) ?? null;
   const existing = inflight.get(key);
   if (existing) return existing;
-  const promise = fetch(resolveApiUrl(`/imagen/${encodeURIComponent(name)}`))
+
+  const params = new URLSearchParams();
+  if (slug?.trim()) params.set("slug", slug.trim());
+
+  const promise = fetch(
+    resolveApiUrl(
+      `/imagen/${encodeURIComponent(name)}${params.size ? `?${params}` : ""}`,
+    ),
+  )
     .then((r) => (r.ok ? r.json() : { imagen: null }))
     .then((data: { imagen?: string | null }) => {
       const img = data.imagen ?? null;
@@ -51,6 +65,7 @@ async function lookupRawgImage(name: string): Promise<string | null> {
     .finally(() => {
       inflight.delete(key);
     });
+
   inflight.set(key, promise);
   return promise;
 }
@@ -61,48 +76,64 @@ export function GameImage({
   className = "",
   loading = "lazy",
   fallbackTitle,
+  fallbackBanner,
+  slug,
 }: GameImageProps) {
   const title = fallbackTitle ?? alt;
-  const initialValid = looksValid(src);
-  const [currentSrc, setCurrentSrc] = useState<string | null>(
-    initialValid ? src : null,
+  const candidates = [src, fallbackBanner].filter(
+    (u, i, arr): u is string => !!u && looksValid(u) && arr.indexOf(u) === i,
   );
+
+  const [candidateIndex, setCandidateIndex] = useState(0);
+  const [rawgSrc, setRawgSrc] = useState<string | null>(null);
   const [failed, setFailed] = useState(false);
-  const [searching, setSearching] = useState(!initialValid);
-  const triedRawg = useRef(false);
+  const [searching, setSearching] = useState(candidates.length === 0);
+  const rawgAttempted = useRef(false);
+
+  const currentSrc = rawgSrc ?? candidates[candidateIndex] ?? null;
 
   useEffect(() => {
-    if (!initialValid && !triedRawg.current) {
-      triedRawg.current = true;
-      setSearching(true);
-      lookupRawgImage(title).then((img) => {
-        if (img) {
-          setCurrentSrc(img);
-          setFailed(false);
-        } else {
-          setFailed(true);
-        }
+    setCandidateIndex(0);
+    setRawgSrc(null);
+    setFailed(false);
+    rawgAttempted.current = false;
+    setSearching(candidates.length === 0);
+
+    if (candidates.length === 0) {
+      rawgAttempted.current = true;
+      lookupRawgImage(title, slug).then((img) => {
+        if (img) setRawgSrc(img);
+        else setFailed(true);
         setSearching(false);
       });
     }
-  }, [initialValid, title]);
+  }, [src, fallbackBanner, title, slug]);
+
+  const tryRawg = () => {
+    if (rawgAttempted.current) {
+      setFailed(true);
+      setSearching(false);
+      return;
+    }
+    rawgAttempted.current = true;
+    setSearching(true);
+    lookupRawgImage(title, slug).then((img) => {
+      if (img) {
+        setRawgSrc(img);
+        setFailed(false);
+      } else {
+        setFailed(true);
+      }
+      setSearching(false);
+    });
+  };
 
   const handleError = () => {
-    if (!triedRawg.current) {
-      triedRawg.current = true;
-      setSearching(true);
-      lookupRawgImage(title).then((img) => {
-        if (img) {
-          setCurrentSrc(img);
-          setFailed(false);
-        } else {
-          setFailed(true);
-        }
-        setSearching(false);
-      });
-    } else {
-      setFailed(true);
+    if (candidateIndex + 1 < candidates.length) {
+      setCandidateIndex((i) => i + 1);
+      return;
     }
+    tryRawg();
   };
 
   if (failed) {
@@ -133,11 +164,14 @@ export function GameImage({
     );
   }
 
+  if (!currentSrc) return null;
+
   return (
     <img
-      src={currentSrc ?? src}
+      src={currentSrc}
       alt={alt}
       loading={loading}
+      referrerPolicy="no-referrer"
       onError={handleError}
       className={className}
     />

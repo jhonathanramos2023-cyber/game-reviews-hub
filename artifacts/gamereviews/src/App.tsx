@@ -6,7 +6,6 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
 
 import { Layout } from "@/components/layout";
-import { OnboardingModal } from "@/components/onboarding-modal";
 import { UpgradeModalProvider } from "@/components/upgrade-modal";
 
 import Home from "@/pages/home";
@@ -114,7 +113,6 @@ function App() {
                 <Layout>
                   <Router />
                 </Layout>
-                <OnboardingModal />
               </UpgradeModalProvider>
             </AuthProvider>
           </ErrorBoundary>
