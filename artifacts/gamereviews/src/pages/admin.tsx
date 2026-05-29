@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import { Bot, Play, RefreshCw, Zap, Clock, GamepadIcon, AlertCircle, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { apiFetch, parseApiJson } from "@/lib/api-fetch";
 import { resolveApiUrl } from "@/lib/api-base";
 
 interface AgenteStatus {
@@ -80,8 +81,12 @@ export default function Admin() {
     setRunning(true);
     setRunMsg(null);
     try {
-      const r = await fetch(resolveApiUrl("/agente/run"), { method: "POST" });
-      const d = (await r.json()) as { success: boolean; mensaje: string };
+      const r = await apiFetch("/agente/run", { method: "POST" });
+      if (r.status === 403) {
+        setRunMsg({ ok: false, text: "403 — Acceso denegado. Se requiere rol admin." });
+        return;
+      }
+      const d = await parseApiJson<{ success: boolean; mensaje: string }>(r);
       setRunMsg({ ok: d.success, text: d.mensaje });
       await fetchStatus();
     } catch {

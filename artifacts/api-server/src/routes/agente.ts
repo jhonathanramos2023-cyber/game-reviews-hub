@@ -3,6 +3,7 @@ import path from "node:path";
 import { readFileSync, existsSync } from "node:fs";
 import { runAgente, type AgenteJuego, type Noticia } from "../agent/agente";
 import { json200 } from "../lib/http-json";
+import { requireAdmin, type AuthenticatedRequest } from "../middleware/auth";
 
 const router: IRouter = Router();
 
@@ -122,7 +123,7 @@ router.get("/juegos", handleAgenteJuegos);
 router.get("/agente/noticias", handleAgenteNoticias);
 router.get("/noticias", handleAgenteNoticias);
 
-router.post("/agente/run", async (req, res) => {
+router.post("/agente/run", requireAdmin, async (req: AuthenticatedRequest, res) => {
   if (ejecutandose) {
     json200(res, { success: false, mensaje: "El agente ya está en ejecución" });
     return;

@@ -132,6 +132,96 @@ function parseJSON<T>(text: string, fallback: T): T {
   }
 }
 
+const GENRE_ES: Record<string, string> = {
+  Action: "Acción",
+  Adventure: "Aventura",
+  RPG: "RPG",
+  Strategy: "Estrategia",
+  Shooter: "Disparos",
+  Simulation: "Simulación",
+  Sports: "Deportes",
+  Racing: "Carreras",
+  Puzzle: "Puzzle",
+  Platformer: "Plataformas",
+  Indie: "Indie",
+  Arcade: "Arcade",
+  Fighting: "Lucha",
+  Family: "Familiar",
+};
+
+function translateGenre(name: string): string {
+  return GENRE_ES[name] ?? name;
+}
+
+function steamCoverFromRawg(g: RawgGame): { imagen: string; imagenBanner: string } {
+  const img =
+    g.background_image ??
+    g.short_screenshots?.[0]?.image ??
+    "https://media.rawg.io/media/games/default.jpg";
+  return { imagen: img, imagenBanner: img };
+}
+
+function buildAgenteJuegosFromRawg(
+  trending: RawgGame[],
+  existingRawgIds: Set<number | null>,
+  limit = 3,
+): AgenteJuego[] {
+  const picked = trending
+    .filter((g) => g.id && !existingRawgIds.has(g.id))
+    .slice(0, limit);
+
+  const now = new Date().toISOString();
+
+  return picked.map((g, i) => {
+    const generos = (g.genres ?? []).map((x) => translateGenre(x.name)).slice(0, 4);
+    const plataformas = (g.platforms ?? []).map((x) => x.platform.name).slice(0, 5);
+    const etiquetas = (g.tags ?? []).map((x) => x.name).slice(0, 5);
+    const { imagen, imagenBanner } = steamCoverFromRawg(g);
+    const nombre = g.name;
+
+    return {
+      id: Date.now() + i,
+      nombre,
+      slug: g.slug,
+      descripcion: `${nombre} está en tendencia hoy en RAWG. ${generos.length ? `Géneros: ${generos.join(", ")}.` : ""} Descubre por qué la comunidad lo está jugando ahora.`,
+      descripcionCorta: `${nombre} — tendencia del día`,
+      generos,
+      plataformas,
+      etiquetas,
+      porQueDestaca: `Destacado hoy por actividad reciente en RAWG (rating ${g.rating?.toFixed(1) ?? "—"}).`,
+      imagen,
+      imagenBanner,
+      rawgId: g.id,
+      metacritic: g.metacritic,
+      fechaLanzamiento: g.released ?? new Date().toISOString().split("T")[0]!,
+      rating: g.rating ?? 0,
+      precio: 29.99,
+      desarrollador: "Estudio (RAWG)",
+      agregadoPorAgente: true,
+      fechaAgregado: now,
+    };
+  });
+}
+
+function buildNoticiasFromRawg(trending: RawgGame[]): Noticia[] {
+  const top = trending.slice(0, 3);
+  const now = new Date().toISOString();
+  const categorias: Noticia["categoria"][] = [
+    "Lanzamiento",
+    "Actualización",
+    "Comunidad",
+  ];
+
+  return top.map((g, i) => ({
+    id: `${Date.now()}-${i}`,
+    titulo: `${g.name} en tendencia`,
+    resumen: `${g.name} aparece entre los juegos más activos del día. La comunidad lo está descubriendo en múltiples plataformas.`,
+    categoria: categorias[i] ?? "Lanzamiento",
+    urgente: false,
+    fecha: now,
+  }));
+}
+
 export async function runAgente(): Promise<{
   juegoAgregados: number;
   noticias: number;
@@ -140,12 +230,12 @@ export async function runAgente(): Promise<{
   ensureDirs();
   const startTs = new Date().toISOString();
   appendLog(`[${startTs}] Agente iniciando...`);
-  logger.info("Agente IA iniciando ciclo");
+  logger.info("Agente iniciando ciclo");
 
-  if (!anthropic) {
-    appendLog(`[${startTs}] IA no disponible (cliente Anthropic no configurado)`);
-    logger.warn("Agente: sin API key de Anthropic, ciclo omitido");
-    return { juegoAgregados: 0, noticias: 0, error: "IA no disponible" };
+  const useClaude = Boolean(anthropic);
+  if (!useClaude) {
+    appendLog(`[${startTs}] Modo RAWG (sin Anthropic) — curación automática local`);
+    logger.info("Agente: modo RAWG-only");
   }
 
   try {
@@ -155,6 +245,34 @@ export async function runAgente(): Promise<{
     if (trending.length === 0) {
       appendLog(`[${startTs}] Sin juegos trending. Ciclo terminado.`);
       return { juegoAgregados: 0, noticias: 0 };
+    }
+
+    const juegoActuales = readJSON<AgenteJuego[]>(JUEGOS_FILE, []);
+    const existingRawgIds = new Set(
+      juegoActuales.map((j) => j.rawgId).filter(Boolean) as number[],
+    );
+
+    if (!useClaude) {
+      const nuevos = buildAgenteJuegosFromRawg(trending, existingRawgIds, 3);
+      const juegoActualizados = [...juegoActuales, ...nuevos];
+      writeJSON(JUEGOS_FILE, juegoActualizados);
+      appendLog(
+        `[${startTs}] Juegos (RAWG): ${nuevos.length} nuevos agregados (total: ${juegoActualizados.length})`,
+      );
+
+      const nuevasNoticias = buildNoticiasFromRawg(trending);
+      writeJSON(NOTICIAS_FILE, nuevasNoticias);
+      appendLog(`[${startTs}] Noticias (RAWG): ${nuevasNoticias.length} generadas`);
+
+      const endTs = new Date().toISOString();
+      appendLog(
+        `[${endTs}] ✅ Agente completado (RAWG). ${nuevos.length} juegos, ${nuevasNoticias.length} noticias.`,
+      );
+      logger.info(
+        { juegoAgregados: nuevos.length, noticias: nuevasNoticias.length, mode: "rawg" },
+        "Agente ciclo completado",
+      );
+      return { juegoAgregados: nuevos.length, noticias: nuevasNoticias.length };
     }
 
     const simplificados = trending.slice(0, 20).map((g) => ({
@@ -229,11 +347,6 @@ Devuelve SOLO un JSON array sin texto adicional, sin markdown, sin explicaciones
     }
 
     const juegosGenerados = parseJSON<ClaudeJuego[]>(juegoRespuesta, []);
-
-    const juegoActuales = readJSON<AgenteJuego[]>(JUEGOS_FILE, []);
-    const existingRawgIds = new Set(
-      juegoActuales.map((j) => j.rawgId).filter(Boolean),
-    );
 
     const nuevos: AgenteJuego[] = juegosGenerados
       .filter((j) => j.rawgId && !existingRawgIds.has(j.rawgId))

@@ -5,7 +5,7 @@ import dealsRouter from "./deals";
 import imagesRouter from "./images";
 import agenteRouter from "./agente";
 import authRouter from "./auth";
-import statsRouter from "./stats";
+import oauthRouter from "./oauth";
 import reviewsRouter from "./reviews";
 import repliesRouter from "./replies";
 
@@ -17,7 +17,7 @@ router.use(dealsRouter);
 router.use(imagesRouter);
 router.use(agenteRouter);
 router.use(authRouter);
-router.use(statsRouter);
+router.use(oauthRouter);
 router.use(reviewsRouter);
 router.use(repliesRouter);
 

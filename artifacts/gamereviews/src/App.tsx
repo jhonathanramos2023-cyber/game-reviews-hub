@@ -20,6 +20,7 @@ import Login from "@/pages/login";
 import Register from "@/pages/register";
 import { AuthProvider } from "@/hooks/use-auth";
 import { ProtectedRoute } from "@/components/protected-route";
+import { AdminRoute } from "@/components/admin-route";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -91,7 +92,11 @@ function Router() {
         </ProtectedRoute>
       </Route>
       <Route path="/suscripcion" component={Subscription} />
-      <Route path="/admin" component={Admin} />
+      <Route path="/admin">
+        <AdminRoute>
+          <Admin />
+        </AdminRoute>
+      </Route>
       <Route component={NotFound} />
     </Switch>
   );

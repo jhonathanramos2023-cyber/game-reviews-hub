@@ -5,6 +5,7 @@ import gamesData from "@/data/games.json";
 import { GameCard } from "@/components/game-card";
 import { useReviews } from "@/hooks/use-reviews";
 import { useUser } from "@/hooks/use-user";
+import { useAuth } from "@/hooks/use-auth";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Search, SlidersHorizontal, Gamepad2, Users, MessageSquare, Dices, Bot, Newspaper, Zap } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -104,6 +105,7 @@ function timeAgo(iso: string | null): string {
 export default function Home() {
   const { reviews } = useReviews();
   const { user } = useUser();
+  const { isAdmin } = useAuth();
   const { juegos: juegosDe24h, noticias, lastRun } = useAgenteData();
   const hasAgenteContent = juegosDe24h.length > 0 || noticias.length > 0;
 
@@ -289,15 +291,17 @@ export default function Home() {
                   </Badge>
                 )}
               </div>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setLocation("/admin")}
-                className="text-muted-foreground hover:text-primary text-xs gap-1"
-              >
-                <Zap className="w-3 h-3" />
-                Panel IA
-              </Button>
+              {isAdmin && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setLocation("/admin")}
+                  className="text-muted-foreground hover:text-primary text-xs gap-1"
+                >
+                  <Zap className="w-3 h-3" />
+                  Panel IA
+                </Button>
+              )}
             </div>
 
             {/* Noticias */}

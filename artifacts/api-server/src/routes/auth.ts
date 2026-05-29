@@ -8,8 +8,16 @@ import { json200 } from "../lib/http-json";
 import { clearAuthCookie, setAuthCookie, signToken } from "../lib/auth";
 import { requireAuth, type AuthenticatedRequest } from "../middleware/auth";
 import { mapDbError } from "../lib/db-errors";
+import { facebookOAuthConfigured, googleOAuthConfigured } from "../lib/oauth";
 
 const router: IRouter = Router();
+
+router.get("/auth/providers", (_req, res) => {
+  json200(res, {
+    google: googleOAuthConfigured(),
+    facebook: facebookOAuthConfigured(),
+  });
+});
 const BCRYPT_ROUNDS = 12;
 
 const AVATAR_COLORS = ["#8B5CF6", "#3B82F6", "#10B981", "#F59E0B", "#EF4444", "#EC4899"];

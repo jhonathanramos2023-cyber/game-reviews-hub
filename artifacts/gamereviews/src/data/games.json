@@ -2259,5 +2259,2101 @@
       "nintendo": "https://www.nintendo.com/es-us/store/products/among-us-switch/",
       "xbox": "https://www.xbox.com/es-US/games/store/among-us/9NG07QJNK38J"
     }
+  },
+  {
+    "id": 49,
+    "nombre": "Counter-Strike 2",
+    "slug": "counter-strike-2",
+    "steamId": 730,
+    "categoria": "disparos",
+    "generos": [
+      "disparos",
+      "competitivo"
+    ],
+    "precio": 0,
+    "precioOriginal": 0,
+    "descuento": 0,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/730/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/730/header.jpg",
+    "descripcion": "El shooter táctico competitivo más jugado del mundo.",
+    "descripcionCorta": "CS2 — precisión y estrategia.",
+    "plataforma": "PC",
+    "plataformas": [
+      "PC"
+    ],
+    "desarrollador": "Valve",
+    "publicador": "Valve",
+    "fechaLanzamiento": "2023-09-27",
+    "rating": 4.5,
+    "ratingMetacritic": 85,
+    "ratingUsuariosMetacritic": 8.5,
+    "video": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "tags": [
+      "disparos",
+      "competitivo",
+      "multijugador"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/730/"
+    }
+  },
+  {
+    "id": 50,
+    "nombre": "Dota 2",
+    "slug": "dota-2",
+    "steamId": 570,
+    "categoria": "estrategia",
+    "generos": [
+      "estrategia",
+      "moba"
+    ],
+    "precio": 0,
+    "precioOriginal": 0,
+    "descuento": 0,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/570/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/570/header.jpg",
+    "descripcion": "MOBA free-to-play con profundidad competitiva legendaria.",
+    "descripcionCorta": "La batalla de los antiguos continúa.",
+    "plataforma": "PC",
+    "plataformas": [
+      "PC"
+    ],
+    "desarrollador": "Valve",
+    "publicador": "Valve",
+    "fechaLanzamiento": "2013-07-09",
+    "rating": 4.4,
+    "ratingMetacritic": 90,
+    "ratingUsuariosMetacritic": 9,
+    "video": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "tags": [
+      "estrategia",
+      "moba",
+      "multijugador"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/570/"
+    }
+  },
+  {
+    "id": 51,
+    "nombre": "PUBG: Battlegrounds",
+    "slug": "pubg",
+    "steamId": 578080,
+    "categoria": "disparos",
+    "generos": [
+      "disparos",
+      "battle-royale"
+    ],
+    "precio": 0,
+    "precioOriginal": 0,
+    "descuento": 0,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/578080/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/578080/header.jpg",
+    "descripcion": "El battle royale que definió el género.",
+    "descripcionCorta": "100 jugadores, una sola victoria.",
+    "plataforma": "PC",
+    "plataformas": [
+      "PC",
+      "PS5",
+      "Xbox Series X",
+      "Mobile"
+    ],
+    "desarrollador": "KRAFTON",
+    "publicador": "KRAFTON",
+    "fechaLanzamiento": "2017-12-21",
+    "rating": 4,
+    "ratingMetacritic": 86,
+    "ratingUsuariosMetacritic": 8.6,
+    "video": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "tags": [
+      "disparos",
+      "battle-royale",
+      "multijugador"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/578080/"
+    }
+  },
+  {
+    "id": 52,
+    "nombre": "Apex Legends",
+    "slug": "apex-legends",
+    "steamId": 1172470,
+    "categoria": "disparos",
+    "generos": [
+      "disparos",
+      "battle-royale"
+    ],
+    "precio": 0,
+    "precioOriginal": 0,
+    "descuento": 0,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/1172470/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/1172470/header.jpg",
+    "descripcion": "Battle royale hero shooter frenético y gratuito.",
+    "descripcionCorta": "Escuadras, habilidades, acción.",
+    "plataforma": "PC",
+    "plataformas": [
+      "PC",
+      "PS5",
+      "Xbox Series X",
+      "Nintendo Switch"
+    ],
+    "desarrollador": "Respawn",
+    "publicador": "EA",
+    "fechaLanzamiento": "2020-11-04",
+    "rating": 4.3,
+    "ratingMetacritic": 88,
+    "ratingUsuariosMetacritic": 8.8,
+    "video": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "tags": [
+      "disparos",
+      "battle-royale",
+      "multijugador"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/1172470/"
+    }
+  },
+  {
+    "id": 53,
+    "nombre": "Destiny 2",
+    "slug": "destiny-2",
+    "steamId": 1085660,
+    "categoria": "disparos",
+    "generos": [
+      "disparos",
+      "mmo"
+    ],
+    "precio": 0,
+    "precioOriginal": 0,
+    "descuento": 0,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/1085660/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/1085660/header.jpg",
+    "descripcion": "Shooter MMO con raids épicas y loot infinito.",
+    "descripcionCorta": "Guardianes, uníos.",
+    "plataforma": "PC",
+    "plataformas": [
+      "PC",
+      "PS5",
+      "Xbox Series X"
+    ],
+    "desarrollador": "Bungie",
+    "publicador": "Bungie",
+    "fechaLanzamiento": "2019-10-01",
+    "rating": 4.2,
+    "ratingMetacritic": 85,
+    "ratingUsuariosMetacritic": 8.5,
+    "video": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "tags": [
+      "disparos",
+      "mmo",
+      "multijugador"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/1085660/"
+    }
+  },
+  {
+    "id": 54,
+    "nombre": "Warframe",
+    "slug": "warframe",
+    "steamId": 230410,
+    "categoria": "accion",
+    "generos": [
+      "accion",
+      "cooperativo"
+    ],
+    "precio": 0,
+    "precioOriginal": 0,
+    "descuento": 0,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/230410/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/230410/header.jpg",
+    "descripcion": "Acción sci-fi cooperativa free-to-play.",
+    "descripcionCorta": "Ninjas espaciales gratuitos.",
+    "plataforma": "PC",
+    "plataformas": [
+      "PC",
+      "PS5",
+      "Xbox Series X",
+      "Nintendo Switch"
+    ],
+    "desarrollador": "Digital Extremes",
+    "publicador": "Digital Extremes",
+    "fechaLanzamiento": "2013-03-25",
+    "rating": 4.4,
+    "ratingMetacritic": 69,
+    "ratingUsuariosMetacritic": 6.9,
+    "video": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "tags": [
+      "accion",
+      "cooperativo",
+      "multijugador"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/230410/"
+    }
+  },
+  {
+    "id": 55,
+    "nombre": "Rocket League",
+    "slug": "rocket-league",
+    "steamId": 252950,
+    "categoria": "deportes",
+    "generos": [
+      "deportes",
+      "carreras"
+    ],
+    "precio": 0,
+    "precioOriginal": 0,
+    "descuento": 0,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/252950/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/252950/header.jpg",
+    "descripcion": "Fútbol con coches: caos vehicular multijugador.",
+    "descripcionCorta": "Goles aéreos garantizados.",
+    "plataforma": "PC",
+    "plataformas": [
+      "PC",
+      "PS5",
+      "Xbox Series X",
+      "Nintendo Switch"
+    ],
+    "desarrollador": "Psyonix",
+    "publicador": "Epic Games",
+    "fechaLanzamiento": "2015-07-07",
+    "rating": 4.5,
+    "ratingMetacritic": 86,
+    "ratingUsuariosMetacritic": 8.6,
+    "video": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "tags": [
+      "deportes",
+      "carreras",
+      "multijugador"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/252950/"
+    }
+  },
+  {
+    "id": 56,
+    "nombre": "Terraria",
+    "slug": "terraria",
+    "steamId": 105600,
+    "categoria": "aventura",
+    "generos": [
+      "aventura",
+      "sandbox"
+    ],
+    "precio": 9.99,
+    "precioOriginal": 9.99,
+    "descuento": 0,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/105600/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/105600/header.jpg",
+    "descripcion": "Sandbox 2D con exploración, crafteo y jefes.",
+    "descripcionCorta": "Cava, construye, conquista.",
+    "plataforma": "PC",
+    "plataformas": [
+      "PC",
+      "Mobile",
+      "Nintendo Switch"
+    ],
+    "desarrollador": "Re-Logic",
+    "publicador": "Re-Logic",
+    "fechaLanzamiento": "2011-05-16",
+    "rating": 4.8,
+    "ratingMetacritic": 83,
+    "ratingUsuariosMetacritic": 8.3,
+    "video": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "tags": [
+      "aventura",
+      "sandbox",
+      "multijugador"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/105600/"
+    }
+  },
+  {
+    "id": 57,
+    "nombre": "Rust",
+    "slug": "rust",
+    "steamId": 252490,
+    "categoria": "supervivencia",
+    "generos": [
+      "supervivencia",
+      "multijugador"
+    ],
+    "precio": 39.99,
+    "precioOriginal": 39.99,
+    "descuento": 0,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/252490/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/252490/header.jpg",
+    "descripcion": "Supervivencia brutal donde todos son enemigos.",
+    "descripcionCorta": "Confía en nadie.",
+    "plataforma": "PC",
+    "plataformas": [
+      "PC",
+      "PS5",
+      "Xbox Series X"
+    ],
+    "desarrollador": "Facepunch",
+    "publicador": "Facepunch",
+    "fechaLanzamiento": "2018-02-08",
+    "rating": 4,
+    "ratingMetacritic": 69,
+    "ratingUsuariosMetacritic": 6.9,
+    "video": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "tags": [
+      "supervivencia",
+      "multijugador",
+      "multijugador"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/252490/"
+    }
+  },
+  {
+    "id": 58,
+    "nombre": "Fallout 4",
+    "slug": "fallout-4",
+    "steamId": 377160,
+    "categoria": "rpg",
+    "generos": [
+      "rpg",
+      "accion"
+    ],
+    "precio": 19.99,
+    "precioOriginal": 19.99,
+    "descuento": 0,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/377160/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/377160/header.jpg",
+    "descripcion": "RPG postapocalíptico en la Commonwealth.",
+    "descripcionCorta": "War never changes.",
+    "plataforma": "PC",
+    "plataformas": [
+      "PC",
+      "PS4",
+      "Xbox One"
+    ],
+    "desarrollador": "Bethesda",
+    "publicador": "Bethesda",
+    "fechaLanzamiento": "2015-11-10",
+    "rating": 4.3,
+    "ratingMetacritic": 87,
+    "ratingUsuariosMetacritic": 8.7,
+    "video": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "tags": [
+      "rpg",
+      "accion",
+      "multijugador"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/377160/"
+    }
+  },
+  {
+    "id": 59,
+    "nombre": "The Elder Scrolls V: Skyrim",
+    "slug": "skyrim-se",
+    "steamId": 489830,
+    "categoria": "rpg",
+    "generos": [
+      "rpg",
+      "aventura"
+    ],
+    "precio": 39.99,
+    "precioOriginal": 39.99,
+    "descuento": 0,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/489830/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/489830/header.jpg",
+    "descripcion": "Aventura épica en Tamriel.",
+    "descripcionCorta": "Fus ro dah.",
+    "plataforma": "PC",
+    "plataformas": [
+      "PC",
+      "PS5",
+      "Xbox Series X",
+      "Nintendo Switch"
+    ],
+    "desarrollador": "Bethesda",
+    "publicador": "Bethesda",
+    "fechaLanzamiento": "2016-10-28",
+    "rating": 4.7,
+    "ratingMetacritic": 94,
+    "ratingUsuariosMetacritic": 9.4,
+    "video": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "tags": [
+      "rpg",
+      "aventura",
+      "multijugador"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/489830/"
+    }
+  },
+  {
+    "id": 60,
+    "nombre": "Dark Souls III",
+    "slug": "dark-souls-3",
+    "steamId": 374320,
+    "categoria": "rpg",
+    "generos": [
+      "rpg",
+      "accion"
+    ],
+    "precio": 59.99,
+    "precioOriginal": 59.99,
+    "descuento": 0,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/374320/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/374320/header.jpg",
+    "descripcion": "Desafío legendario y diseño de niveles magistral.",
+    "descripcionCorta": "Prepare to die.",
+    "plataforma": "PC",
+    "plataformas": [
+      "PC",
+      "PS4",
+      "Xbox One"
+    ],
+    "desarrollador": "FromSoftware",
+    "publicador": "Bandai Namco",
+    "fechaLanzamiento": "2016-04-12",
+    "rating": 4.6,
+    "ratingMetacritic": 89,
+    "ratingUsuariosMetacritic": 8.9,
+    "video": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "tags": [
+      "rpg",
+      "accion",
+      "multijugador"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/374320/"
+    }
+  },
+  {
+    "id": 61,
+    "nombre": "Horizon Zero Dawn",
+    "slug": "horizon-zero-dawn",
+    "steamId": 1151640,
+    "categoria": "accion",
+    "generos": [
+      "accion",
+      "aventura"
+    ],
+    "precio": 49.99,
+    "precioOriginal": 49.99,
+    "descuento": 0,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/1151640/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/1151640/header.jpg",
+    "descripcion": "Caza máquinas en un mundo postapocalíptico.",
+    "descripcionCorta": "Aloy contra el mundo.",
+    "plataforma": "PC",
+    "plataformas": [
+      "PC",
+      "PS4",
+      "PS5"
+    ],
+    "desarrollador": "Guerrilla",
+    "publicador": "Sony",
+    "fechaLanzamiento": "2020-08-07",
+    "rating": 4.5,
+    "ratingMetacritic": 86,
+    "ratingUsuariosMetacritic": 8.6,
+    "video": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "tags": [
+      "accion",
+      "aventura",
+      "multijugador"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/1151640/"
+    }
+  },
+  {
+    "id": 62,
+    "nombre": "Monster Hunter Rise",
+    "slug": "monster-hunter-rise",
+    "steamId": 1446780,
+    "categoria": "accion",
+    "generos": [
+      "accion",
+      "rpg"
+    ],
+    "precio": 39.99,
+    "precioOriginal": 39.99,
+    "descuento": 0,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/1446780/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/1446780/header.jpg",
+    "descripcion": "Caza monstruos épicos con movilidad vertical.",
+    "descripcionCorta": "Elige tu arma.",
+    "plataforma": "PC",
+    "plataformas": [
+      "PC",
+      "Nintendo Switch"
+    ],
+    "desarrollador": "Capcom",
+    "publicador": "Capcom",
+    "fechaLanzamiento": "2022-01-12",
+    "rating": 4.5,
+    "ratingMetacritic": 88,
+    "ratingUsuariosMetacritic": 8.8,
+    "video": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "tags": [
+      "accion",
+      "rpg",
+      "multijugador"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/1446780/"
+    }
+  },
+  {
+    "id": 63,
+    "nombre": "Resident Evil 2",
+    "slug": "resident-evil-2",
+    "steamId": 883710,
+    "categoria": "terror",
+    "generos": [
+      "terror",
+      "accion"
+    ],
+    "precio": 39.99,
+    "precioOriginal": 39.99,
+    "descuento": 0,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/883710/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/883710/header.jpg",
+    "descripcion": "Remake de terror claustrofóbico en Raccoon City.",
+    "descripcionCorta": "Survival horror definitivo.",
+    "plataforma": "PC",
+    "plataformas": [
+      "PC",
+      "PS4",
+      "Xbox One"
+    ],
+    "desarrollador": "Capcom",
+    "publicador": "Capcom",
+    "fechaLanzamiento": "2019-01-25",
+    "rating": 4.8,
+    "ratingMetacritic": 93,
+    "ratingUsuariosMetacritic": 9.3,
+    "video": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "tags": [
+      "terror",
+      "accion",
+      "multijugador"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/883710/"
+    }
+  },
+  {
+    "id": 64,
+    "nombre": "Divinity: Original Sin 2",
+    "slug": "divinity-os2",
+    "steamId": 435150,
+    "categoria": "rpg",
+    "generos": [
+      "rpg",
+      "estrategia"
+    ],
+    "precio": 44.99,
+    "precioOriginal": 44.99,
+    "descuento": 0,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/435150/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/435150/header.jpg",
+    "descripcion": "RPG táctico cooperativo con libertad total.",
+    "descripcionCorta": "Tu historia, tus reglas.",
+    "plataforma": "PC",
+    "plataformas": [
+      "PC",
+      "PS4",
+      "Xbox One",
+      "Nintendo Switch"
+    ],
+    "desarrollador": "Larian",
+    "publicador": "Larian",
+    "fechaLanzamiento": "2017-09-14",
+    "rating": 4.8,
+    "ratingMetacritic": 93,
+    "ratingUsuariosMetacritic": 9.3,
+    "video": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "tags": [
+      "rpg",
+      "estrategia",
+      "multijugador"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/435150/"
+    }
+  },
+  {
+    "id": 65,
+    "nombre": "RimWorld",
+    "slug": "rimworld",
+    "steamId": 294100,
+    "categoria": "estrategia",
+    "generos": [
+      "estrategia",
+      "simulacion"
+    ],
+    "precio": 34.99,
+    "precioOriginal": 34.99,
+    "descuento": 0,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/294100/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/294100/header.jpg",
+    "descripcion": "Colonia sci-fi con historias emergentes.",
+    "descripcionCorta": "Cada colonia es única.",
+    "plataforma": "PC",
+    "plataformas": [
+      "PC",
+      "Xbox Series X",
+      "PS4"
+    ],
+    "desarrollador": "Ludeon",
+    "publicador": "Ludeon",
+    "fechaLanzamiento": "2018-10-17",
+    "rating": 4.7,
+    "ratingMetacritic": 87,
+    "ratingUsuariosMetacritic": 8.7,
+    "video": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "tags": [
+      "estrategia",
+      "simulacion",
+      "multijugador"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/294100/"
+    }
+  },
+  {
+    "id": 66,
+    "nombre": "Cities: Skylines II",
+    "slug": "cities-skylines-2",
+    "steamId": 949230,
+    "categoria": "simulacion",
+    "generos": [
+      "simulacion",
+      "construccion"
+    ],
+    "precio": 49.99,
+    "precioOriginal": 49.99,
+    "descuento": 0,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/949230/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/949230/header.jpg",
+    "descripcion": "Construye la metrópolis de tus sueños.",
+    "descripcionCorta": "Alcalde supremo.",
+    "plataforma": "PC",
+    "plataformas": [
+      "PC",
+      "PS5",
+      "Xbox Series X"
+    ],
+    "desarrollador": "Colossal Order",
+    "publicador": "Paradox",
+    "fechaLanzamiento": "2023-10-24",
+    "rating": 3.8,
+    "ratingMetacritic": 75,
+    "ratingUsuariosMetacritic": 7.5,
+    "video": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "tags": [
+      "simulacion",
+      "construccion",
+      "multijugador"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/949230/"
+    }
+  },
+  {
+    "id": 67,
+    "nombre": "Total War: WARHAMMER III",
+    "slug": "total-war-warhammer-3",
+    "steamId": 1142710,
+    "categoria": "estrategia",
+    "generos": [
+      "estrategia",
+      "accion"
+    ],
+    "precio": 59.99,
+    "precioOriginal": 59.99,
+    "descuento": 0,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/1142710/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/1142710/header.jpg",
+    "descripcion": "Estrategia épica en el mundo de Warhammer.",
+    "descripcionCorta": "Domina el Caos.",
+    "plataforma": "PC",
+    "plataformas": [
+      "PC"
+    ],
+    "desarrollador": "Creative Assembly",
+    "publicador": "SEGA",
+    "fechaLanzamiento": "2022-02-17",
+    "rating": 4.2,
+    "ratingMetacritic": 86,
+    "ratingUsuariosMetacritic": 8.6,
+    "video": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "tags": [
+      "estrategia",
+      "accion",
+      "multijugador"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/1142710/"
+    }
+  },
+  {
+    "id": 68,
+    "nombre": "F1 24",
+    "slug": "f1-24",
+    "steamId": 2488620,
+    "categoria": "carreras",
+    "generos": [
+      "carreras",
+      "deportes"
+    ],
+    "precio": 69.99,
+    "precioOriginal": 69.99,
+    "descuento": 0,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/2488620/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/2488620/header.jpg",
+    "descripcion": "Simulador oficial de Fórmula 1.",
+    "descripcionCorta": "Lights out.",
+    "plataforma": "PC",
+    "plataformas": [
+      "PC",
+      "PS5",
+      "Xbox Series X"
+    ],
+    "desarrollador": "Codemasters",
+    "publicador": "EA",
+    "fechaLanzamiento": "2024-05-30",
+    "rating": 4,
+    "ratingMetacritic": 78,
+    "ratingUsuariosMetacritic": 7.8,
+    "video": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "tags": [
+      "carreras",
+      "deportes",
+      "multijugador"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/2488620/"
+    }
+  },
+  {
+    "id": 69,
+    "nombre": "The Last of Us Part I",
+    "slug": "the-last-of-us-part-1",
+    "steamId": 1888930,
+    "categoria": "aventura",
+    "generos": [
+      "aventura",
+      "accion"
+    ],
+    "precio": 59.99,
+    "precioOriginal": 59.99,
+    "descuento": 0,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/1888930/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/1888930/header.jpg",
+    "descripcion": "Supervivencia emocional en un mundo infectado.",
+    "descripcionCorta": "When you're lost in the dark.",
+    "plataforma": "PC",
+    "plataformas": [
+      "PC",
+      "PS5"
+    ],
+    "desarrollador": "Naughty Dog",
+    "publicador": "Sony",
+    "fechaLanzamiento": "2023-03-28",
+    "rating": 4.6,
+    "ratingMetacritic": 88,
+    "ratingUsuariosMetacritic": 8.8,
+    "video": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "tags": [
+      "aventura",
+      "accion",
+      "multijugador"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/1888930/"
+    }
+  },
+  {
+    "id": 70,
+    "nombre": "Uncharted: Legacy of Thieves",
+    "slug": "uncharted-legacy",
+    "steamId": 1659420,
+    "categoria": "aventura",
+    "generos": [
+      "aventura",
+      "accion"
+    ],
+    "precio": 49.99,
+    "precioOriginal": 49.99,
+    "descuento": 0,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/1659420/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/1659420/header.jpg",
+    "descripcion": "Aventuras cinematográficas de Nathan Drake.",
+    "descripcionCorta": "Fortune favors the bold.",
+    "plataforma": "PC",
+    "plataformas": [
+      "PC",
+      "PS5"
+    ],
+    "desarrollador": "Naughty Dog",
+    "publicador": "Sony",
+    "fechaLanzamiento": "2022-10-19",
+    "rating": 4.5,
+    "ratingMetacritic": 87,
+    "ratingUsuariosMetacritic": 8.7,
+    "video": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "tags": [
+      "aventura",
+      "accion",
+      "multijugador"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/1659420/"
+    }
+  },
+  {
+    "id": 71,
+    "nombre": "Ghost of Tsushima",
+    "slug": "ghost-of-tsushima",
+    "steamId": 2215430,
+    "categoria": "accion",
+    "generos": [
+      "accion",
+      "aventura"
+    ],
+    "precio": 59.99,
+    "precioOriginal": 59.99,
+    "descuento": 0,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/2215430/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/2215430/header.jpg",
+    "descripcion": "Samurái en la isla de Tsushima.",
+    "descripcionCorta": "Honor del fantasma.",
+    "plataforma": "PC",
+    "plataformas": [
+      "PC",
+      "PS5"
+    ],
+    "desarrollador": "Sucker Punch",
+    "publicador": "Sony",
+    "fechaLanzamiento": "2024-05-16",
+    "rating": 4.7,
+    "ratingMetacritic": 83,
+    "ratingUsuariosMetacritic": 8.3,
+    "video": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "tags": [
+      "accion",
+      "aventura",
+      "multijugador"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/2215430/"
+    }
+  },
+  {
+    "id": 72,
+    "nombre": "Ratchet & Clank: Rift Apart",
+    "slug": "ratchet-clank-rift-apart",
+    "steamId": 1895880,
+    "categoria": "accion",
+    "generos": [
+      "accion",
+      "plataformas"
+    ],
+    "precio": 59.99,
+    "precioOriginal": 59.99,
+    "descuento": 0,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/1895880/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/1895880/header.jpg",
+    "descripcion": "Plataformas dimensionales espectaculares.",
+    "descripcionCorta": "El dúo más divertido.",
+    "plataforma": "PC",
+    "plataformas": [
+      "PC",
+      "PS5"
+    ],
+    "desarrollador": "Insomniac",
+    "publicador": "Sony",
+    "fechaLanzamiento": "2023-07-26",
+    "rating": 4.6,
+    "ratingMetacritic": 87,
+    "ratingUsuariosMetacritic": 8.7,
+    "video": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "tags": [
+      "accion",
+      "plataformas",
+      "multijugador"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/1895880/"
+    }
+  },
+  {
+    "id": 73,
+    "nombre": "Yakuza: Like a Dragon",
+    "slug": "yakuza-like-a-dragon",
+    "steamId": 1235140,
+    "categoria": "rpg",
+    "generos": [
+      "rpg",
+      "accion"
+    ],
+    "precio": 39.99,
+    "precioOriginal": 39.99,
+    "descuento": 0,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/1235140/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/1235140/header.jpg",
+    "descripcion": "RPG urbano japonés con humor y corazón.",
+    "descripcionCorta": "Ichiban, héroe inesperado.",
+    "plataforma": "PC",
+    "plataformas": [
+      "PC",
+      "PS5",
+      "Xbox Series X"
+    ],
+    "desarrollador": "Ryu Ga Gotoku",
+    "publicador": "SEGA",
+    "fechaLanzamiento": "2020-11-10",
+    "rating": 4.5,
+    "ratingMetacritic": 84,
+    "ratingUsuariosMetacritic": 8.4,
+    "video": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "tags": [
+      "rpg",
+      "accion",
+      "multijugador"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/1235140/"
+    }
+  },
+  {
+    "id": 74,
+    "nombre": "Tekken 8",
+    "slug": "tekken-8",
+    "steamId": 1778820,
+    "categoria": "lucha",
+    "generos": [
+      "lucha",
+      "competitivo"
+    ],
+    "precio": 69.99,
+    "precioOriginal": 69.99,
+    "descuento": 0,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/1778820/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/1778820/header.jpg",
+    "descripcion": "El rey de los fighters 3D regresa.",
+    "descripcionCorta": "Get ready for the next battle.",
+    "plataforma": "PC",
+    "plataformas": [
+      "PC",
+      "PS5",
+      "Xbox Series X"
+    ],
+    "desarrollador": "Bandai Namco",
+    "publicador": "Bandai Namco",
+    "fechaLanzamiento": "2024-01-26",
+    "rating": 4.4,
+    "ratingMetacritic": 90,
+    "ratingUsuariosMetacritic": 9,
+    "video": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "tags": [
+      "lucha",
+      "competitivo",
+      "multijugador"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/1778820/"
+    }
+  },
+  {
+    "id": 75,
+    "nombre": "Palworld",
+    "slug": "palworld",
+    "steamId": 1623730,
+    "categoria": "aventura",
+    "generos": [
+      "aventura",
+      "supervivencia"
+    ],
+    "precio": 29.99,
+    "precioOriginal": 29.99,
+    "descuento": 0,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/1623730/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/1623730/header.jpg",
+    "descripcion": "Criaturas, crafteo y combate con amigos.",
+    "descripcionCorta": "Pokémon con armas.",
+    "plataforma": "PC",
+    "plataformas": [
+      "PC",
+      "Xbox Series X"
+    ],
+    "desarrollador": "Pocketpair",
+    "publicador": "Pocketpair",
+    "fechaLanzamiento": "2024-01-19",
+    "rating": 4,
+    "ratingMetacritic": 72,
+    "ratingUsuariosMetacritic": 7.2,
+    "video": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "tags": [
+      "aventura",
+      "supervivencia",
+      "multijugador"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/1623730/"
+    }
+  },
+  {
+    "id": 76,
+    "nombre": "Lethal Company",
+    "slug": "lethal-company",
+    "steamId": 1966720,
+    "categoria": "terror",
+    "generos": [
+      "terror",
+      "cooperativo"
+    ],
+    "precio": 9.99,
+    "precioOriginal": 9.99,
+    "descuento": 0,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/1966720/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/1966720/header.jpg",
+    "descripcion": "Horror cooperativo de recolección espacial.",
+    "descripcionCorta": "No olvides el porcentaje.",
+    "plataforma": "PC",
+    "plataformas": [
+      "PC"
+    ],
+    "desarrollador": "Zeekerss",
+    "publicador": "Zeekerss",
+    "fechaLanzamiento": "2023-10-24",
+    "rating": 4.6,
+    "ratingMetacritic": 82,
+    "ratingUsuariosMetacritic": 8.2,
+    "video": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "tags": [
+      "terror",
+      "cooperativo",
+      "multijugador"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/1966720/"
+    }
+  },
+  {
+    "id": 77,
+    "nombre": "Valheim",
+    "slug": "valheim",
+    "steamId": 892970,
+    "categoria": "supervivencia",
+    "generos": [
+      "supervivencia",
+      "cooperativo"
+    ],
+    "precio": 19.99,
+    "precioOriginal": 19.99,
+    "descuento": 0,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/892970/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/892970/header.jpg",
+    "descripcion": "Vikingos, crafteo y jefes nórdicos.",
+    "descripcionCorta": "Valhalla te espera.",
+    "plataforma": "PC",
+    "plataformas": [
+      "PC",
+      "Xbox Series X"
+    ],
+    "desarrollador": "Iron Gate",
+    "publicador": "Coffee Stain",
+    "fechaLanzamiento": "2021-02-02",
+    "rating": 4.7,
+    "ratingMetacritic": 86,
+    "ratingUsuariosMetacritic": 8.6,
+    "video": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "tags": [
+      "supervivencia",
+      "cooperativo",
+      "multijugador"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/892970/"
+    }
+  },
+  {
+    "id": 78,
+    "nombre": "Sons of the Forest",
+    "slug": "sons-of-the-forest",
+    "steamId": 1326470,
+    "categoria": "supervivencia",
+    "generos": [
+      "supervivencia",
+      "terror"
+    ],
+    "precio": 29.99,
+    "precioOriginal": 29.99,
+    "descuento": 0,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/1326470/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/1326470/header.jpg",
+    "descripcion": "Secuela de supervivencia en isla caníbal.",
+    "descripcionCorta": "Construye, caza, sobrevive.",
+    "plataforma": "PC",
+    "plataformas": [
+      "PC"
+    ],
+    "desarrollador": "Endnight",
+    "publicador": "Newnight",
+    "fechaLanzamiento": "2024-03-06",
+    "rating": 4.2,
+    "ratingMetacritic": 80,
+    "ratingUsuariosMetacritic": 8,
+    "video": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "tags": [
+      "supervivencia",
+      "terror",
+      "multijugador"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/1326470/"
+    }
+  },
+  {
+    "id": 79,
+    "nombre": "Subnautica",
+    "slug": "subnautica",
+    "steamId": 264710,
+    "categoria": "aventura",
+    "generos": [
+      "aventura",
+      "supervivencia"
+    ],
+    "precio": 29.99,
+    "precioOriginal": 29.99,
+    "descuento": 0,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/264710/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/264710/header.jpg",
+    "descripcion": "Explora océanos alienígenas.",
+    "descripcionCorta": "Bajo el agua todo cambia.",
+    "plataforma": "PC",
+    "plataformas": [
+      "PC",
+      "PS5",
+      "Xbox Series X",
+      "Nintendo Switch"
+    ],
+    "desarrollador": "Unknown Worlds",
+    "publicador": "Unknown Worlds",
+    "fechaLanzamiento": "2018-01-23",
+    "rating": 4.8,
+    "ratingMetacritic": 87,
+    "ratingUsuariosMetacritic": 8.7,
+    "video": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "tags": [
+      "aventura",
+      "supervivencia",
+      "multijugador"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/264710/"
+    }
+  },
+  {
+    "id": 80,
+    "nombre": "No Man's Sky",
+    "slug": "no-mans-sky",
+    "steamId": 275850,
+    "categoria": "aventura",
+    "generos": [
+      "aventura",
+      "exploracion"
+    ],
+    "precio": 59.99,
+    "precioOriginal": 59.99,
+    "descuento": 0,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/275850/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/275850/header.jpg",
+    "descripcion": "Exploración procedural infinita.",
+    "descripcionCorta": "El universo entero.",
+    "plataforma": "PC",
+    "plataformas": [
+      "PC",
+      "PS5",
+      "Xbox Series X",
+      "Nintendo Switch"
+    ],
+    "desarrollador": "Hello Games",
+    "publicador": "Hello Games",
+    "fechaLanzamiento": "2016-08-12",
+    "rating": 4.3,
+    "ratingMetacritic": 78,
+    "ratingUsuariosMetacritic": 7.8,
+    "video": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "tags": [
+      "aventura",
+      "exploracion",
+      "multijugador"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/275850/"
+    }
+  },
+  {
+    "id": 81,
+    "nombre": "Sea of Thieves",
+    "slug": "sea-of-thieves",
+    "steamId": 1172620,
+    "categoria": "aventura",
+    "generos": [
+      "aventura",
+      "multijugador"
+    ],
+    "precio": 39.99,
+    "precioOriginal": 39.99,
+    "descuento": 0,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/1172620/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/1172620/header.jpg",
+    "descripcion": "Piratas cooperativos en alta mar.",
+    "descripcionCorta": "Yarr, matey.",
+    "plataforma": "PC",
+    "plataformas": [
+      "PC",
+      "Xbox Series X"
+    ],
+    "desarrollador": "Rare",
+    "publicador": "Xbox Game Studios",
+    "fechaLanzamiento": "2020-06-02",
+    "rating": 4.2,
+    "ratingMetacritic": 81,
+    "ratingUsuariosMetacritic": 8.1,
+    "video": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "tags": [
+      "aventura",
+      "multijugador",
+      "multijugador"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/1172620/"
+    }
+  },
+  {
+    "id": 82,
+    "nombre": "Halo: The Master Chief Collection",
+    "slug": "halo-mcc",
+    "steamId": 976730,
+    "categoria": "disparos",
+    "generos": [
+      "disparos",
+      "ciencia-ficcion"
+    ],
+    "precio": 39.99,
+    "precioOriginal": 39.99,
+    "descuento": 0,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/976730/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/976730/header.jpg",
+    "descripcion": "La saga Halo completa en PC.",
+    "descripcionCorta": "Finish the fight.",
+    "plataforma": "PC",
+    "plataformas": [
+      "PC",
+      "Xbox Series X"
+    ],
+    "desarrollador": "343 Industries",
+    "publicador": "Xbox Game Studios",
+    "fechaLanzamiento": "2019-12-03",
+    "rating": 4.6,
+    "ratingMetacritic": 85,
+    "ratingUsuariosMetacritic": 8.5,
+    "video": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "tags": [
+      "disparos",
+      "ciencia-ficcion",
+      "multijugador"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/976730/"
+    }
+  },
+  {
+    "id": 83,
+    "nombre": "Gears 5",
+    "slug": "gears-5",
+    "steamId": 1097840,
+    "categoria": "disparos",
+    "generos": [
+      "disparos",
+      "accion"
+    ],
+    "precio": 39.99,
+    "precioOriginal": 39.99,
+    "descuento": 0,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/1097840/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/1097840/header.jpg",
+    "descripcion": "Cover shooter brutal contra el Enjambre.",
+    "descripcionCorta": "Chainsaw time.",
+    "plataforma": "PC",
+    "plataformas": [
+      "PC",
+      "Xbox Series X"
+    ],
+    "desarrollador": "The Coalition",
+    "publicador": "Xbox Game Studios",
+    "fechaLanzamiento": "2019-09-10",
+    "rating": 4.1,
+    "ratingMetacritic": 84,
+    "ratingUsuariosMetacritic": 8.4,
+    "video": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "tags": [
+      "disparos",
+      "accion",
+      "multijugador"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/1097840/"
+    }
+  },
+  {
+    "id": 84,
+    "nombre": "Diablo IV",
+    "slug": "diablo-4",
+    "steamId": 2344520,
+    "categoria": "rpg",
+    "generos": [
+      "rpg",
+      "accion"
+    ],
+    "precio": 69.99,
+    "precioOriginal": 69.99,
+    "descuento": 0,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/2344520/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/2344520/header.jpg",
+    "descripcion": "Hack and slash oscuro de mundo abierto.",
+    "descripcionCorta": "Lilith ha regresado.",
+    "plataforma": "PC",
+    "plataformas": [
+      "PC",
+      "PS5",
+      "Xbox Series X"
+    ],
+    "desarrollador": "Blizzard",
+    "publicador": "Blizzard",
+    "fechaLanzamiento": "2023-06-06",
+    "rating": 4,
+    "ratingMetacritic": 88,
+    "ratingUsuariosMetacritic": 8.8,
+    "video": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "tags": [
+      "rpg",
+      "accion",
+      "multijugador"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/2344520/"
+    }
+  },
+  {
+    "id": 85,
+    "nombre": "Overwatch 2",
+    "slug": "overwatch-2",
+    "steamId": 2357570,
+    "categoria": "disparos",
+    "generos": [
+      "disparos",
+      "hero-shooter"
+    ],
+    "precio": 0,
+    "precioOriginal": 0,
+    "descuento": 0,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/2357570/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/2357570/header.jpg",
+    "descripcion": "Hero shooter por equipos free-to-play.",
+    "descripcionCorta": "Heroes never die.",
+    "plataforma": "PC",
+    "plataformas": [
+      "PC",
+      "PS5",
+      "Xbox Series X",
+      "Nintendo Switch"
+    ],
+    "desarrollador": "Blizzard",
+    "publicador": "Blizzard",
+    "fechaLanzamiento": "2022-10-04",
+    "rating": 3.9,
+    "ratingMetacritic": 79,
+    "ratingUsuariosMetacritic": 7.9,
+    "video": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "tags": [
+      "disparos",
+      "hero-shooter",
+      "multijugador"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/2357570/"
+    }
+  },
+  {
+    "id": 86,
+    "nombre": "World of Warcraft",
+    "slug": "world-of-warcraft",
+    "steamId": null,
+    "categoria": "rpg",
+    "generos": [
+      "rpg",
+      "mmo"
+    ],
+    "precio": 14.99,
+    "precioOriginal": 14.99,
+    "descuento": 0,
+    "imagen": "",
+    "imagenBanner": "",
+    "descripcion": "El MMORPG que definió una generación.",
+    "descripcionCorta": "Por la Alianza o la Horda.",
+    "plataforma": "PC",
+    "plataformas": [
+      "PC"
+    ],
+    "desarrollador": "Blizzard",
+    "publicador": "Blizzard",
+    "fechaLanzamiento": "2004-11-23",
+    "rating": 4.5,
+    "ratingMetacritic": 93,
+    "ratingUsuariosMetacritic": 9.3,
+    "video": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "tags": [
+      "rpg",
+      "mmo",
+      "multijugador"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {}
+  },
+  {
+    "id": 87,
+    "nombre": "Final Fantasy XIV",
+    "slug": "final-fantasy-xiv",
+    "steamId": 39210,
+    "categoria": "rpg",
+    "generos": [
+      "rpg",
+      "mmo"
+    ],
+    "precio": 19.99,
+    "precioOriginal": 19.99,
+    "descuento": 0,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/39210/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/39210/header.jpg",
+    "descripcion": "MMORPG narrativo de fantasía épica.",
+    "descripcionCorta": "Hydaelyn te llama.",
+    "plataforma": "PC",
+    "plataformas": [
+      "PC",
+      "PS5",
+      "Xbox Series X"
+    ],
+    "desarrollador": "Square Enix",
+    "publicador": "Square Enix",
+    "fechaLanzamiento": "2013-08-27",
+    "rating": 4.7,
+    "ratingMetacritic": 89,
+    "ratingUsuariosMetacritic": 8.9,
+    "video": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "tags": [
+      "rpg",
+      "mmo",
+      "multijugador"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/39210/"
+    }
+  },
+  {
+    "id": 88,
+    "nombre": "Genshin Impact",
+    "slug": "genshin-impact",
+    "steamId": null,
+    "categoria": "rpg",
+    "generos": [
+      "rpg",
+      "accion"
+    ],
+    "precio": 0,
+    "precioOriginal": 0,
+    "descuento": 0,
+    "imagen": "",
+    "imagenBanner": "",
+    "descripcion": "Action RPG gacha de mundo abierto.",
+    "descripcionCorta": "Explora Teyvat gratis.",
+    "plataforma": "PC",
+    "plataformas": [
+      "PC",
+      "PS5",
+      "Mobile"
+    ],
+    "desarrollador": "miHoYo",
+    "publicador": "miHoYo",
+    "fechaLanzamiento": "2020-09-28",
+    "rating": 4.4,
+    "ratingMetacritic": 87,
+    "ratingUsuariosMetacritic": 8.7,
+    "video": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "tags": [
+      "rpg",
+      "accion",
+      "multijugador"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {}
+  },
+  {
+    "id": 89,
+    "nombre": "Honkai: Star Rail",
+    "slug": "honkai-star-rail",
+    "steamId": null,
+    "categoria": "rpg",
+    "generos": [
+      "rpg",
+      "turnos"
+    ],
+    "precio": 0,
+    "precioOriginal": 0,
+    "descuento": 0,
+    "imagen": "",
+    "imagenBanner": "",
+    "descripcion": "RPG por turnos sci-fi con estilo anime.",
+    "descripcionCorta": "Expreso Astral.",
+    "plataforma": "PC",
+    "plataformas": [
+      "PC",
+      "PS5",
+      "Mobile"
+    ],
+    "desarrollador": "miHoYo",
+    "publicador": "miHoYo",
+    "fechaLanzamiento": "2023-04-26",
+    "rating": 4.5,
+    "ratingMetacritic": 86,
+    "ratingUsuariosMetacritic": 8.6,
+    "video": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "tags": [
+      "rpg",
+      "turnos",
+      "multijugador"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {}
+  },
+  {
+    "id": 90,
+    "nombre": "League of Legends",
+    "slug": "league-of-legends",
+    "steamId": null,
+    "categoria": "estrategia",
+    "generos": [
+      "estrategia",
+      "moba"
+    ],
+    "precio": 0,
+    "precioOriginal": 0,
+    "descuento": 0,
+    "imagen": "",
+    "imagenBanner": "",
+    "descripcion": "MOBA competitivo más popular del planeta.",
+    "descripcionCorta": "Summoner's Rift.",
+    "plataforma": "PC",
+    "plataformas": [
+      "PC"
+    ],
+    "desarrollador": "Riot Games",
+    "publicador": "Riot Games",
+    "fechaLanzamiento": "2009-10-27",
+    "rating": 4.3,
+    "ratingMetacritic": 78,
+    "ratingUsuariosMetacritic": 7.8,
+    "video": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "tags": [
+      "estrategia",
+      "moba",
+      "multijugador"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {}
+  },
+  {
+    "id": 91,
+    "nombre": "Roblox",
+    "slug": "roblox",
+    "steamId": null,
+    "categoria": "aventura",
+    "generos": [
+      "aventura",
+      "social"
+    ],
+    "precio": 0,
+    "precioOriginal": 0,
+    "descuento": 0,
+    "imagen": "",
+    "imagenBanner": "",
+    "descripcion": "Plataforma de experiencias creadas por usuarios.",
+    "descripcionCorta": "Millones de mundos.",
+    "plataforma": "PC",
+    "plataformas": [
+      "PC",
+      "Mobile",
+      "Xbox Series X"
+    ],
+    "desarrollador": "Roblox Corp",
+    "publicador": "Roblox Corp",
+    "fechaLanzamiento": "2006-09-01",
+    "rating": 4.1,
+    "ratingMetacritic": 70,
+    "ratingUsuariosMetacritic": 7,
+    "video": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "tags": [
+      "aventura",
+      "social",
+      "multijugador"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {}
+  },
+  {
+    "id": 92,
+    "nombre": "Clash Royale",
+    "slug": "clash-royale",
+    "steamId": null,
+    "categoria": "estrategia",
+    "generos": [
+      "estrategia",
+      "mobile"
+    ],
+    "precio": 0,
+    "precioOriginal": 0,
+    "descuento": 0,
+    "imagen": "",
+    "imagenBanner": "",
+    "descripcion": "Duelos tácticos en tiempo real en móvil.",
+    "descripcionCorta": "Cartas y corona.",
+    "plataforma": "Mobile",
+    "plataformas": [
+      "Mobile"
+    ],
+    "desarrollador": "Supercell",
+    "publicador": "Supercell",
+    "fechaLanzamiento": "2016-03-02",
+    "rating": 4.3,
+    "ratingMetacritic": 80,
+    "ratingUsuariosMetacritic": 8,
+    "video": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "tags": [
+      "estrategia",
+      "mobile",
+      "multijugador"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {}
+  },
+  {
+    "id": 93,
+    "nombre": "Brawl Stars",
+    "slug": "brawl-stars",
+    "steamId": null,
+    "categoria": "accion",
+    "generos": [
+      "accion",
+      "mobile"
+    ],
+    "precio": 0,
+    "precioOriginal": 0,
+    "descuento": 0,
+    "imagen": "",
+    "imagenBanner": "",
+    "descripcion": "Multijugador rápido para móvil.",
+    "descripcionCorta": "Brawlers en acción.",
+    "plataforma": "Mobile",
+    "plataformas": [
+      "Mobile"
+    ],
+    "desarrollador": "Supercell",
+    "publicador": "Supercell",
+    "fechaLanzamiento": "2018-12-12",
+    "rating": 4.4,
+    "ratingMetacritic": 76,
+    "ratingUsuariosMetacritic": 7.6,
+    "video": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "tags": [
+      "accion",
+      "mobile",
+      "multijugador"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {}
+  },
+  {
+    "id": 94,
+    "nombre": "Portal 2",
+    "slug": "portal-2",
+    "steamId": 620,
+    "categoria": "puzzle",
+    "generos": [
+      "puzzle",
+      "aventura"
+    ],
+    "precio": 9.99,
+    "precioOriginal": 9.99,
+    "descuento": 0,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/620/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/620/header.jpg",
+    "descripcion": "Puzzles con portales y humor negro.",
+    "descripcionCorta": "The cake is a lie.",
+    "plataforma": "PC",
+    "plataformas": [
+      "PC",
+      "PS3",
+      "Xbox 360"
+    ],
+    "desarrollador": "Valve",
+    "publicador": "Valve",
+    "fechaLanzamiento": "2011-04-19",
+    "rating": 4.9,
+    "ratingMetacritic": 95,
+    "ratingUsuariosMetacritic": 9.5,
+    "video": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "tags": [
+      "puzzle",
+      "aventura",
+      "multijugador"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/620/"
+    }
+  },
+  {
+    "id": 95,
+    "nombre": "Half-Life: Alyx",
+    "slug": "half-life-alyx",
+    "steamId": 546560,
+    "categoria": "accion",
+    "generos": [
+      "accion",
+      "vr"
+    ],
+    "precio": 59.99,
+    "precioOriginal": 59.99,
+    "descuento": 0,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/546560/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/546560/header.jpg",
+    "descripcion": "VR narrativo revolucionario.",
+    "descripcionCorta": "Rise and shine.",
+    "plataforma": "PC",
+    "plataformas": [
+      "PC"
+    ],
+    "desarrollador": "Valve",
+    "publicador": "Valve",
+    "fechaLanzamiento": "2020-03-23",
+    "rating": 4.8,
+    "ratingMetacritic": 93,
+    "ratingUsuariosMetacritic": 9.3,
+    "video": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "tags": [
+      "accion",
+      "vr",
+      "multijugador"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/546560/"
+    }
+  },
+  {
+    "id": 96,
+    "nombre": "Left 4 Dead 2",
+    "slug": "left-4-dead-2",
+    "steamId": 550,
+    "categoria": "disparos",
+    "generos": [
+      "disparos",
+      "cooperativo"
+    ],
+    "precio": 9.99,
+    "precioOriginal": 9.99,
+    "descuento": 0,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/550/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/550/header.jpg",
+    "descripcion": "Cooperativo zombie clásico.",
+    "descripcionCorta": "Pills here!",
+    "plataforma": "PC",
+    "plataformas": [
+      "PC",
+      "Xbox 360"
+    ],
+    "desarrollador": "Valve",
+    "publicador": "Valve",
+    "fechaLanzamiento": "2009-11-17",
+    "rating": 4.8,
+    "ratingMetacritic": 89,
+    "ratingUsuariosMetacritic": 8.9,
+    "video": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "tags": [
+      "disparos",
+      "cooperativo",
+      "multijugador"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/550/"
+    }
+  },
+  {
+    "id": 97,
+    "nombre": "Payday 3",
+    "slug": "payday-3",
+    "steamId": 1272080,
+    "categoria": "accion",
+    "generos": [
+      "accion",
+      "cooperativo"
+    ],
+    "precio": 39.99,
+    "precioOriginal": 39.99,
+    "descuento": 0,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/1272080/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/1272080/header.jpg",
+    "descripcion": "Atracos cooperativos en primera persona.",
+    "descripcionCorta": "Get the money.",
+    "plataforma": "PC",
+    "plataformas": [
+      "PC",
+      "PS5",
+      "Xbox Series X"
+    ],
+    "desarrollador": "Starbreeze",
+    "publicador": "Deep Silver",
+    "fechaLanzamiento": "2023-09-21",
+    "rating": 3.5,
+    "ratingMetacritic": 68,
+    "ratingUsuariosMetacritic": 6.8,
+    "video": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "tags": [
+      "accion",
+      "cooperativo",
+      "multijugador"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/1272080/"
+    }
+  },
+  {
+    "id": 98,
+    "nombre": "Borderlands 3",
+    "slug": "borderlands-3",
+    "steamId": 397540,
+    "categoria": "disparos",
+    "generos": [
+      "disparos",
+      "rpg"
+    ],
+    "precio": 59.99,
+    "precioOriginal": 59.99,
+    "descuento": 0,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/397540/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/397540/header.jpg",
+    "descripcion": "Looter shooter caótico y divertido.",
+    "descripcionCorta": "Billions of guns.",
+    "plataforma": "PC",
+    "plataformas": [
+      "PC",
+      "PS5",
+      "Xbox Series X"
+    ],
+    "desarrollador": "Gearbox",
+    "publicador": "2K",
+    "fechaLanzamiento": "2019-09-13",
+    "rating": 4.2,
+    "ratingMetacritic": 81,
+    "ratingUsuariosMetacritic": 8.1,
+    "video": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "tags": [
+      "disparos",
+      "rpg",
+      "multijugador"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/397540/"
+    }
+  },
+  {
+    "id": 99,
+    "nombre": "Mass Effect Legendary Edition",
+    "slug": "mass-effect-le",
+    "steamId": 1328670,
+    "categoria": "rpg",
+    "generos": [
+      "rpg",
+      "ciencia-ficcion"
+    ],
+    "precio": 59.99,
+    "precioOriginal": 59.99,
+    "descuento": 0,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/1328670/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/1328670/header.jpg",
+    "descripcion": "Trilogía sci-fi remasterizada.",
+    "descripcionCorta": "Commander Shepard.",
+    "plataforma": "PC",
+    "plataformas": [
+      "PC",
+      "PS4",
+      "Xbox One"
+    ],
+    "desarrollador": "BioWare",
+    "publicador": "EA",
+    "fechaLanzamiento": "2021-05-14",
+    "rating": 4.7,
+    "ratingMetacritic": 87,
+    "ratingUsuariosMetacritic": 8.7,
+    "video": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "tags": [
+      "rpg",
+      "ciencia-ficcion",
+      "multijugador"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/1328670/"
+    }
+  },
+  {
+    "id": 100,
+    "nombre": "Dragon's Dogma 2",
+    "slug": "dragons-dogma-2",
+    "steamId": 2054970,
+    "categoria": "rpg",
+    "generos": [
+      "rpg",
+      "accion"
+    ],
+    "precio": 69.99,
+    "precioOriginal": 69.99,
+    "descuento": 0,
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/2054970/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/2054970/header.jpg",
+    "descripcion": "RPG de acción con pawns y dragones.",
+    "descripcionCorta": "Arisen despierta.",
+    "plataforma": "PC",
+    "plataformas": [
+      "PC",
+      "PS5",
+      "Xbox Series X"
+    ],
+    "desarrollador": "Capcom",
+    "publicador": "Capcom",
+    "fechaLanzamiento": "2024-03-22",
+    "rating": 4.4,
+    "ratingMetacritic": 84,
+    "ratingUsuariosMetacritic": 8.4,
+    "video": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "tags": [
+      "rpg",
+      "accion",
+      "multijugador"
+    ],
+    "skins": [],
+    "packs": [],
+    "enlacesCompra": {
+      "steam": "https://store.steampowered.com/app/2054970/"
+    }
   }
 ]

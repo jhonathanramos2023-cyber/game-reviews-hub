@@ -1,8 +1,6 @@
 import { Link, useLocation } from "wouter";
-import { useQuery } from "@tanstack/react-query";
 import { Gamepad2, Trophy, List, User, Menu, X, Crown, LogOut, LogIn } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
-import { apiFetch, parseApiJson } from "@/lib/api-fetch";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -18,17 +16,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
   const { user: authUser, logout, loading: authLoading } = useAuth();
   const { plan } = usePlan();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  const onlineQuery = useQuery({
-    queryKey: ["stats", "online"],
-    queryFn: async () => {
-      const res = await apiFetch("/stats/online");
-      if (!res.ok) return { count: 0 };
-      return parseApiJson<{ count: number }>(res);
-    },
-    refetchInterval: 60_000,
-    staleTime: 30_000,
-  });
 
   const displayName = authUser?.nombre ?? localUser?.nombre;
   const avatarColor =
@@ -80,12 +67,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
               {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </Button>
             
-            {onlineQuery.data?.count != null && onlineQuery.data.count > 0 && (
-              <Badge variant="outline" className="hidden sm:flex border-green-500/40 text-green-500 bg-green-500/10 text-xs">
-                <span className="w-1.5 h-1.5 rounded-full bg-green-500 mr-1.5 animate-pulse" />
-                {onlineQuery.data.count} en línea
-              </Badge>
-            )}
             {!authLoading && authUser ? (
               <div className="flex items-center gap-2">
                 {plan === "pro" && (
