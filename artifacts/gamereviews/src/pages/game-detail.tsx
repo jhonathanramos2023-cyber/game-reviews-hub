@@ -17,8 +17,6 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { toast } from "sonner";
 import { Stars } from "@/components/stars";
-import { AiAnalysis } from "@/components/ai-analysis";
-import { GameCard } from "@/components/game-card";
 import { GameImage } from "@/components/game-image";
 import { DealsSection } from "@/components/deals-section";
 import { PriceAlertButton } from "@/components/price-alert-button";
@@ -380,11 +378,6 @@ export default function GameDetail() {
               />
             </section>
           )}
-
-          <AiAnalysis
-            systemPrompt="Eres un crítico de videojuegos experto, elocuente y ligeramente sarcástico. Analizas juegos con profundidad técnica y artística."
-            userPrompt={`Escribe un análisis crítico breve pero profundo sobre el juego "${game.nombre}". Menciona sus puntos fuertes, debilidades, y si su nota en Metacritic de ${game.ratingMetacritic} es merecida. Usa formato Markdown, separa en párrafos, y dale un título llamativo.`}
-          />
 
           {/* Reviews Section */}
           <section id="review-section" className="space-y-6 pt-8 border-t border-border">
