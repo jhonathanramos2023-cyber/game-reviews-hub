@@ -2,13 +2,10 @@ import { useMemo } from "react";
 import { Link } from "wouter";
 import gamesData from "@/data/games.json";
 import { useReviews } from "@/hooks/use-reviews";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Badge } from "@/components/ui/badge";
-import { Stars } from "@/components/stars";
-import { Trophy, Medal, Flame, Star, MessageSquare, TrendingUp } from "lucide-react";
+import { Trophy, Flame, Star, MessageSquare } from "lucide-react";
 import { motion } from "framer-motion";
-import { AiAnalysis } from "@/components/ai-analysis";
 
 export default function Ranking() {
   const { reviews } = useReviews();
@@ -118,8 +115,6 @@ export default function Ranking() {
     );
   };
 
-  const aiRankingPrompt = `Basado en este top 3 de juegos (1. ${topRated[0]?.nombre}, 2. ${topRated[1]?.nombre}, 3. ${topRated[2]?.nombre}), escribe un breve análisis del estado actual del gaming. ¿Qué dice este top sobre los gustos de los jugadores? Sé analítico y usa tono de experto.`;
-
   return (
     <div className="space-y-8 max-w-5xl mx-auto pb-20">
       <div className="text-center space-y-4 mb-12">
@@ -131,13 +126,6 @@ export default function Ranking() {
           Los mejores juegos según la comunidad. Basado en {reviews.length} reseñas reales.
         </p>
       </div>
-
-      <AiAnalysis 
-        systemPrompt="Eres un analista de la industria de los videojuegos. Analizas tendencias basadas en datos de rankings."
-        userPrompt={aiRankingPrompt}
-        buttonText="Análisis IA del Ranking"
-        buttonIcon={<TrendingUp className="h-4 w-4 mr-2" />}
-      />
 
       <Tabs defaultValue="valorados" className="w-full mt-8">
         <TabsList className="grid w-full grid-cols-3 bg-card h-14 p-1 rounded-xl">
