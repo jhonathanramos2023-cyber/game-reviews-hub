@@ -9,6 +9,7 @@ import oauthRouter from "./oauth";
 import reviewsRouter from "./reviews";
 import repliesRouter from "./replies";
 import suscriptoresRouter from "./suscriptores";
+import statsRouter from "./stats";
 
 const router: IRouter = Router();
 
@@ -22,5 +23,6 @@ router.use(oauthRouter);
 router.use(reviewsRouter);
 router.use(repliesRouter);
 router.use(suscriptoresRouter);
+router.use(statsRouter);
 
 export default router;

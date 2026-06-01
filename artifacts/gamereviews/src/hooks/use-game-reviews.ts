@@ -39,6 +39,8 @@ export function useGameReviews(juegoId: number, juegoNombre: string) {
     enabled,
     staleTime: 0,
     refetchOnMount: true,
+    refetchInterval: 30_000,
+    refetchIntervalInBackground: true,
     queryFn: async () => {
       const res = await apiFetch(`/resenas/${juegoId}`);
       if (!res.ok) throw new Error("Error al cargar reseñas");
@@ -84,8 +86,9 @@ export function useGameReviews(juegoId: number, juegoNombre: string) {
       }
       return raw.id;
     },
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ["resenas", juegoId] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["resenas", juegoId] });
+      await queryClient.refetchQueries({ queryKey: ["resenas", juegoId] });
     },
   });
 

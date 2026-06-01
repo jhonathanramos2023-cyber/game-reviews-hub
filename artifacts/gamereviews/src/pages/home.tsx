@@ -4,7 +4,6 @@ import { useQuery } from "@tanstack/react-query";
 import gamesData from "@/data/games.json";
 import { GameCard } from "@/components/game-card";
 import { useReviews } from "@/hooks/use-reviews";
-import { useUser } from "@/hooks/use-user";
 import { useAuth } from "@/hooks/use-auth";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Search, SlidersHorizontal, Gamepad2, Users, MessageSquare, Dices, Bot, Newspaper, Zap } from "lucide-react";
@@ -14,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { TopDealsStrip } from "@/components/top-deals-strip";
 import { GameImage } from "@/components/game-image";
 import { resolveApiUrl } from "@/lib/api-base";
+import { apiFetch, parseApiJson } from "@/lib/api-fetch";
 
 interface AgenteJuego {
   id: number;
@@ -104,7 +104,6 @@ function timeAgo(iso: string | null): string {
 
 export default function Home() {
   const { reviews } = useReviews();
-  const { user } = useUser();
   const { isAdmin } = useAuth();
   const { juegos: juegosDe24h, noticias, lastRun } = useAgenteData();
   const hasAgenteContent = juegosDe24h.length > 0 || noticias.length > 0;
@@ -120,10 +119,21 @@ export default function Home() {
     setLocation(`/juego/${random.id}`);
   };
 
-  // Derive stats
   const totalGames = gamesData.length;
-  const totalReviews = reviews.length;
-  const totalUsers = 12450 + (user ? 1 : 0); // Fake base number + local user
+
+  const statsQuery = useQuery({
+    queryKey: ["stats", "counts"],
+    queryFn: async () => {
+      const res = await apiFetch("/stats/counts");
+      if (!res.ok) throw new Error("Error al cargar estadísticas");
+      return parseApiJson<{ resenas: number; usuarios: number }>(res);
+    },
+    staleTime: 30_000,
+    refetchInterval: 30_000,
+  });
+
+  const totalReviews = statsQuery.data?.resenas ?? 0;
+  const totalUsers = statsQuery.data?.usuarios ?? 0;
 
   // Extract unique genres and platforms
   const genres = useMemo(() => {
@@ -256,7 +266,7 @@ export default function Home() {
             <div className="flex flex-col items-center">
               <div className="flex items-center gap-2 text-2xl font-display font-bold text-foreground">
                 <Users className="h-6 w-6 text-primary" />
-                {totalUsers.toLocaleString()}
+                {totalUsers.toLocaleString("es-ES")}
               </div>
               <span className="text-sm text-muted-foreground uppercase tracking-widest font-bold">Usuarios</span>
             </div>
