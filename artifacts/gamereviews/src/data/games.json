@@ -578,8 +578,8 @@
     "precio": 59.99,
     "precioOriginal": 69.99,
     "descuento": 14,
-    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/2446780/library_600x900.jpg",
-    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/2446780/header.jpg",
+    "imagen": "https://cdn.cloudflare.steamstatic.com/steam/apps/2878980/library_600x900.jpg",
+    "imagenBanner": "https://cdn.cloudflare.steamstatic.com/steam/apps/2878980/header.jpg",
     "descripcion": "NBA 2K25 redefine el realismo del baloncesto con la tecnología ProPlay 2.0, llevando los movimientos auténticos de la NBA al juego. Crea tu MyPLAYER y vive la cultura del baloncesto en La Ciudad.",
     "descripcionCorta": "El simulador de baloncesto más realista del año.",
     "plataforma": "Multi",
@@ -604,9 +604,9 @@
     ],
     "skins": [],
     "packs": [],
-    "steamId": 2446780,
+    "steamId": 2878980,
     "enlacesCompra": {
-      "steam": "https://store.steampowered.com/app/2446780/",
+      "steam": "https://store.steampowered.com/app/2878980/",
       "playstation": "https://www.playstation.com/es-us/games/nba-2k25/",
       "nintendo": "https://www.nintendo.com/es-us/store/products/nba-2k25/"
     }
