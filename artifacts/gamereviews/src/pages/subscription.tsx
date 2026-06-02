@@ -22,7 +22,7 @@ import {
 import { apiJson } from "@/lib/api-fetch";
 
 export default function Subscription() {
-  const { plan, setPlan, iaUsos } = usePlan();
+  const { plan, setPlan } = usePlan();
   const { user } = useUser();
   const { list } = useList();
   const { reviews } = useReviews();
@@ -45,7 +45,6 @@ export default function Subscription() {
       }).length
     : 0;
 
-  const iaCount = iaUsos.date === new Date().toISOString().split("T")[0] ? iaUsos.count : 0;
   const listCount = list.length;
 
   const openSubscribeModal = (targetPlan: PlanType) => {
@@ -109,7 +108,6 @@ export default function Subscription() {
       features: [
         { included: true, text: "5 reseñas por mes" },
         { included: true, text: "Hasta 10 juegos en Mi Lista" },
-        { included: true, text: "3 análisis de IA al día" },
         { included: false, text: "Historial de precios completo" },
         { included: false, text: "Alertas de rebajas" },
         { included: false, text: "Badge en tu perfil" },
@@ -125,7 +123,6 @@ export default function Subscription() {
       features: [
         { included: true, text: "Reseñas ILIMITADAS" },
         { included: true, text: "Juegos ILIMITADOS en Mi Lista" },
-        { included: true, text: "Análisis de IA ILIMITADOS" },
         { included: true, text: "Historial de precios completo" },
         { included: true, text: "Alertas de rebajas" },
         { included: true, text: "Badge PRO en tu perfil" },
@@ -141,7 +138,6 @@ export default function Subscription() {
       features: [
         { included: true, text: "Todo lo del plan PRO" },
         { included: true, text: "Badge ELITE exclusivo" },
-        { included: true, text: "Prioridad en análisis de IA" },
         { included: true, text: "Reporte mensual de tu librería" },
         { included: true, text: "Soporte prioritario" },
       ],
@@ -235,20 +231,6 @@ export default function Subscription() {
                 LIMITES[plan].resenasPorMes === Infinity
                   ? 0
                   : (myReviewsThisMonth / LIMITES[plan].resenasPorMes) * 100
-              }
-              className="h-2"
-            />
-          </div>
-          <div>
-            <div className="flex justify-between mb-1 text-sm font-medium">
-              <span>Análisis IA hoy</span>
-              <span>
-                {iaCount} / {LIMITES[plan].iaPorDia === Infinity ? "∞" : LIMITES[plan].iaPorDia}
-              </span>
-            </div>
-            <Progress
-              value={
-                LIMITES[plan].iaPorDia === Infinity ? 0 : (iaCount / LIMITES[plan].iaPorDia) * 100
               }
               className="h-2"
             />
